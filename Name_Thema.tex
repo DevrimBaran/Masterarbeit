@@ -1,0 +1,84 @@
+% !TeX document-id = {af34fc55-a85d-4a03-a739-53acda67b3be}
+% !TeX TXS-program:bibliography = txs:///biber
+% !TeX TXS-program:compile = txs:///lualatex
+% !TEX spellcheck = de-DE
+
+\documentclass[ a4paper,
+                oneside,
+                toc=bibliography,
+                toc=listof
+                ]{scrbook}
+
+\input{settings}
+
+% Path to .bib file for BibLatex
+\addbibresource{bibliography.bib}
+% \addbibresource{someOtherBibFile}
+
+\author{Max Mustermann}
+\placeOfBirth{Stuttgart}
+\address{Seidenstraße 36, 70174 Stuttgart}
+\major{Mechatronics}
+\title{How to train a hamster}
+\titleTranslated{Wie man einen Hamster trainiert}
+\matrnr{1234567}
+%\signature{example-image-a} % path to your scanned signature as image for declaration of originality
+\date{\today}
+\supervisor{My supervisor, M.Sc.}
+\professor{Prof. Dr.-Ing. Oliver Riedel}
+
+\begin{document} 
+    \frontmatter
+    \makeISWtitle
+
+	\cleardoublepage
+	\setcounter{page}{1} % start at page (i) after title page
+    \declarationOfOriginality
+
+    % Kurzfassung/Abstract
+    \input{chapters/Abstract}
+    
+    \cleardoublepage
+    \currentpdfbookmark{\contentsname}{Inhalt}
+    \tableofcontents
+       
+
+    \mainmatter
+    % ********************************************************************
+    % Write your own contents here:
+    % ********************************************************************
+    
+    % TODO: remove this \nocite{*} command. This is only to demonstrate the bibliography
+    \nocite{*}
+
+
+    \input{chapters/Introduction}
+    \input{chapters/Examples}
+    \input{chapters/Tooling}
+    
+    \chapter{Conclusions}
+
+    % ********************************************************************
+    % End of contents
+    % ********************************************************************
+    
+    \cleardoublepage
+    \printbibliography
+    
+     \cleardoublepage
+    \input{chapters/Acronyms}
+    
+    \cleardoublepage
+    \listoffigures
+    
+    \cleardoublepage
+    \listoftables
+    
+    \input{chapters/Symbols}
+    
+    % Appendix, if needed:
+    \appendix
+    \chapter{Example appendix chapter}
+
+
+\end{document}
