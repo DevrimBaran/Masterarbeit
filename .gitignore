@@ -13,6 +13,11 @@
 *.toc
 *.out
 __latexindent_temp.tex
+latexindent.pl
+/build
+/LatexIndent
+/path-helper-files
+/defaultSettings.yaml
 
 !images/logo-isw.pdf
 !Name_Thema.pdf

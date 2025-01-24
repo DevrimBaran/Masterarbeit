@@ -1,133 +1,199 @@
-% This sample bib file is taken from the "Dissertation-Template-KIT", licensed under MIT license, (c) 2019 Grinberg, Michael
-%
-% Source:
-% https://gitlab-ext.iosb.fraunhofer.de/grinbe/Dissertation-Template-KIT/raw/5257bda3baf14443b4977ab674f9b4c3296407e2/bib/example.bib
-%
-% Permission is hereby granted, free of charge, to any person obtaining a copy
-of this template and associated documentation files (the "Template"), to deal
-in the Template without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Template, and to permit persons to whom the Template is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Template.
-
-THE TEMPLATE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE TEMPLATE OR THE USE OR OTHER DEALINGS IN THE
-TEMPLATE.
-%
-%
-%
-
-% This file was created with JabRef 2.10.
-% Encoding: UTF8
-
-@manual{Kohm2013,
-  title = {KOMA-Script -- ein wandelbares LaTeX-2-Paket},
-  author = {Markus Kohm and Jens-Uwe Morawski},
-  year = {2013},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/koma-script/doc/scrguide.pdf},
-  langid =  {ngerman}
+@article{herlihy1991wait,
+	author = {Herlihy, Maurice},
+	title = {Wait-free synchronization},
+	year = {1991},
+	issue_date = {Jan. 1991},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {13},
+	number = {1},
+	issn = {0164-0925},
+	url = {https://doi.org/10.1145/114005.102808},
+	doi = {10.1145/114005.102808},
+	abstract = {A wait-free implementation of a concurrent data object is one that guarantees that any process can complete any operation in a finite number of steps, regardless of the execution speeds of the other processes. The problem of constructing a wait-free implementation of one data object from another lies at the heart of much recent work in concurrent algorithms, concurrent data structures, and multiprocessor architectures. First, we introduce a simple and general technique, based on reduction to a concensus protocol, for proving statements of the form, “there is no wait-free implementation of X by Y.” We derive a hierarchy of objects such that no object at one level has a wait-free implementation in terms of objects at lower levels. In particular, we show that atomic read/write registers, which have been the focus of much recent attention, are at the bottom of the hierarchy: thay cannot be used to construct wait-free implementations of many simple and familiar data types. Moreover, classical synchronization primitives such astest&set and fetch&add, while more powerful than read and write, are also computationally weak, as are the standard message-passing primitives. Second, nevertheless, we show that there do exist simple universal objects from which one can construct a wait-free implementation of any sequential object.},
+	journal = {ACM Trans. Program. Lang. Syst.},
+	month = jan,
+	pages = {124–149},
+	numpages = {26},
+	keywords = {wait-free synchronization, linearization},
+}
+@book{herlihy2012art,
+	author = {Herlihy, Maurice and Shavit, Nir},
+	title = {The Art of Multiprocessor Programming, Revised Reprint},
+	year = {2012},
+	isbn = {9780123973375},
+	publisher = {Morgan Kaufmann Publishers Inc.},
+	address = {San Francisco, CA, USA},
+	edition = {1st},
+	abstract = {Revised and updated with improvements conceived in parallel programming courses, The Art of Multiprocessor Programming is an authoritative guide to multicore programming. It introduces a higher level set of software development skills than that needed for efficient single-core programming. This book provides comprehensive coverage of the new principles, algorithms, and tools necessary for effective multiprocessor programming. Students and professionals alike will benefit from thorough coverage of key multiprocessor programming issues. This revised edition incorporates much-demanded updates throughout the book, based on feedback and corrections reported from classrooms since 2008 Learn the fundamentals of programming multiple threads accessing shared memory Explore mainstream concurrent data structures and the key elements of their design, as well as synchronization techniques from simple locks to transactional memory systems Visit the companion site and download source code, example Java programs, and materials to support and enhance the learning experience Table of Contents 1. Introduction 2. Mutual Exclusion 3. Concurrent Objects and Linearization 4. Foundations of Shared Memory 5. The Relative Power of Synchronization Methods 6. The Universality of Consensus 7. Spin Locks and Contention 8. Monitors and Blocking Synchronization 9. Linked Lists: the Role of Locking 10. Concurrent Queues and the ABA Problem 11. Concurrent Stacks and Elimination 12. Counting, Sorting and Distributed Coordination 13. Concurrent Hashing and Natural Parallelism 14. Skiplists and Balanced Search 15. Priority Queues 16. Futures, Scheduling and Work Distribution 17. Barriers 18. Transactional Memory Appendices}
 }
 
-@manual{Cubitt2013,
-  title = {The cleveref package},
-	author = {Toby Cubitt},
-	year = {2013},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf},
-  langid = {american}
+@article{kogan2012methodology,
+	author = {Kogan, Alex and Petrank, Erez},
+	title = {A methodology for creating fast wait-free data structures},
+	year = {2012},
+	issue_date = {August 2012},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {47},
+	number = {8},
+	issn = {0362-1340},
+	url = {https://doi.org/10.1145/2370036.2145835},
+	doi = {10.1145/2370036.2145835},
+	abstract = {Lock-freedom is a progress guarantee that ensures overall program progress. Wait-freedom is a stronger progress guarantee that ensures the progress of each thread in the program. While many practical lock-free algorithms exist, wait-free algorithms are typically inefficient and hardly used in practice. In this paper, we propose a methodology called fast-path-slow-path for creating efficient wait-free algorithms. The idea is to execute the efficient lock-free version most of the time and revert to the wait-free version only when things go wrong. The generality and effectiveness of this methodology is demonstrated by two examples. In this paper, we apply this idea to a recent construction of a wait-free queue, bringing the wait-free implementation to perform in practice as efficient as the lock-free implementation. In another work, the fast-path-slow-path methodology has been used for (dramatically) improving the performance of a wait-free linked-list.},
+	journal = {SIGPLAN Not.},
+	month = feb,
+	pages = {141–150},
+	numpages = {10},
+	keywords = {wait-free queues, non-blocking synchronization, lock-free algorithms, concurrent data structures}
 }
 
-@manual{Fear2005,
-  title = {Publication quality tables in LaTeX},
-	author = {Simon Fear},
-	year = {2005},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/booktabs/booktabs.pdf},
-  langid = {american}
-}
-
-@manual{Cochran2005,
-  title = {The Subfig Package},
-	author = {Steven Cochran and Vafa Karen-Pahlav},
-	year = {2005},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/subfig/subfig.pdf},
-  langid = {american}
-}
-
-@manual{Hoffmann2014,
-  title = {The Listings Package},
-	author = {Carsten Heinz and  Brooks Moses and  Jobst Hoffmann},
+@article{timnat2014practical,
+	author = {Timnat, Shahar and Petrank, Erez},
+	title = {A practical wait-free simulation for lock-free data structures},
 	year = {2014},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/listings/listings.pdf},
-  langid = {american}
+	issue_date = {August 2014},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {49},
+	number = {8},
+	issn = {0362-1340},
+	url = {https://doi.org/10.1145/2692916.2555261},
+	doi = {10.1145/2692916.2555261},
+	abstract = {Lock-free data structures guarantee overall system progress, whereas wait-free data structures guarantee the progress of each and every thread, providing the desirable non-starvation guarantee for concurrent data structures. While practical lock-free implementations are known for various data structures, wait-free data structure designs are rare. Wait-free implementations have been notoriously hard to design and often inefficient. In this work we present a transformation of lock-free algorithms to wait-free ones allowing even a non-expert to transform a lock-free data-structure into a practical wait-free one. The transformation requires that the lock-free data structure is given in a normalized form defined in this work. Using the new method, we have designed and implemented wait-free linked-list, skiplist, and tree and we measured their performance. It turns out that for all these data structures the wait-free implementations are only a few percent slower than their lock-free counterparts, while still guaranteeing non-starvation.},
+	journal = {SIGPLAN Not.},
+	month = feb,
+	pages = {357–368},
+	numpages = {12},
+	keywords = {lock-freedom, wait-freedom}
 }
 
-@manual{Sommerfeldt2004,
-  title = {The rotfloat package},
-	author = {Axel Sommerfeldt},
-	year = {2004},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/rotfloat/rotfloat.pdf},
-  langid = {american}
+@inproceedings{michael1996simple,
+	author = {Michael, Maged M. and Scott, Michael L.},
+	title = {Simple, fast, and practical non-blocking and blocking concurrent queue algorithms},
+	year = {1996},
+	isbn = {0897918002},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/248052.248106},
+	doi = {10.1145/248052.248106},
+	booktitle = {Proceedings of the Fifteenth Annual ACM Symposium on Principles of Distributed Computing},
+	pages = {267–275},
+	numpages = {9},
+	keywords = {compare_and_swap, concurrent queue, lock-free, multiprogramming, non-blocking},
+	location = {Philadelphia, Pennsylvania, USA},
+	series = {PODC '96}
 }
 
-@manual{Tantau2013,
-  title = {TikZ \& PGF},
-	author = {Till Tantau},
-	year = {2013},
-	url = {http://mirrors.ctan.org/graphics/pgf/base/doc/pgfmanual.pdf},
-  langid = {american}
+@InProceedings{xu2023rust,
+	author="Xu, Baowen
+	and Chu, Bei
+	and Fan, Hongcheng
+	and Feng, Yang",
+	editor="Yuan, Long
+	and Yang, Shiyu
+	and Li, Ruixuan
+	and Kanoulas, Evangelos
+	and Zhao, Xiang",
+	title="An Analysis of the Rust Programming Practice for Memory Safety Assurance",
+	booktitle="Web Information Systems and Applications",
+	year="2023",
+	publisher="Springer Nature Singapore",
+	address="Singapore",
+	pages="440--451",
+	abstract="Memory safety is a critical concern in software development, as related issues often lead to program crashes, vulnerabilities, and security breaches, leading to severe consequences for applications and systems. This paper provides a detailed analysis of how Rust effectively addresses memory safety concerns. The paper first introduces the concepts of ownership, reference and lifetime in Rust, highlighting how they contribute to ensuring memory safety. It then delves into an examination of common memory safety issues and how they manifest in popular programming languages. Rust's solutions to these issues are compared to those of other languages, emphasizing the benefits of using Rust for enhanced memory safety. In conclusion, this paper offers a comprehensive exploration of prevalent memory safety issues in programming and demonstrates how Rust effectively addresses them. With its encompassing mechanisms and strict rules, Rust proves to be a reliable choice for developers aiming to achieve enhanced memory safety in their programming endeavors.",
+	isbn="978-981-99-6222-8"
 }
 
-@manual{Feuersaenger2014,
-  title = {Manual for Package pgfplots},
-	author = {Christian Feuersänger},
-	year = {2014},
-	url = {http://mirrors.ctan.org/graphics/pgf/contrib/pgfplots/doc/pgfplots.pdf},
-  langid = {american}
+@misc{sharma2024rustembeddedsystemscurrent,
+      title={Rust for Embedded Systems: Current State, Challenges and Open Problems (Extended Report)}, 
+      author={Ayushi Sharma and Shashank Sharma and Santiago Torres-Arias and Aravind Machiry},
+      year={2024},
+      eprint={2311.05063},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2311.05063}, 
 }
 
-@manual{Lehman2013,
-  title = {The biblatex Package},
-	author = {Philipp Lehman and Philip Kime and Audrey Boruvka and Joseph Wright},
-	year = {2013},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf},
-  langid = {american}
+@misc{brandenburg2019multiprocessorrealtimelockingprotocols,
+      title={Multiprocessor Real-Time Locking Protocols: A Systematic Review}, 
+      author={Björn B. Brandenburg},
+      year={2019},
+      eprint={1909.09600},
+      archivePrefix={arXiv},
+      primaryClass={cs.DC},
+      url={https://arxiv.org/abs/1909.09600}, 
 }
 
-@manual{May2011,
-  title = {An Extension of the LaTeX-Theorem Environment},
-	author = {Wolfgang May and Andreas Schedler},
-	year = {2011},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/ntheorem/ntheorem.pdf},
-  langid = {american}
+@unknown{kode2024analysisSynchronization,
+	author = {Kode, Oluwatoyin and Oyemade, Temitope},
+	year = {2024},
+	month = {09},
+	pages = {},
+	title = {Analysis of Synchronization Mechanisms in Operating Systems},
+	doi = {10.48550/arXiv.2409.11271}
 }
 
-
-@manual{ams1999a,
-  title = {User’s Guide for the amsmath Package},
-	author = {{American Mathematical Society}},
-	year = {1999},
-	url = {http://mirrors.ctan.org/macros/latex/required/amslatex/math/amsldoc.pdf},
-  langid = {american}
+@inproceedings {huang2002improvingWaitFree,
+	author = {Hai Huang and Padmanabhan Pillai and Kang G. Shin},
+	title = {Improving {Wait-Free} Algorithms for Interprocess Communication in Embedded {Real-Time} Systems},
+	booktitle = {2002 USENIX Annual Technical Conference (USENIX ATC 02)},
+	year = {2002},
+	address = {Monterey, CA},
+	url = {https://www.usenix.org/conference/2002-usenix-annual-technical-conference/improving-wait-free-algorithms-interprocess},
+	publisher = {USENIX Association},
+	month = jun
 }
 
-@manual{ams1999b,
-  title = {Sample Paper for the amsmath Package},
-	author = {{American Mathematical Society}},
-	year = {1999},
-	url = {http://mirrors.ctan.org/macros/latex/required/amslatex/math/testmath.pdf},
-  langid = {american}
+@misc{pellegrini2020relevancewaitfreecoordinationalgorithms,
+      title={On the Relevance of Wait-free Coordination Algorithms in Shared-Memory HPC:The Global Virtual Time Case}, 
+      author={Alessandro Pellegrini and Francesco Quaglia},
+      year={2020},
+      eprint={2004.10033},
+      archivePrefix={arXiv},
+      primaryClass={cs.DC},
+      url={https://arxiv.org/abs/2004.10033}, 
 }
 
-@manual{talbot2014,
-  title = {User Manual for glossaries.sty v4.09},
-	author = {Nicola Talbot},
-	year = {2014},
-	url = {http://mirrors.ctan.org/macros/latex/contrib/glossaries/glossaries-user.pdf},
-  langid = {american}
+@inproceedings{dolz2016SPSC,
+	author = {Dolz, Manuel F. and del Rio Astorga, David and Fern\'{a}ndez, Javier and Garc\'{\i}a, J. Daniel and Garc\'{\i}a-Carballeira, F\'{e}lix and Danelutto, Marco and Torquati, Massimo},
+	title = {Embedding Semantics of the Single-Producer/Single-Consumer Lock-Free Queue into a Race Detection Tool},
+	year = {2016},
+	isbn = {9781450341967},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2883404.2883406},
+	doi = {10.1145/2883404.2883406},
+	abstract = {The rapid progress of multi-/many-core architectures has caused data-intensive parallel applications not yet be fully suited for getting the maximum performance. The advent of parallel programming frameworks offering structured patterns has alleviated developers' burden adapting such applications to parallel platforms. For example, the use of synchronization mechanisms in multithreaded applications is essential on shared-cache multi-core architectures. However, ensuring an appropriate use of their interfaces can be challenging, since different memory models plus instruction reordering at compiler/processor levels may influence the occurrence of data races. The benefits of race detectors are formidable in this sense, nevertheless if lock-free data structures with no high-level atomics are used, they may emit false positives. In this paper, we extend the ThreadSanitizer race detection tool in order to support semantics of the general Single-Producer/Single-Consumer (SPSC) lock-free parallel queue and to detect benign data races where it was correctly used. To perform our analysis, we leverage the FastFlow SPSC bounded lock-free queue implementation to test our extensions over a set of μ-benchmarks and real applications on a dual-socket Intel Xeon CPU E5-2695 platform. We demonstrate that this approach can reduce, on average, 30\% the number of data race warning messages.},
+	booktitle = {Proceedings of the 7th International Workshop on Programming Models and Applications for Multicores and Manycores},
+	pages = {20–29},
+	numpages = {10},
+	keywords = {Wait-/lock-free parallel structures, Semantics, Parallel programming, Data race detectors},
+	location = {Barcelona, Spain},
+	series = {PMAM'16}
+}
+
+@misc{torquati2010singleproducersingleconsumerqueuessharedcache,
+      title={Single-Producer/Single-Consumer Queues on Shared Cache Multi-Core Systems}, 
+      author={Massimo Torquati},
+      year={2010},
+      eprint={1012.1824},
+      archivePrefix={arXiv},
+      primaryClass={cs.DS},
+      url={https://arxiv.org/abs/1012.1824}, 
+}
+
+@inproceedings{Gidenstam2010CacheAwareLockFreeQueues,
+	author = {Gidenstam, Anders and Sundell, H\r{a}kan and Tsigas, Philippas},
+	title = {Cache-aware lock-free queues for multiple producers/consumers and weak memory consistency},
+	year = {2010},
+	isbn = {3642176526},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg},
+	abstract = {A lock-free FIFO queue data structure is presented in this paper. The algorithm supports multiple producers and multiple consumers and weak memory models. It has been designed to be cache-aware and work directly on weak memory models. It utilizes the cache behavior in concert with lazy updates of shared data, and a dynamic lock-free memory management scheme to decrease unnecessary synchronization and increase performance. Experiments on an 8- way multi-core platform show significantly better performance for the new algorithm compared to previous fast lock-free algorithms.},
+	booktitle = {Proceedings of the 14th International Conference on Principles of Distributed Systems},
+	pages = {302–317},
+	numpages = {16},
+	location = {Tozeur, Tunisia},
+	series = {OPODIS'10}
 }

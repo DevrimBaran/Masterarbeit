@@ -1,109 +1,257 @@
-% Beispiel für ein Projektexposé.
+% Example of a Project Exposé.
 \documentclass[ a4paper,
                 toc=bibliography
               ]{scrartcl}
 
 \usepackage{iswthesis}
 
-% Path to .bib file for BibLatex
+% Path to .bib file for BibLaTeX
 \addbibresource{bibliography.bib}
 
-%% Einstellungen:
-\usepackage[ngerman]{babel}
+%% Settings:
+\usepackage[english]{babel}
 \usepackage{hyperref}
-\usepackage[dvipsnames]{xcolor} % Farben mit Namen ansprechen
-\usepackage{pgfplots} % Plot-Engine
+\usepackage[dvipsnames]{xcolor} % Use named colors
+\usepackage{pgfplots} % Plot engine
 \pgfplotsset{compat=newest} 
-\usepackage{pgfgantt} % Paket für Gantt-Diagramme
+\usepackage{pgfgantt} % Package for Gantt charts
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{booktabs}
 
-\author{Max Mustermann}
-\title{Exposé: Name des Themas}
-\date{\today}
+\author{Devrim Baran Demir}
+\title{Exposé: Wait-free Synchronization for Interprocess Communication in Real-Time Systems}
+\date{January 27, 2025}
 
 \begin{document}
 
 \maketitle
-	
-\section{Einleitung}
+
+\section{Introduction}
 \subsection{Motivation}
 
-Das Exposé dient dazu, die gestellte Aufgabe zu reflektieren und in eigenen Worten wiederzugeben. 
-Darüber hinaus soll der Stand der Technik recherchiert und analysiert werden. Basierend auf der gestellten Aufgabe und dem aus dem Stand der Technik abgeleiteten Handlungsbedarf soll eine Zeitplanung erstellt werden. 
-Die Gliederung dieses Dokuments gibt die Grobstruktur des Exposés vor. Jedoch gilt auch für das Exposé, dass die Kapitelüberschriften und deren Reihenfolge der jeweiligen Arbeit und dem entsprechenden Themengebiet angepasst werden müssen.
+In modern manufacturing, real-time capable control systems are essential for the effective operation of machinery and equipment. Programming these controllers requires a specialized approach to meet strict temporal requirements. Both the operating system and the control program must satisfy real-time constraints to ensure processes run without delays or interruptions. Typically, real-time capable operating systems and system-level programming languages like C/C++ or Rust are employed to meet these stringent requirements.
 
-Das erste Kapitel (inkl. Unterkapitel) der Arbeit und dieses Exposé dienen dazu, folgende Fragen zu klären:
+Traditional synchronization mechanisms, such as mutexes or semaphores, can be problematic in real-time systems due to their unpredictable wait times and potential for deadlocks. These mechanisms often introduce latency and non-deterministic behavior, which are detrimental to the reliability and performance of real-time applications. \cite{herlihy1991wait, herlihy2012art, brandenburg2019multiprocessorrealtimelockingprotocols, kode2024analysisSynchronization}
+
+Consequently, there is a growing interest in \textbf{wait-free synchronization algorithms}, which guarantee that every operation completes in a finite number of steps, regardless of the number of competing threads. This predictability is crucial in real-time applications where deterministic behavior is paramount. Wait-free algorithms eliminate the possibility of indefinite blocking, ensuring that high-priority tasks are not starved by lower-priority ones. \cite{kogan2012methodology, herlihy1991wait}
+
+The Rust programming language offers a promising foundation for implementing such synchronization mechanisms, thanks to its stringent type system and memory safety guarantees. Rust's ownership model and compile-time checks prevent data races and ensure thread safety without incurring the runtime overhead associated with traditional locking mechanisms. Furthermore, Rust's performance characteristics make it well-suited for real-time systems that demand low latency and high throughput. \cite{xu2023rust,sharma2024rustembeddedsystemscurrent} 
+
+Interprocess communication (IPC) is a critical component in real-time systems, enabling efficient data exchange between processes. Efficient and safe IPC mechanisms are necessary to maintain the integrity and performance of the system. Implementing wait-free data structures for IPC can significantly enhance the system's responsiveness and reliability, making it better suited for real-time applications. \cite{timnat2014practical, michael1996simple, huang2002improvingWaitFree,pellegrini2020relevancewaitfreecoordinationalgorithms}
+
+This project aims to identify, implement, compare, and validate suitable wait-free data structures for interprocess communication in real-time systems using Rust. By leveraging Rust's safety and performance features, the project seeks to develop robust IPC mechanisms that meet the stringent requirements of real-time applications.
+
+The main motivations for this work include:
 
 \begin{itemize}
-    \item In welchem Themengebiet bewegt sich die Arbeit?
-    \item Worin liegt das Problem? Warum muss überhaupt an dem Themengebiet gearbeitet werden?
-    \item Was ist meine Aufgabe? Was ist mein Beitrag zu der Lösung des Problems/der Fragestellung?
-    \item Was ist das Ziel der Aufgabe bzw. meiner Arbeit?
-    \item Wie ordnet sich das Ziel der Arbeit/die Lösung der Arbeit in die Lösung des Gesamtproblems ein?
+	\item \textbf{Enhancing Real-Time Performance}: Developing synchronization mechanisms that minimize latency and ensure predictable execution times.
+	\item \textbf{Improving System Reliability}: Eliminating potential deadlocks and race conditions through wait-free algorithms.
+	\item \textbf{Leveraging Modern Programming Languages}: Utilizing Rust's advanced features to create efficient and safe concurrent data structures.
+	\item \textbf{Contributing to Real-Time Systems Research}: Providing empirical data and validated implementations that can be utilized in industrial applications.
 \end{itemize}
 
-Überlegen Sie sich eine sinnvolle Argumentationskette, die auf das Thema hinführt.
+Thus, this work addresses the critical need for efficient synchronization in real-time systems, leveraging wait-free algorithms and the Rust programming language to develop advanced IPC solutions.
+
+\subsection{Objectives}
+
+The primary objective of this work is to \textbf{identify and implement wait-free data structures} suitable for \textbf{interprocess communication} in \textbf{real-time systems}. Specifically, the goals are as follows:
+
+\begin{itemize}
+	\item \textbf{Identify} appropriate wait-free data structures for IPC, focusing on \textbf{Single-Producer Single-Consumer (SPSC)}, \textbf{Multiple-Producer Multiple-Consumer (MPMC) queues} and mixed queues.
+	\item \textbf{Implement} these data structures in the Rust programming language, ensuring they meet real-time requirements. Based on this develop an IPC solution using \textbf{shared memory} that leverages the selected wait-free data structures.
+	\item \textbf{Compare and analyze} the implemented data structures in terms of \textbf{performance}, \textbf{scalability}, and \textbf{real-time compatibility}.
+	\item \textbf{Validate} the data structures through \textbf{empirical testing} and \textbf{benchmarking} to confirm their suitability for real-time systems.
+	\item \textbf{Identify} the most effective algorithms for IPC in real-time systems based on the results obtained.
+\end{itemize}
+
+\subsection{Methodology}
+
+The methodology to achieve the aforementioned objectives is structured into several phases:
+
+\begin{enumerate}
+	\item \textbf{Literature Review and Analysis}: Investigate the current state of the art in wait-free synchronization and IPC in real-time systems. Identify relevant research papers and existing implementations.
+	
+	\item \textbf{Selection of Data Structures}: Based on the literature review, select suitable wait-free data structures (SPSC and MPMC queues) appropriate for IPC in real-time systems.
+	
+	\item \textbf{Implementation in Rust}: Develop the selected data structures in Rust, ensuring proper memory management and thread safety. Based on this we will create an IPC mechanism using shared memory that incorporates the validated wait-free data structures.
+	
+	\item \textbf{Benchmarking and Comparison}: Conduct performance tests and compare the data structures based on throughput, latency, and scalability under various workloads.
+	
+	\item \textbf{Validation}: Analyze the test results to validate the suitability of the data structures for real-time systems. Identify the most effective algorithms for IPC in real-time applications.
+	
+	\item \textbf{Documentation and Final Report}: Compile the research findings and implementation results into a cohesive thesis document. Review, revise, and finalize the thesis for submission.
+\end{enumerate}
+
+This approach is structured and scheduled as depicted in \autoref{fig:Gantt-chart-2}.
+
+\section{State of the Art}
+
+Synchronization in parallel systems are a critical aspect of ensuring data consistency and system reliability. Traditional synchronization mechanisms, such as mutexes, spinlocks, and semaphores, have been widely used but often fall short in real-time environments due to their unpredictable latency and potential for causing deadlocks \cite{herlihy1991wait, herlihy2012art}.
+
+\textbf{Wait-free synchronization algorithms} offer a compelling alternative by guaranteeing that every thread can complete its operations in a finite number of steps, thereby eliminating the issues of indefinite blocking and ensuring high predictability. These algorithms are especially beneficial in real-time systems where timing guarantees are essential \cite{kogan2012methodology,herlihy1991wait}.
+
+\subsection{Wait-Free Queues}
+
+Wait-free queues are fundamental for interprocess communication, enabling safe and efficient data exchange between processes without the need for locking mechanisms. Two primary types of wait-free queues are:
+
+\subsubsection{Single-Producer Single-Consumer (SPSC) Queues}
+
+SPSC queues are designed for scenarios where there is exactly one producer and one consumer. Their simplicity allows for highly efficient implementations with minimal overhead. These queues are typically implemented as ring buffers, where the producer and consumer maintain separate indices for writing and reading, respectively.
+
+\textbf{Advantages}:
+\begin{itemize}
+	\item \textbf{Simplicity and Efficiency}: Minimal synchronization overhead due to single producer and consumer.
+	\item \textbf{True Wait-Freedom}: Each operation completes in a fixed number of steps without contention.
+	\item \textbf{Predictable Latency}: Constant-time operations make them suitable for real-time applications.
+\end{itemize}
+
+\textbf{Disadvantages}:
+\begin{itemize}
+	\item \textbf{Limited to Single Producer and Consumer}: Not suitable for multiple producers or consumers without modifications.
+	\item \textbf{Fixed Capacity}: Typically implemented with a bounded buffer size, requiring handling of full or empty states.
+\end{itemize}
+\cite{dolz2016SPSC,torquati2010singleproducersingleconsumerqueuessharedcache}
+
+\subsubsection{Multiple-Producer Multiple-Consumer (MPMC) Queues}
+
+MPMC queues on the other hand support multiple producers and consumers. They are more complex to implement due to the need to handle concurrent access by multiple threads, often relying on atomic operations and careful memory management to ensure consistency.
+
+\textbf{Advantages}:
+\begin{itemize}
+	\item \textbf{High Concurrency}: Supports multiple producers and consumers, making them suitable for scalable applications.
+	\item \textbf{Non-Blocking}: Typically lock-free, ensuring system-wide progress even under high contention.
+\end{itemize}
 
 
-\subsection{Zielsetzung}
+\textbf{Disadvantages}:
+\begin{itemize}
+	\item \textbf{Increased Complexity}: More sophisticated algorithms are required to manage concurrent access.
+	\item \textbf{Potential for Contention}: Higher contention can lead to increased latency and reduced throughput.
+	\item \textbf{Memory Reclamation Challenges}: Safe memory management in lock-free structures can be complex, especially in languages without garbage collection.
+\end{itemize}
+\cite{Gidenstam2010CacheAwareLockFreeQueues}, \cite{timnat2014practical}
 
-\subsection{Vorgehensweise}
-Das hier gezeigte Beispielexposé bietet keine vollständige Vorlage für die finale Ausarbeitung. Es wird daher empfohlen, die relevanten Inhalte nach der Abgabe des Exposés in die \texttt{Name\_Thema.tex} Vorlage zu übertragen, welche auch besser strukturiert ist.
+\subsection{Background and Relevant Research}
 
-\section{Stand der Technik}
+\subsubsection{Background}
 
-\section{Arbeitspaket- und Zeitplan}
+
+
+\subsubsection{Relevant Research}
+
+Several key studies and papers have significantly contributed to the development and understanding of wait-free synchronization mechanisms:
+
+\begin{itemize}
+	\item \textbf{Herlihy, M., \& Shavit, N. (2012)}. \textit{The Art of Multiprocessor Programming}. \textit{Morgan Kaufmann}.
+	      A comprehensive textbook that covers various concurrent programming techniques, including wait-free and lock-free data structures. It is a good introduction into designing concurrent/parallel systems \cite{herlihy2012art}.
+
+	\item \textbf{Herlihy, M. (1991)}. \textit{Wait-Free Synchronization}. \textit{ACM Transactions on Programming Languages and Systems (TOPLAS)}.
+	      This seminal paper introduces the concept of wait-free synchronization and provides foundational algorithms and theoretical guarantees \cite{herlihy1991wait}.
+	
+	\item \textbf{Kogan, A., \& Petrank, E. (2012)}. \textit{A Methodology for Creating Fast Wait-Free Data Structures}. \textit{Proceedings of the 17th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP)}.
+	      This paper presents techniques for designing efficient wait-free data structures based on existing lock-free implementations \cite{kogan2012methodology}.
+	
+	\item \textbf{Timnat, S., \& Petrank, E. (2014)}. \textit{A Practical Wait-Free Simulation for Lock-Free Data Structures}. \textit{ACM SIGPLAN Notices}.
+	      Discusses methods to transform lock-free data structures into wait-free ones, enhancing their applicability in real-time systems \cite{timnat2014practical}.
+	
+	\item \textbf{Michael, M. M., \& Scott, M. L. (1996)}. \textit{Simple, Fast, and Practical Non-Blocking and Blocking Concurrent Queue Algorithms}. \textit{Proceedings of the 1996 ACM SIGOPS Fourth Workshop on Operating System Principles (WOSP)}.
+	      Introduces a lock free MPMC queue \cite{michael1996simple}.
+
+	\item \textbf{Huang, J., \& Abali, B. (2002)}. \textit{Improving the Performance of Wait-Free Queues}. \textit{Proceedings of the 16th International Symposium on Distributed Computing (DISC)}.
+	      Discusses techniques to enhance the performance of wait-free queues, particularly in high-contention scenarios \cite{huang2002improvingWaitFree}.
+\end{itemize}
+
+\section{Work Package and Time Plan}
 
 \begin{figure*}[htbp]
-    \begin{center}
-        
-        % Dokumentation ist unter http://mirrors.ctan.org/graphics/pgf/contrib/pgfgantt/pgfgantt.pdf einsehbar. Hier sind alle Einstellmöglichkeiten erklärt.
-        \begin{ganttchart}[vgrid,
-            y unit title = 0.7cm,
-            y unit chart = 0.5cm,
-            bar/.append style={fill=red!70},
-            bar incomplete/.append style={fill=black!30},
-            bar top shift =0.2,
-            bar height=.5,
-            group/.append style={draw=black,fill=NavyBlue!70},
-            group incomplete/.append style={draw=black, fill=black!50},
-            group left shift=0,
-            group right shift=0,
-            group height=.7,
-            group peaks height = 0,
-            milestone height = 0.7,
-            milestone/.append style={fill=orange},
-            progress=today,
-            progress label text={\pgfmathprintnumber[verbatim,precision=0]{#1}\% abgeschlossen}, % Anzeige des Fortschritts auf deutsch (statt "completed")
-            today = 4, % wenn today gesetzt ist wird eine Linie mit dem aktuellen Stand angezeigt.
-            today label=HEUTE, % Label des aktuellen Standes/Datums deutsch (statt "TODAY")
-            ]{1}{30} % Zeitraum einstellen, von wann bis wann
-            
-            \gantttitle{2024}{10} \gantttitle{2025}{20} \\ % wie viele Kalenderwochen in welchem Jahr
-            \gantttitlelist{43,...,52}{1} \gantttitlelist{1,...,20}{1} \\ % kalenderwochen durchnummerieren.
-            
-            %% Hier beginnt der Inhalt der Gantt-Diagramms
-            
-            \ganttgroup{Paket 1}{1}{12} \\ % Task {von}{bis}  als Wochennummern
-            \ganttbar{Aufgabe 1}{1}{8} \\ % Subtask
-            \ganttlinkedbar{Aufgabe 2}{9}{12} \\ %Subtask verbunden mit letzter Aufgabe
-            %\ganttmilestone{Milestone}{12} \\ % Meilenstein
-            \ganttbar{Aufgabe 3}{13}{20} 
-            
-            
-            \\ \ganttnewline[thick, black] % Trennlinien
-        
-        \end{ganttchart}
-    \end{center}
-    \caption{Gantt-Diagramm des geplanten Arbeitsablaufs.}\label{fig:Gantt-chart-2}
+	\begin{center}
+
+		% Documentation is available at http://mirrors.ctan.org/graphics/pgf/contrib/pgfgantt/pgfgantt.pdf. All configuration options are explained here.
+		\begin{ganttchart}[
+				vgrid,
+				y unit title = 0.7cm,
+				y unit chart = 0.6cm,
+				x unit = 0.4cm,
+				bar/.append style={fill=red!70},
+				bar incomplete/.append style={fill=black!30},
+				bar top shift =0.3,
+				bar height=.5,
+				group/.append style={draw=black,fill=NavyBlue!70},
+				group incomplete/.append style={draw=black, fill=black!50},
+				group left shift=0,
+				group right shift=0,
+				group height=.7,
+				group peaks height = 0,
+				milestone height = 0.7,
+				milestone/.append style={fill=orange},
+				progress=today,
+				progress label text={\pgfmathprintnumber[verbatim,precision=0]{#1}\% completed},
+				today = 1, % Project has not started
+				today label=Today,
+			]{1}{32} % 26 weeks for 6 months
+
+			\gantttitlelist{1,...,32}{1} \\ % Week numbering
+
+			%% Begin Gantt chart content
+
+			\ganttgroup{Literature Review}{1}{4} \\
+			\ganttbar{Research}{1}{2} \\
+
+			\ganttnewline[thick, black] % Divider line
+
+			\ganttgroup{Exams}{3}{6} \\
+
+			\ganttnewline[thick, black] % Divider line
+
+			\ganttgroup{Design \& Selection}{5}{8} \\
+			\ganttbar{Data Structures}{7}{7} \\
+			\ganttbar{Strategy}{8}{8} \\
+
+			\ganttnewline[thick, black] % Divider line
+
+			\ganttgroup{Implementation}{9}{14} \\
+			\ganttbar{SPSC Queue}{9}{11} \\
+			\ganttbar{MPMC Queue}{12}{14} \\
+
+			\ganttnewline[thick, black] % Divider line
+
+			\ganttgroup{Testing}{15}{18} \\
+			\ganttbar{Develop Cases}{15}{16} \\
+			\ganttbar{Benchmarking}{17}{18} \\
+			\ganttbar{Results}{18}{18} \\
+
+			\ganttnewline[thick, black] % Divider line
+
+			\ganttgroup{Documentation}{20}{26} \\
+			\ganttbar{Write Thesis}{20}{24} \\
+			\ganttbar{Review}{25}{26} \\
+
+		\end{ganttchart}
+	\end{center}
+	\caption{Gantt Chart of the Planned Workflow}\label{fig:Gantt-chart-2}
 \end{figure*}
 
+The work plan outlined in \autoref{fig:Gantt-chart-2} spans a period of approximately six months, structured into six main phases:
 
-Beschreibung des Arbeitsplans in \autoref{fig:Gantt-chart-2} \ldots
+\begin{enumerate}
+	\item \textbf{Literature Review and Analysis (Weeks 1-4)}: Conduct an in-depth review of existing research on wait-free synchronization and IPC in real-time systems. Identify key algorithms, data structures, and implementation strategies.
+	
+	\item \textbf{Design and Selection (Weeks 5-8)}: Based on the literature review, select the most suitable wait-free data structures (SPSC and MPMC queues) for implementation. Design the overall architecture and implementation strategy.
+	
+	\item \textbf{Implementation (Weeks 9-14)}: Develop the selected data structures in Rust. Implement the SPSC queue first, followed by the more complex MPMC queue, ensuring adherence to wait-free principles.
+	
+	\item \textbf{Testing and Benchmarking (Weeks 15-20)}: Create comprehensive test cases to validate the correctness and performance of the implemented data structures. Conduct benchmarking to measure throughput, latency, and scalability under various workloads.
+	
+	\item \textbf{IPC Solution Development (Weeks 21-24)}: Design and implement an IPC mechanism using shared memory that leverages the validated wait-free data structures. Ensure seamless integration and real-time compatibility.
+	
+	\item \textbf{Documentation and Finalization (Weeks 25-26)}: Compile the research findings and implementation results into a cohesive thesis document. Review, revise, and finalize the thesis for submission.
+\end{enumerate}
 
-% ********************************************************************
-% End of contents
-% ********************************************************************
-\cleardoublepage
+This structured approach ensures a systematic progression from theoretical research to practical implementation and validation, culminating in a comprehensive thesis that addresses the research objectives.
+
+\section{References}
+
 \printbibliography
 
 \end{document}
