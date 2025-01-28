@@ -132,35 +132,7 @@ MPMC queues on the other hand support multiple producers and consumers. They are
 \end{itemize}
 \cite{Gidenstam2010CacheAwareLockFreeQueues}, \cite{timnat2014practical}
 
-\subsection{Background and Relevant Research}
-
-\subsubsection{Background}
-
-
-
 \subsubsection{Relevant Research}
-
-Several key studies and papers have significantly contributed to the development and understanding of wait-free synchronization mechanisms:
-
-\begin{itemize}
-	\item \textbf{Herlihy, M., \& Shavit, N. (2012)}. \textit{The Art of Multiprocessor Programming}. \textit{Morgan Kaufmann}.
-	      A comprehensive textbook that covers various concurrent programming techniques, including wait-free and lock-free data structures. It is a good introduction into designing concurrent/parallel systems \cite{herlihy2012art}.
-
-	\item \textbf{Herlihy, M. (1991)}. \textit{Wait-Free Synchronization}. \textit{ACM Transactions on Programming Languages and Systems (TOPLAS)}.
-	      This seminal paper introduces the concept of wait-free synchronization and provides foundational algorithms and theoretical guarantees \cite{herlihy1991wait}.
-	
-	\item \textbf{Kogan, A., \& Petrank, E. (2012)}. \textit{A Methodology for Creating Fast Wait-Free Data Structures}. \textit{Proceedings of the 17th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP)}.
-	      This paper presents techniques for designing efficient wait-free data structures based on existing lock-free implementations \cite{kogan2012methodology}.
-	
-	\item \textbf{Timnat, S., \& Petrank, E. (2014)}. \textit{A Practical Wait-Free Simulation for Lock-Free Data Structures}. \textit{ACM SIGPLAN Notices}.
-	      Discusses methods to transform lock-free data structures into wait-free ones, enhancing their applicability in real-time systems \cite{timnat2014practical}.
-	
-	\item \textbf{Michael, M. M., \& Scott, M. L. (1996)}. \textit{Simple, Fast, and Practical Non-Blocking and Blocking Concurrent Queue Algorithms}. \textit{Proceedings of the 1996 ACM SIGOPS Fourth Workshop on Operating System Principles (WOSP)}.
-	      Introduces a lock free MPMC queue \cite{michael1996simple}.
-
-	\item \textbf{Huang, J., \& Abali, B. (2002)}. \textit{Improving the Performance of Wait-Free Queues}. \textit{Proceedings of the 16th International Symposium on Distributed Computing (DISC)}.
-	      Discusses techniques to enhance the performance of wait-free queues, particularly in high-contention scenarios \cite{huang2002improvingWaitFree}.
-\end{itemize}
 
 \section{Work Package and Time Plan}
 
@@ -236,6 +208,8 @@ The work plan outlined in \autoref{fig:Gantt-chart-2} spans a period of approxim
 
 \begin{enumerate}
 	\item \textbf{Literature Review and Analysis (Weeks 1-4)}: Conduct an in-depth review of existing research on wait-free synchronization and IPC in real-time systems. Identify key algorithms, data structures, and implementation strategies.
+	
+	\item \textbf{Exams (Weeks 3-6)}: Complete any ongoing exams that may overlap with master thesis timeline.
 	
 	\item \textbf{Design and Selection (Weeks 5-8)}: Based on the literature review, select the most suitable wait-free data structures (SPSC and MPMC queues) for implementation. Design the overall architecture and implementation strategy.
 	
