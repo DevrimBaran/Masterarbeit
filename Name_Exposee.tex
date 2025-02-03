@@ -32,7 +32,7 @@
 
 In modern manufacturing, real-time capable control systems are essential for the effective operation of machinery and equipment. Programming these controllers requires a specialized approach to meet strict temporal requirements. Both the operating system and the control program must satisfy real-time constraints to ensure processes run without delays or interruptions. Typically, real-time capable operating systems and system-level programming languages like C/C++ or Rust are employed to meet these stringent requirements.
 
-Traditional synchronization mechanisms, such as mutexes or semaphores, can be problematic in real-time systems due to their unpredictable wait times and potential for deadlocks. These mechanisms often introduce latency and non-deterministic behavior, which are detrimental to the reliability and performance of real-time applications. \cite{herlihy1991wait, herlihy2012art, brandenburg2019multiprocessorrealtimelockingprotocols, kode2024analysisSynchronization}
+Traditional synchronization mechanisms, such as mutexes or semaphores, can be problematic in real-time systems due to their unpredictable wait times and potential for deadlocks. These mechanisms often introduce latency and non-deterministic behavior, which are detrimental to the reliability and performance of real-time applications. \cite{herlihy1991wait, brandenburg2019multiprocessorrealtimelockingprotocols, kode2024analysisSynchronization}
 
 Consequently, there is a growing interest in \textbf{wait-free synchronization algorithms}, which guarantee that every operation completes in a finite number of steps, regardless of the number of competing threads. This predictability is crucial in real-time applications where deterministic behavior is paramount. Wait-free algorithms eliminate the possibility of indefinite blocking, ensuring that high-priority tasks are not starved by lower-priority ones. \cite{kogan2012methodology, herlihy1991wait}
 
@@ -87,9 +87,9 @@ This approach is structured and scheduled as depicted in \autoref{fig:Gantt-char
 
 \section{State of the Art}
 
-Synchronization in parallel systems are a critical aspect of ensuring data consistency and system reliability. Traditional synchronization mechanisms, such as mutexes, spinlocks, and semaphores, have been widely used but often fall short in real-time environments due to their unpredictable latency and potential for causing deadlocks \cite{herlihy1991wait, herlihy2012art}.
+Synchronization in parallel systems are a critical aspect of ensuring data consistency and system reliability. Traditional synchronization mechanisms, such as mutexes, spinlocks, and semaphores, have been widely used but often fall short in real-time environments due to their unpredictable latency and potential for causing deadlocks. \cite{herlihy1991wait,Brandenburg2010SpinBasedReaderWriterSynchronization,kode2024analysisSynchronization}
 
-\textbf{Wait-free synchronization algorithms} offer a compelling alternative by guaranteeing that every thread can complete its operations in a finite number of steps, thereby eliminating the issues of indefinite blocking and ensuring high predictability. These algorithms are especially beneficial in real-time systems where timing guarantees are essential \cite{kogan2012methodology,herlihy1991wait}.
+\textbf{Wait-free synchronization algorithms} offer a compelling alternative by guaranteeing that every thread can complete its operations in a finite number of steps, thereby eliminating the issues of indefinite blocking and ensuring high predictability. These algorithms are especially beneficial in real-time systems where timing guarantees are essential. \cite{kogan2012methodology,herlihy1991wait}
 
 \subsection{Wait-Free Queues}
 
@@ -115,7 +115,7 @@ SPSC queues are designed for scenarios where there is exactly one producer and o
 
 \subsubsection{Multiple-Producer Multiple-Consumer (MPMC) Queues}
 
-MPMC queues on the other hand support multiple producers and consumers. They are more complex to implement due to the need to handle concurrent access by multiple threads, often relying on atomic operations and careful memory management to ensure consistency.
+MPMC queues on the other hand support multiple producers and consumers. They are more complex to implement due to the need to handle concurrent access by multiple threads, often relying on atomic operations and careful memory management to ensure consistency. These queues often use linked lists that use the CAS (Compare-And-Swap) atomic hardware instruction or other dynamic data structures like bounded ring buffers to accommodate variable numbers of producers and consumers. \newpage
 
 \textbf{Advantages}:
 \begin{itemize}
@@ -130,12 +130,28 @@ MPMC queues on the other hand support multiple producers and consumers. They are
 	\item \textbf{Potential for Contention}: Higher contention can lead to increased latency and reduced throughput.
 	\item \textbf{Memory Reclamation Challenges}: Safe memory management in lock-free structures can be complex, especially in languages without garbage collection.
 \end{itemize}
-\cite{Gidenstam2010CacheAwareLockFreeQueues}, \cite{timnat2014practical}
+\cite{Gidenstam2010CacheAwareLockFreeQueues}, \cite{timnat2014practical,michael1996simple}
 
 \subsubsection{Relevant Research}
+In the last years several works have been published on the topic of wait-free synchronization and interprocess communication in real-time systems. Efficient point-to-point communication is essential in real-time systems, and wait-free data structures play a crucial role in achieving this. Several studies have focused on developing wait-free synchronization algorithms for various applications. For example Torquati et al. proposed a wait-free SPSC FIFO (First In First Out) queue for shared cache multi-core systems. He presents an efficient implementation of an unbounded wait-free SPSC FIFO queue and discusses also its correctness proof in his work. \cite{torquati2010singleproducersingleconsumerqueuessharedcache}
+
+Further, Herlihy introduced the concept of wait-free synchronization, providing a foundation for subsequent research. This work gives a good overview on how wait-free sysnchronization works. \cite{herlihy1991wait}
+
+Kogan and Petrank \cite{kogan2012methodology} additionally proposed a methodology for creating wait-free data structures, which gives us a sclabele and fast wait-free data structure, while bounding the number of steps requiring to complete operations.
+
+Eventhough we are looking at lock free or wait free methods for interprocess communication in real-time systems it is also worth to look at the work of Brandenburg, to have an oversight of what else is there too. He explored multiprocessor real-time locking protocols, highlighting the challenges and solutions in achieving real-time guarantees, which gives a good overview on available locking protocols for multiprocesser real-time systems. \cite{brandenburg2019multiprocessorrealtimelockingprotocols}
+
+Timnat et al. \cite{timnat2014practical} presented a practical wait-free algorithm which uses MPMC techniques as a central component for its mechanisms, demonstrating its scalability and performance in multi-core environments.
+
+Recent studies have also focused on the application of wait-free synchronization in specific contexts. For example, Dolz et al. \cite{dolz2016SPSC} developed a wait-free SPSC queue tailored for real-time systems with bounded latency requirements. Pellegrini et al. \cite{pellegrini2020relevancewaitfreecoordinationalgorithms} discussed the relevance of wait-free coordination algorithms in real-time systems, emphasizing their importance for ensuring system reliability and performance.
+
+On the other hand Huang et al. \cite{huang2002improvingWaitFree} proposed a method to improve the performance of wait-free algorithms by reducing the number of steps required to complete operations, which can be beneficial for interprocess communication in real-time applications.
+
+These works collectively contribute to the understanding and advancement of wait-free synchronization and IPC mechanisms in real-time systems, providing valuable insights and practical solutions for addressing the challenges in this domain.
 
 \section{Work Package and Time Plan}
 
+The work plan for this project is structured into six phases, each focusing on a specific aspect of the research and implementation process. The timeline for each phase is outlined in the Gantt chart shown in \autoref{fig:Gantt-chart-2}. The project is scheduled to be completed within six months, with a detailed breakdown of tasks and milestones as follows:
 \begin{figure*}[htbp]
 	\begin{center}
 
@@ -204,22 +220,22 @@ MPMC queues on the other hand support multiple producers and consumers. They are
 	\caption{Gantt Chart of the Planned Workflow}\label{fig:Gantt-chart-2}
 \end{figure*}
 
-The work plan outlined in \autoref{fig:Gantt-chart-2} spans a period of approximately six months, structured into six main phases:
+\newpage
+
+The phases are structured as follows:
 
 \begin{enumerate}
-	\item \textbf{Literature Review and Analysis (Weeks 1-4)}: Conduct an in-depth review of existing research on wait-free synchronization and IPC in real-time systems. Identify key algorithms, data structures, and implementation strategies.
+	\item \textbf{Literature Review (Weeks 1-4)}: Conduct an in-depth review of existing research on wait-free synchronization and IPC in real-time systems. Identify key algorithms, data structures, and implementation strategies.
 	
 	\item \textbf{Exams (Weeks 3-6)}: Complete any ongoing exams that may overlap with master thesis timeline.
 	
 	\item \textbf{Design and Selection (Weeks 5-8)}: Based on the literature review, select the most suitable wait-free data structures (SPSC and MPMC queues) for implementation. Design the overall architecture and implementation strategy.
 	
-	\item \textbf{Implementation (Weeks 9-14)}: Develop the selected data structures in Rust. Implement the SPSC queue first, followed by the more complex MPMC queue, ensuring adherence to wait-free principles.
+	\item \textbf{Implementation (Weeks 9-14)}: Develop the selected solution in Rust for IPC for real-time systems. Implement the SPSC queue first, followed by the more complex MPMC queue, ensuring adherence to wait-free principles.
 	
 	\item \textbf{Testing and Benchmarking (Weeks 15-20)}: Create comprehensive test cases to validate the correctness and performance of the implemented data structures. Conduct benchmarking to measure throughput, latency, and scalability under various workloads.
 	
-	\item \textbf{IPC Solution Development (Weeks 21-24)}: Design and implement an IPC mechanism using shared memory that leverages the validated wait-free data structures. Ensure seamless integration and real-time compatibility.
-	
-	\item \textbf{Documentation and Finalization (Weeks 25-26)}: Compile the research findings and implementation results into a cohesive thesis document. Review, revise, and finalize the thesis for submission.
+	\item \textbf{Documentation (Weeks 25-26)}: Compile the research findings and implementation results into a cohesive thesis document. Review, revise, and finalize the thesis for submission.
 \end{enumerate}
 
 This structured approach ensures a systematic progression from theoretical research to practical implementation and validation, culminating in a comprehensive thesis that addresses the research objectives.

@@ -17,16 +17,6 @@
 	numpages = {26},
 	keywords = {wait-free synchronization, linearization},
 }
-@book{herlihy2012art,
-	author = {Herlihy, Maurice and Shavit, Nir},
-	title = {The Art of Multiprocessor Programming, Revised Reprint},
-	year = {2012},
-	isbn = {9780123973375},
-	publisher = {Morgan Kaufmann Publishers Inc.},
-	address = {San Francisco, CA, USA},
-	edition = {1st},
-	abstract = {Revised and updated with improvements conceived in parallel programming courses, The Art of Multiprocessor Programming is an authoritative guide to multicore programming. It introduces a higher level set of software development skills than that needed for efficient single-core programming. This book provides comprehensive coverage of the new principles, algorithms, and tools necessary for effective multiprocessor programming. Students and professionals alike will benefit from thorough coverage of key multiprocessor programming issues. This revised edition incorporates much-demanded updates throughout the book, based on feedback and corrections reported from classrooms since 2008 Learn the fundamentals of programming multiple threads accessing shared memory Explore mainstream concurrent data structures and the key elements of their design, as well as synchronization techniques from simple locks to transactional memory systems Visit the companion site and download source code, example Java programs, and materials to support and enhance the learning experience Table of Contents 1. Introduction 2. Mutual Exclusion 3. Concurrent Objects and Linearization 4. Foundations of Shared Memory 5. The Relative Power of Synchronization Methods 6. The Universality of Consensus 7. Spin Locks and Contention 8. Monitors and Blocking Synchronization 9. Linked Lists: the Role of Locking 10. Concurrent Queues and the ABA Problem 11. Concurrent Stacks and Elimination 12. Counting, Sorting and Distributed Coordination 13. Concurrent Hashing and Natural Parallelism 14. Skiplists and Balanced Search 15. Priority Queues 16. Futures, Scheduling and Work Distribution 17. Barriers 18. Transactional Memory Appendices}
-}
 
 @article{kogan2012methodology,
 	author = {Kogan, Alex and Petrank, Erez},
@@ -86,23 +76,20 @@
 }
 
 @InProceedings{xu2023rust,
-	author="Xu, Baowen
-	and Chu, Bei
-	and Fan, Hongcheng
-	and Feng, Yang",
-	editor="Yuan, Long
-	and Yang, Shiyu
-	and Li, Ruixuan
-	and Kanoulas, Evangelos
-	and Zhao, Xiang",
-	title="An Analysis of the Rust Programming Practice for Memory Safety Assurance",
-	booktitle="Web Information Systems and Applications",
-	year="2023",
-	publisher="Springer Nature Singapore",
-	address="Singapore",
-	pages="440--451",
-	abstract="Memory safety is a critical concern in software development, as related issues often lead to program crashes, vulnerabilities, and security breaches, leading to severe consequences for applications and systems. This paper provides a detailed analysis of how Rust effectively addresses memory safety concerns. The paper first introduces the concepts of ownership, reference and lifetime in Rust, highlighting how they contribute to ensuring memory safety. It then delves into an examination of common memory safety issues and how they manifest in popular programming languages. Rust's solutions to these issues are compared to those of other languages, emphasizing the benefits of using Rust for enhanced memory safety. In conclusion, this paper offers a comprehensive exploration of prevalent memory safety issues in programming and demonstrates how Rust effectively addresses them. With its encompassing mechanisms and strict rules, Rust proves to be a reliable choice for developers aiming to achieve enhanced memory safety in their programming endeavors.",
-	isbn="978-981-99-6222-8"
+	author = {Xu, Baowen and Chu, Bei and Fan, Hongcheng and Feng, Yang},
+	title = {An Analysis of the Rust Programming Practice for Memory Safety Assurance},
+	year = {2023},
+	isbn = {978-981-99-6221-1},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg},
+	url = {https://doi.org/10.1007/978-981-99-6222-8_37},
+	doi = {10.1007/978-981-99-6222-8_37},
+	abstract = {Memory safety is a critical concern in software development, as related issues often lead to program crashes, vulnerabilities, and security breaches, leading to severe consequences for applications and systems. This paper provides a detailed analysis of how Rust effectively addresses memory safety concerns. The paper first introduces the concepts of ownership, reference and lifetime in Rust, highlighting how they contribute to ensuring memory safety. It then delves into an examination of common memory safety issues and how they manifest in popular programming languages. Rust’s solutions to these issues are compared to those of other languages, emphasizing the benefits of using Rust for enhanced memory safety. In conclusion, this paper offers a comprehensive exploration of prevalent memory safety issues in programming and demonstrates how Rust effectively addresses them. With its encompassing mechanisms and strict rules, Rust proves to be a reliable choice for developers aiming to achieve enhanced memory safety in their programming endeavors.},
+	booktitle = {Web Information Systems and Applications: 20th International Conference, WISA 2023,  Chengdu, China, September 15–17, 2023,  Proceedings},
+	pages = {440–451},
+	numpages = {12},
+	keywords = {Memory safety, Rust, Ownership, Reference},
+	location = {Chengdu, China}
 }
 
 @misc{sharma2024rustembeddedsystemscurrent,
@@ -196,4 +183,24 @@
 	numpages = {16},
 	location = {Tozeur, Tunisia},
 	series = {OPODIS'10}
+}
+
+@article{Brandenburg2010SpinBasedReaderWriterSynchronization,
+	author = {Brandenburg, Bj\"{o}rn B. and Anderson, James H.},
+	title = {Spin-based reader-writer synchronization for multiprocessor real-time systems},
+	year = {2010},
+	issue_date = {September 2010},
+	publisher = {Kluwer Academic Publishers},
+	address = {USA},
+	volume = {46},
+	number = {1},
+	issn = {0922-6443},
+	url = {https://doi.org/10.1007/s11241-010-9097-2},
+	doi = {10.1007/s11241-010-9097-2},
+	abstract = {Reader preference, writer preference, and task-fair reader-writer locks are shown to cause undue blocking in multiprocessor real-time systems. Phase-fair reader writer locks, a new class of reader-writer locks, are proposed as an alternative. Three local-spin phase-fair lock algorithms, one with constant remote-memory-reference complexity, are presented and demonstrated to be efficiently implementable on common hardware platforms. Both task- and phase-fair locks are evaluated and contrasted to mutex locks in terms of hard and soft real-time schedulability--each under both global and partitioned scheduling--under consideration of runtime overheads on a multicore Sun "Niagara" UltraSPARC T1 processor. Formal bounds on worst-case blocking are derived for all considered lock types.},
+	journal = {Real-Time Syst.},
+	month = sep,
+	pages = {25–87},
+	numpages = {63},
+	keywords = {Real-time, Reader-writer synchronization, Multiprocessor}
 }
