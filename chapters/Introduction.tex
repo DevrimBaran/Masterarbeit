@@ -1,13 +1,32 @@
 \chapter{Introduction}
 
-The aim of student theses is to show that students are able to work on tasks from their own field independently and according to scientific methods and that they can present their results appropriately. 
-These objectives, defined in the examination regulations, raise a number of questions:
+\section{Motivation}
+
+In modern manufacturing and automation, control systems must operate under strict timing constraints to function reliably. If a system fails to meet these constraints, unexpected delays can disrupt processes, leading to instability or even hazardous failures in safety-critical environments. For this reason, real-time operating systems (RTOS) and low-level programming languages like C, C++, and Rust are widely used to ensure predictable execution times.
+
+Many real-time applications involve multiple tasks that must run concurrently and share resources efficiently. Without proper synchronization, problems such as data corruption or race conditions can occur leading to unpredictable behavior. Traditional synchronization methods, such as mutexes and semaphores, are commonly used to manage access to shared resources. However, these blocking mechanisms introduce significant challenges in real-time settings. Since they require threads to wait for resource availability, they can lead to increased response times, potential deadlocks, and priority inversion. These delays are unacceptable in systems that require strict timing guarantees. \cite{herlihy1991wait, brandenburg2019multiprocessorrealtimelockingprotocols, kode2024analysisSynchronization}
+
+For example, consider a factory setting where a worker presses an emergency stop button. If the system experiences a deadlock and becomes unresponsive, the failure could result in severe consequences, including potential injury or loss of life. This highlights the critical need for synchronization methods that do not block execution and allow real-time processes to proceed without unexpected delays.
+
+To address these limitations, there is increasing interest in wait-free and lock-free synchronization techniques. A wait-free algorithm guarantees that every operation completes in a finite number of steps, regardless of contention from other threads. This property ensures system responsiveness and predictability, which are essential for real-time applications. By eliminating blocking and contention-based delays, wait-free synchronization prevents priority inversion and ensures that high-priority tasks execute without interference. \cite{kogan2012methodology, herlihy1991wait}
+
+Lock-free synchronization, on the other hand, ensures that at least one thread makes progress in a finite number of steps, but it does not guarantee that every thread will complete its operation. While lock-free algorithms tend to be more efficient than wait-free ones, they allow the possibility of thread starvation in high-contention scenarios. This can be problematic in real-time and heterogeneous computing environments, where some threads might be repeatedly delayed due to interference from faster threads. Despite this limitation, lock-free algorithms are often preferred in practice because they avoid blocking and can achieve high throughput. \cite{kogan2012methodology}
+
+\ac{IPC} plays a crucial role in real-time systems, allowing processes to exchange data efficiently. The choice of \ac{IPC} mechanisms directly impacts system performance, as inefficient communication can introduce latency and reduce throughput. Wait-free data structures offer a promising way to improve \ac{IPC} by ensuring that communication operations complete within predictable time bounds. However, selecting appropriate wait-free data structures and evaluating their performance in real-time environments remains a challenge. \cite{timnat2014practical, michael1996simple, huang2002improvingWaitFree, pellegrini2020relevancewaitfreecoordinationalgorithms}
+
+The Rust programming language provides useful features for implementing real-time synchronization mechanisms. Its ownership model and strict type system prevent data races and enforce safe concurrency without requiring traditional locking mechanisms. Additionally, Rust offers fine-grained control over system resources, making it a strong candidate for real-time applications that demand both low latency and high reliability. \cite{xu2023rust, sharma2024rustembeddedsystemscurrent}
+
+\section{Objective}
+
+The primary goal of this research is to explore how wait-free data structures can be used to improve interprocess communication in real-time systems using Rust. Specifically, this study aims to:
 
 \begin{itemize}
-\item What does ``working according to scientific methods'' actually mean?
-\item What belongs to the proper presentation of results?
-\item Which standards and guidelines apply at the \ac{ISW}?
-\item What is to be considered in general when writing student theses at the \ac{ISW}?
+\item Identify and analyze existing wait-free synchronization techniques for real-time \ac{IPC}.
+\item Compare the performance of wait-free synchronization mechanisms with traditional locking methods in real-time scenarios.
+\item Choose, develop and optimize the optimal wait-free data structures for interprocess communication in Rust.
+\item Evaluate the effectiveness of these implementations through real-time benchmarks and system simulations.
 \end{itemize}
 
-Read the guidelines for the preparation of student theses at \ac{ISW}! The chapters used in this template are for inspiration only. Each thesis is different and the chapter headings and their order should be adapted accordingly.
+By addressing these objectives, this work contributes to the field of real-time systems by providing practical solutions for efficient and predictable \ac{IPC}. The insights gained from this research can help improve the reliability and performance of real-time applications across various domains.
+
+\section{Structure of the Thesis}
