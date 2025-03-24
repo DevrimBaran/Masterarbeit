@@ -1,0 +1,516 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{herlihy1991wait}{article}{}
+      \name{author}{1}{}{%
+        {{hash=dec3948f0497f5447bae5c2365b87e8f}{%
+           family={Herlihy},
+           familyi={H\bibinitperiod},
+           given={Maurice},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{dec3948f0497f5447bae5c2365b87e8f}
+      \strng{fullhash}{dec3948f0497f5447bae5c2365b87e8f}
+      \strng{bibnamehash}{dec3948f0497f5447bae5c2365b87e8f}
+      \strng{authorbibnamehash}{dec3948f0497f5447bae5c2365b87e8f}
+      \strng{authornamehash}{dec3948f0497f5447bae5c2365b87e8f}
+      \strng{authorfullhash}{dec3948f0497f5447bae5c2365b87e8f}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A wait-free implementation of a concurrent data object is one that guarantees that any process can complete any operation in a finite number of steps, regardless of the execution speeds of the other processes. The problem of constructing a wait-free implementation of one data object from another lies at the heart of much recent work in concurrent algorithms, concurrent data structures, and multiprocessor architectures. First, we introduce a simple and general technique, based on reduction to a concensus protocol, for proving statements of the form, “there is no wait-free implementation of X by Y.” We derive a hierarchy of objects such that no object at one level has a wait-free implementation in terms of objects at lower levels. In particular, we show that atomic read/write registers, which have been the focus of much recent attention, are at the bottom of the hierarchy: thay cannot be used to construct wait-free implementations of many simple and familiar data types. Moreover, classical synchronization primitives such astest&set and fetch&add, while more powerful than read and write, are also computationally weak, as are the standard message-passing primitives. Second, nevertheless, we show that there do exist simple universal objects from which one can construct a wait-free implementation of any sequential object.}
+      \field{issn}{0164-0925}
+      \field{journaltitle}{ACM Trans. Program. Lang. Syst.}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{Wait-free synchronization}
+      \field{volume}{13}
+      \field{year}{1991}
+      \field{pages}{124\bibrangedash 149}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1145/114005.102808
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/114005.102808
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/114005.102808
+      \endverb
+      \keyw{wait-free synchronization,linearization}
+    \endentry
+    \entry{brandenburg2019multiprocessorrealtimelockingprotocols}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=1c09f82fea4635ca943758d90dded01c}{%
+           family={Brandenburg},
+           familyi={B\bibinitperiod},
+           given={Björn\bibnamedelima B.},
+           giveni={B\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{1c09f82fea4635ca943758d90dded01c}
+      \strng{fullhash}{1c09f82fea4635ca943758d90dded01c}
+      \strng{bibnamehash}{1c09f82fea4635ca943758d90dded01c}
+      \strng{authorbibnamehash}{1c09f82fea4635ca943758d90dded01c}
+      \strng{authornamehash}{1c09f82fea4635ca943758d90dded01c}
+      \strng{authorfullhash}{1c09f82fea4635ca943758d90dded01c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.DC}
+      \field{eprinttype}{arXiv}
+      \field{title}{Multiprocessor Real-Time Locking Protocols: A Systematic Review}
+      \field{year}{2019}
+      \verb{eprint}
+      \verb 1909.09600
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1909.09600
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1909.09600
+      \endverb
+    \endentry
+    \entry{kode2024analysisSynchronization}{unknown}{}
+      \name{author}{2}{}{%
+        {{hash=9754bcd51e4eb13c99f06d37181a6401}{%
+           family={Kode},
+           familyi={K\bibinitperiod},
+           given={Oluwatoyin},
+           giveni={O\bibinitperiod}}}%
+        {{hash=5304e9e83c68b6c368eb8c8145e4d3eb}{%
+           family={Oyemade},
+           familyi={O\bibinitperiod},
+           given={Temitope},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{2bb35a8eb6b8b1324a7ee03101f203f4}
+      \strng{fullhash}{2bb35a8eb6b8b1324a7ee03101f203f4}
+      \strng{bibnamehash}{2bb35a8eb6b8b1324a7ee03101f203f4}
+      \strng{authorbibnamehash}{2bb35a8eb6b8b1324a7ee03101f203f4}
+      \strng{authornamehash}{2bb35a8eb6b8b1324a7ee03101f203f4}
+      \strng{authorfullhash}{2bb35a8eb6b8b1324a7ee03101f203f4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{09}
+      \field{title}{Analysis of Synchronization Mechanisms in Operating Systems}
+      \field{year}{2024}
+      \verb{doi}
+      \verb 10.48550/arXiv.2409.11271
+      \endverb
+    \endentry
+    \entry{kogan2012methodology}{article}{}
+      \name{author}{2}{}{%
+        {{hash=fdcad8e75af2ff8226f3804288eeebb7}{%
+           family={Kogan},
+           familyi={K\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+        {{hash=468fe0329ffeea43782aa0c27eaf16fe}{%
+           family={Petrank},
+           familyi={P\bibinitperiod},
+           given={Erez},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
+      \strng{fullhash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
+      \strng{bibnamehash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
+      \strng{authorbibnamehash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
+      \strng{authornamehash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
+      \strng{authorfullhash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Lock-freedom is a progress guarantee that ensures overall program progress. Wait-freedom is a stronger progress guarantee that ensures the progress of each thread in the program. While many practical lock-free algorithms exist, wait-free algorithms are typically inefficient and hardly used in practice. In this paper, we propose a methodology called fast-path-slow-path for creating efficient wait-free algorithms. The idea is to execute the efficient lock-free version most of the time and revert to the wait-free version only when things go wrong. The generality and effectiveness of this methodology is demonstrated by two examples. In this paper, we apply this idea to a recent construction of a wait-free queue, bringing the wait-free implementation to perform in practice as efficient as the lock-free implementation. In another work, the fast-path-slow-path methodology has been used for (dramatically) improving the performance of a wait-free linked-list.}
+      \field{issn}{0362-1340}
+      \field{journaltitle}{SIGPLAN Not.}
+      \field{month}{2}
+      \field{number}{8}
+      \field{title}{A methodology for creating fast wait-free data structures}
+      \field{volume}{47}
+      \field{year}{2012}
+      \field{pages}{141\bibrangedash 150}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/2370036.2145835
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/2370036.2145835
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/2370036.2145835
+      \endverb
+      \keyw{wait-free queues,non-blocking synchronization,lock-free algorithms,concurrent data structures}
+    \endentry
+    \entry{timnat2014practical}{article}{}
+      \name{author}{2}{}{%
+        {{hash=84f9c0b264838c1908e9cc43b1710c9c}{%
+           family={Timnat},
+           familyi={T\bibinitperiod},
+           given={Shahar},
+           giveni={S\bibinitperiod}}}%
+        {{hash=468fe0329ffeea43782aa0c27eaf16fe}{%
+           family={Petrank},
+           familyi={P\bibinitperiod},
+           given={Erez},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{a9f179d63a4259afc8e169c0fd5d802e}
+      \strng{fullhash}{a9f179d63a4259afc8e169c0fd5d802e}
+      \strng{bibnamehash}{a9f179d63a4259afc8e169c0fd5d802e}
+      \strng{authorbibnamehash}{a9f179d63a4259afc8e169c0fd5d802e}
+      \strng{authornamehash}{a9f179d63a4259afc8e169c0fd5d802e}
+      \strng{authorfullhash}{a9f179d63a4259afc8e169c0fd5d802e}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Lock-free data structures guarantee overall system progress, whereas wait-free data structures guarantee the progress of each and every thread, providing the desirable non-starvation guarantee for concurrent data structures. While practical lock-free implementations are known for various data structures, wait-free data structure designs are rare. Wait-free implementations have been notoriously hard to design and often inefficient. In this work we present a transformation of lock-free algorithms to wait-free ones allowing even a non-expert to transform a lock-free data-structure into a practical wait-free one. The transformation requires that the lock-free data structure is given in a normalized form defined in this work. Using the new method, we have designed and implemented wait-free linked-list, skiplist, and tree and we measured their performance. It turns out that for all these data structures the wait-free implementations are only a few percent slower than their lock-free counterparts, while still guaranteeing non-starvation.}
+      \field{issn}{0362-1340}
+      \field{journaltitle}{SIGPLAN Not.}
+      \field{month}{2}
+      \field{number}{8}
+      \field{title}{A practical wait-free simulation for lock-free data structures}
+      \field{volume}{49}
+      \field{year}{2014}
+      \field{pages}{357\bibrangedash 368}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1145/2692916.2555261
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/2692916.2555261
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/2692916.2555261
+      \endverb
+      \keyw{lock-freedom,wait-freedom}
+    \endentry
+    \entry{michael1996simple}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=7c8b91b67826da61ce9205a2176af631}{%
+           family={Michael},
+           familyi={M\bibinitperiod},
+           given={Maged\bibnamedelima M.},
+           giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=e15993060a5335650b18aea778baab54}{%
+           family={Scott},
+           familyi={S\bibinitperiod},
+           given={Michael\bibnamedelima L.},
+           giveni={M\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Philadelphia, Pennsylvania, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{4658275f1fa4645788aca1c4501fcbe6}
+      \strng{fullhash}{4658275f1fa4645788aca1c4501fcbe6}
+      \strng{bibnamehash}{4658275f1fa4645788aca1c4501fcbe6}
+      \strng{authorbibnamehash}{4658275f1fa4645788aca1c4501fcbe6}
+      \strng{authornamehash}{4658275f1fa4645788aca1c4501fcbe6}
+      \strng{authorfullhash}{4658275f1fa4645788aca1c4501fcbe6}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Fifteenth Annual ACM Symposium on Principles of Distributed Computing}
+      \field{isbn}{0897918002}
+      \field{series}{PODC '96}
+      \field{title}{Simple, fast, and practical non-blocking and blocking concurrent queue algorithms}
+      \field{year}{1996}
+      \field{pages}{267\bibrangedash 275}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1145/248052.248106
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/248052.248106
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/248052.248106
+      \endverb
+      \keyw{compare_and_swap,concurrent queue,lock-free,multiprogramming,non-blocking}
+    \endentry
+    \entry{huang2002improvingWaitFree}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=8084383cdb4d636feec4a3c882da6cc5}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Hai},
+           giveni={H\bibinitperiod}}}%
+        {{hash=f50104dc04bfb7759d8a0fe16e962ccc}{%
+           family={Pillai},
+           familyi={P\bibinitperiod},
+           given={Padmanabhan},
+           giveni={P\bibinitperiod}}}%
+        {{hash=163411def426f522803d5a27828d3b8d}{%
+           family={Shin},
+           familyi={S\bibinitperiod},
+           given={Kang\bibnamedelima G.},
+           giveni={K\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Monterey, CA}%
+      }
+      \list{publisher}{1}{%
+        {USENIX Association}%
+      }
+      \strng{namehash}{29c02acb3fe7e157c43e393efe364336}
+      \strng{fullhash}{2fe1a9044e8a25ee69bb9276258309d9}
+      \strng{bibnamehash}{2fe1a9044e8a25ee69bb9276258309d9}
+      \strng{authorbibnamehash}{2fe1a9044e8a25ee69bb9276258309d9}
+      \strng{authornamehash}{29c02acb3fe7e157c43e393efe364336}
+      \strng{authorfullhash}{2fe1a9044e8a25ee69bb9276258309d9}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2002 USENIX Annual Technical Conference (USENIX ATC 02)}
+      \field{month}{6}
+      \field{title}{Improving {Wait-Free} Algorithms for Interprocess Communication in Embedded {Real-Time} Systems}
+      \field{year}{2002}
+      \verb{urlraw}
+      \verb https://www.usenix.org/conference/2002-usenix-annual-technical-conference/improving-wait-free-algorithms-interprocess
+      \endverb
+      \verb{url}
+      \verb https://www.usenix.org/conference/2002-usenix-annual-technical-conference/improving-wait-free-algorithms-interprocess
+      \endverb
+    \endentry
+    \entry{pellegrini2020relevancewaitfreecoordinationalgorithms}{misc}{}
+      \name{author}{2}{}{%
+        {{hash=a45aae5d0803802d855ed58df3d1d8bb}{%
+           family={Pellegrini},
+           familyi={P\bibinitperiod},
+           given={Alessandro},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b549acaf1dad1fb12af921e040994e9e}{%
+           family={Quaglia},
+           familyi={Q\bibinitperiod},
+           given={Francesco},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{3d885ece90313a3083790b38ae0c5e95}
+      \strng{fullhash}{3d885ece90313a3083790b38ae0c5e95}
+      \strng{bibnamehash}{3d885ece90313a3083790b38ae0c5e95}
+      \strng{authorbibnamehash}{3d885ece90313a3083790b38ae0c5e95}
+      \strng{authornamehash}{3d885ece90313a3083790b38ae0c5e95}
+      \strng{authorfullhash}{3d885ece90313a3083790b38ae0c5e95}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.DC}
+      \field{eprinttype}{arXiv}
+      \field{title}{On the Relevance of Wait-free Coordination Algorithms in Shared-Memory HPC:The Global Virtual Time Case}
+      \field{year}{2020}
+      \verb{eprint}
+      \verb 2004.10033
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2004.10033
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2004.10033
+      \endverb
+    \endentry
+    \entry{xu2023rust}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=33a2fbf36484e35836ed60370fd8e8fd}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Baowen},
+           giveni={B\bibinitperiod}}}%
+        {{hash=4b8df41dc7774e3e817b7f36316778f7}{%
+           family={Chu},
+           familyi={C\bibinitperiod},
+           given={Bei},
+           giveni={B\bibinitperiod}}}%
+        {{hash=89bdf576c918495bb429c0720fc91730}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Hongcheng},
+           giveni={H\bibinitperiod}}}%
+        {{hash=0bd795323e3d2f604e723e25b4a68fef}{%
+           family={Feng},
+           familyi={F\bibinitperiod},
+           given={Yang},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Chengdu, China}%
+      }
+      \list{publisher}{1}{%
+        {Springer-Verlag}%
+      }
+      \strng{namehash}{2dd676bf89d5d0382e37fecfe94ea345}
+      \strng{fullhash}{2cd98ab4ba3cb4b2688e03296f2e0438}
+      \strng{bibnamehash}{2cd98ab4ba3cb4b2688e03296f2e0438}
+      \strng{authorbibnamehash}{2cd98ab4ba3cb4b2688e03296f2e0438}
+      \strng{authornamehash}{2dd676bf89d5d0382e37fecfe94ea345}
+      \strng{authorfullhash}{2cd98ab4ba3cb4b2688e03296f2e0438}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Memory safety is a critical concern in software development, as related issues often lead to program crashes, vulnerabilities, and security breaches, leading to severe consequences for applications and systems. This paper provides a detailed analysis of how Rust effectively addresses memory safety concerns. The paper first introduces the concepts of ownership, reference and lifetime in Rust, highlighting how they contribute to ensuring memory safety. It then delves into an examination of common memory safety issues and how they manifest in popular programming languages. Rust’s solutions to these issues are compared to those of other languages, emphasizing the benefits of using Rust for enhanced memory safety. In conclusion, this paper offers a comprehensive exploration of prevalent memory safety issues in programming and demonstrates how Rust effectively addresses them. With its encompassing mechanisms and strict rules, Rust proves to be a reliable choice for developers aiming to achieve enhanced memory safety in their programming endeavors.}
+      \field{booktitle}{Web Information Systems and Applications: 20th International Conference, WISA 2023, Chengdu, China, September 15–17, 2023, Proceedings}
+      \field{isbn}{978-981-99-6221-1}
+      \field{title}{An Analysis of the Rust Programming Practice for Memory Safety Assurance}
+      \field{year}{2023}
+      \field{pages}{440\bibrangedash 451}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1007/978-981-99-6222-8_37
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-981-99-6222-8_37
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-981-99-6222-8_37
+      \endverb
+      \keyw{Memory safety,Rust,Ownership,Reference}
+    \endentry
+    \entry{sharma2024rustembeddedsystemscurrent}{misc}{}
+      \name{author}{4}{}{%
+        {{hash=431cb60d5d599981559a991c644cc04c}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={Ayushi},
+           giveni={A\bibinitperiod}}}%
+        {{hash=82bc9bf618db0da9f54457b53a91ea18}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={Shashank},
+           giveni={S\bibinitperiod}}}%
+        {{hash=e853f42f6f4956b17c21ede3c49eddb5}{%
+           family={Torres-Arias},
+           familyi={T\bibinithyphendelim A\bibinitperiod},
+           given={Santiago},
+           giveni={S\bibinitperiod}}}%
+        {{hash=731d4b71cd36ca1d9c468bc496ea1353}{%
+           family={Machiry},
+           familyi={M\bibinitperiod},
+           given={Aravind},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{5175a83483367918e424714996ce25f2}
+      \strng{fullhash}{6047e803f3af89233fb7ed49872af5bb}
+      \strng{bibnamehash}{6047e803f3af89233fb7ed49872af5bb}
+      \strng{authorbibnamehash}{6047e803f3af89233fb7ed49872af5bb}
+      \strng{authornamehash}{5175a83483367918e424714996ce25f2}
+      \strng{authorfullhash}{6047e803f3af89233fb7ed49872af5bb}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.CR}
+      \field{eprinttype}{arXiv}
+      \field{title}{Rust for Embedded Systems: Current State, Challenges and Open Problems (Extended Report)}
+      \field{year}{2024}
+      \verb{eprint}
+      \verb 2311.05063
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2311.05063
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2311.05063
+      \endverb
+    \endentry
+    \entry{stankovic1996real}{article}{}
+      \name{author}{1}{}{%
+        {{hash=4cee4274e72d878fbb49053cad90d4e9}{%
+           family={Stankovic},
+           familyi={S\bibinitperiod},
+           given={John\bibnamedelima A},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM New York, NY, USA}%
+      }
+      \strng{namehash}{4cee4274e72d878fbb49053cad90d4e9}
+      \strng{fullhash}{4cee4274e72d878fbb49053cad90d4e9}
+      \strng{bibnamehash}{4cee4274e72d878fbb49053cad90d4e9}
+      \strng{authorbibnamehash}{4cee4274e72d878fbb49053cad90d4e9}
+      \strng{authornamehash}{4cee4274e72d878fbb49053cad90d4e9}
+      \strng{authorfullhash}{4cee4274e72d878fbb49053cad90d4e9}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Computing Surveys (CSUR)}
+      \field{number}{1}
+      \field{title}{Real-time and embedded systems}
+      \field{volume}{28}
+      \field{year}{1996}
+      \field{pages}{205\bibrangedash 208}
+      \range{pages}{4}
+    \endentry
+    \entry{real-time}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=56a21a482f349b9aa485ad72542881e1}{%
+           family={Kay},
+           familyi={K\bibinitperiod},
+           given={Jackie},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{56a21a482f349b9aa485ad72542881e1}
+      \strng{fullhash}{56a21a482f349b9aa485ad72542881e1}
+      \strng{bibnamehash}{56a21a482f349b9aa485ad72542881e1}
+      \strng{authorbibnamehash}{56a21a482f349b9aa485ad72542881e1}
+      \strng{authornamehash}{56a21a482f349b9aa485ad72542881e1}
+      \strng{authorfullhash}{56a21a482f349b9aa485ad72542881e1}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://design.ros2.org/articles/realtime_background.html#:~:text=Firm%20real%2Dtime%20systems%20treat,robotic%20assembly%20lines%20(2)}}
+      \field{title}{Introduction to Real-time Systems}
+      \field{year}{2016}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

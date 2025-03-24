@@ -4,7 +4,11 @@ To establish a clear foundation for the concepts and definitions introduced thro
 
 \section{Real-Time Systems}
 
+In real-time systems the correctness of the system does not only depend on the logical results of computations, but also on timing constraints. These constraints can be classified into hard, soft, and firm real-time requirements. Hard real-time systems have strict timing constraints, and missing a constraint is considered a system failure and may lead to a catastrophic desaster. An example would be an autopilot system in an airplane or an airplane sensor, where in case of a timing constraint this may lead to a crash. On the other hand, soft real-time systems try to stick to the timing constraints as much as possible, but missing a timing constraint is not considered a system failure. However, this may lead to a degration of the system's \ac{QoS} to improve responsiveness. The \ac{QoS} describes the overall performance of the networc in this context, which includes factors like latency, jitter (variation between expected and the actual timing for a task, so when a task takes longer or shorter then expected \cite{jitter}), bandwith, throughput and error rates. An example would be an audio and video streaming service, where some lag is acceptable to some extent. Finally what firm real-time systems do is, treating information that is delivered/computed after a timing constraint as invalid. Examples for these kind of systems are fincancial forecast systems, where the information has no use after a certain time. Since we focus on strict timing constraints, we will focus on hard real-time systems in this thesis. \cite{real-time}
+
 \section{Inter-Process Communication}
+
+
 
 \section{Synchronization}
 
