@@ -459,34 +459,25 @@
       \verb https://arxiv.org/abs/2311.05063
       \endverb
     \endentry
-    \entry{stankovic1996real}{article}{}
+    \entry{jitter}{misc}{}
       \name{author}{1}{}{%
-        {{hash=4cee4274e72d878fbb49053cad90d4e9}{%
-           family={Stankovic},
-           familyi={S\bibinitperiod},
-           given={John\bibnamedelima A},
-           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=e6c151d449e1db05b1ffb5ad5ec656cf}{%
+           family={ni},
+           familyi={n\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
-        {ACM New York, NY, USA}%
-      }
-      \strng{namehash}{4cee4274e72d878fbb49053cad90d4e9}
-      \strng{fullhash}{4cee4274e72d878fbb49053cad90d4e9}
-      \strng{bibnamehash}{4cee4274e72d878fbb49053cad90d4e9}
-      \strng{authorbibnamehash}{4cee4274e72d878fbb49053cad90d4e9}
-      \strng{authornamehash}{4cee4274e72d878fbb49053cad90d4e9}
-      \strng{authorfullhash}{4cee4274e72d878fbb49053cad90d4e9}
+      \strng{namehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
+      \strng{fullhash}{e6c151d449e1db05b1ffb5ad5ec656cf}
+      \strng{bibnamehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
+      \strng{authorbibnamehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
+      \strng{authornamehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
+      \strng{authorfullhash}{e6c151d449e1db05b1ffb5ad5ec656cf}
       \field{sortinit}{6}
       \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{journaltitle}{ACM Computing Surveys (CSUR)}
-      \field{number}{1}
-      \field{title}{Real-time and embedded systems}
-      \field{volume}{28}
-      \field{year}{1996}
-      \field{pages}{205\bibrangedash 208}
-      \range{pages}{4}
+      \field{howpublished}{\url{https://www.ni.com/docs/de-DE/bundle/labview-nxg-rt-module-programming-with-rt-target/page/determinism-real-time.html}}
+      \field{title}{Determinism and Jitter in a Real-Time System}
+      \field{year}{2016}
     \endentry
     \entry{real-time}{misc}{}
       \name{author}{1}{}{%
@@ -502,13 +493,52 @@
       \strng{authorbibnamehash}{56a21a482f349b9aa485ad72542881e1}
       \strng{authornamehash}{56a21a482f349b9aa485ad72542881e1}
       \strng{authorfullhash}{56a21a482f349b9aa485ad72542881e1}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://design.ros2.org/articles/realtime_background.html#:~:text=Firm%20real%2Dtime%20systems%20treat,robotic%20assembly%20lines%20(2)}}
+      \field{howpublished}{\url{https://design.ros2.org/articles/realtime_background.html}}
       \field{title}{Introduction to Real-time Systems}
       \field{year}{2016}
+    \endentry
+    \entry{IPC}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=a6eb56f80be8a120436d6f1c9b8d87ca}{%
+           family={geeksforgeeks},
+           familyi={g\bibinitperiod}}}%
+      }
+      \strng{namehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \strng{fullhash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \strng{bibnamehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \strng{authorbibnamehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \strng{authornamehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \strng{authorfullhash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.geeksforgeeks.org/inter-process-communication-ipc/}}
+      \field{title}{Inter Process Communication (IPC)}
+      \field{year}{2025}
+    \endentry
+    \entry{OracleIPC}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=30162ed78b6c10f731411f2fc440c24f}{%
+           family={Oracle},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{30162ed78b6c10f731411f2fc440c24f}
+      \strng{fullhash}{30162ed78b6c10f731411f2fc440c24f}
+      \strng{bibnamehash}{30162ed78b6c10f731411f2fc440c24f}
+      \strng{authorbibnamehash}{30162ed78b6c10f731411f2fc440c24f}
+      \strng{authornamehash}{30162ed78b6c10f731411f2fc440c24f}
+      \strng{authorfullhash}{30162ed78b6c10f731411f2fc440c24f}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://docs.oracle.com/cd/E19455-01/806-4750/6jdqdfltn/index.html#:~:text=Real,will%20depend%20upon%20application%20behavior}}
+      \field{title}{Interprocess Communication}
     \endentry
   \enddatalist
 \endrefsection
