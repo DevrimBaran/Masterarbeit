@@ -232,28 +232,37 @@
 
 @Misc{jitter,
 	title        = {Determinism and Jitter in a Real-Time System},
-	author       = {ni},
 	howpublished = {\url{https://www.ni.com/docs/de-DE/bundle/labview-nxg-rt-module-programming-with-rt-target/page/determinism-real-time.html}},
 	year = {2016}
 }
 
 @Misc{IPC,
 	title        = {Inter Process Communication (IPC)},
-	author       = {geeksforgeeks},
 	howpublished = {\url{https://www.geeksforgeeks.org/inter-process-communication-ipc/}},
 	year = {2025}
 }
 
 @Misc{OracleIPC,
 	title        = {Interprocess Communication},
-	author       = {Oracle},
 	howpublished = {\url{https://docs.oracle.com/cd/E19455-01/806-4750/6jdqdfltn/index.html}},
 }
 
 @Misc{IPCMethods,
 	title        = {Methods in Inter process Communication},
-	author       = {geeksforgeeks},
 	howpublished = {\url{https://www.geeksforgeeks.org/methods-in-interprocess-communication/}},
+}
+
+@Misc{Race-Condition,
+	title        = {Race Condition, Synchronization, atomic operations and Volatile keyword.},
+	author       = {Aniket Thakur},
+	howpublished = {\url{https://opensourceforgeeks.blogspot.com/2014/01/race-condition-synchronization-atomic.html}},
+	year = {2014},
+}
+
+@Misc{DiffProcessThread,
+	title        = {Difference between Process and Thread},
+	howpublished = {\url{https://opensourceforgeeks.blogspot.com/2014/01/race-condition-synchronization-atomic.html}},
+	year = {2025},
 }
 
 @inbook{HardSoftRealTime,
@@ -299,10 +308,55 @@
 }
 
 @article{SharedMemoryMessagePassing,
-  author = {Sarvesh Mogare and Abhijeet Mahamune and Dipak Sathe and Harshal Bhangare and Minal Deshmukh and Anup Ingale},
-  journal = {International Research Journal of Modernization in Engineering Technology and Science (IRJMETS)},
-  title = {Message Passing VS Shared Memory-a Survey Of Trade Off In IPC},
-  volume = {06},
-  month = {11},
-  year = {2024}
+	author = {Sarvesh Mogare and Abhijeet Mahamune and Dipak Sathe and Harshal Bhangare and Minal Deshmukh and Anup Ingale},
+	journal = {International Research Journal of Modernization in Engineering Technology and Science (IRJMETS)},
+	title = {Message Passing VS Shared Memory-a Survey Of Trade Off In IPC},
+	volume = {06},
+	month = {11},
+	year = {2024}
 }
+
+@inproceedings{criticalSectionMutex,
+	author = {Suleman, M. Aater and Mutlu, Onur and Qureshi, Moinuddin K. and Patt, Yale N.},
+	title = {Accelerating critical section execution with asymmetric multi-core architectures},
+	year = {2009},
+	isbn = {9781605584065},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/1508244.1508274},
+	doi = {10.1145/1508244.1508274},
+	abstract = {To improve the performance of a single application on Chip Multiprocessors (CMPs), the application must be split into threads which execute concurrently on multiple cores. In multi-threaded applications, critical sections are used to ensure that only one thread accesses shared data at any given time. Critical sections can serialize the execution of threads, which significantly reduces performance and scalability.This paper proposes Accelerated Critical Sections (ACS), a technique that leverages the high-performance core(s) of an Asymmetric Chip Multiprocessor (ACMP) to accelerate the execution of critical sections. In ACS, selected critical sections are executed by a high-performance core, which can execute the critical section faster than the other, smaller cores. As a result, ACS reduces serialization: it lowers the likelihood of threads waiting for a critical section to finish. Our evaluation on a set of 12 critical-section-intensive workloads shows that ACS reduces the average execution time by 34\% compared to an equal-area 32T-core symmetric CMP and by 23\% compared to an equal-area ACMP. Moreover, for 7 out of the 12 workloads, ACS improves scalability by increasing the number of threads at which performance saturates.},
+	booktitle = {Proceedings of the 14th International Conference on Architectural Support for Programming Languages and Operating Systems},
+	pages = {253–264},
+	numpages = {12},
+	keywords = {cmp, critical sections, heterogeneous cores, locks, multi-core, parallel programming},
+	location = {Washington, DC, USA},
+	series = {ASPLOS XIV}
+}
+
+@INPROCEEDINGS{Semaphore,
+	author={Gong, Yi and Chen, Minjie and Song, Lihua and Guo, Yanfei},
+	booktitle={2022 IEEE 2nd International Conference on Power, Electronics and Computer Applications (ICPECA)}, 
+	title={Study on the classification model of lock mechanism in operating system}, 
+	year={2022},
+	volume={},
+	number={},
+	pages={857-861},
+	keywords={Operating systems;Computational modeling;Conferences;Software algorithms;Computer architecture;System recovery;Software;lock model;spinlock;semaphore;lock chain structure},
+	doi={10.1109/ICPECA53709.2022.9718877}
+}
+
+@INPROCEEDINGS{MutexSemaphoreIPC,
+	author={Raghunathan, Sriram},
+	booktitle={2008 14th IEEE International Conference on Parallel and Distributed Systems}, 
+	title={Extending Inter-process Synchronization with Robust Mutex and Variants in Condition Wait}, 
+	year={2008},
+	volume={},
+	number={},
+	pages={121-128},
+	keywords={Robustness;Yarn;Libraries;Linux;Application software;Kernel;Content addressable storage;Context-aware services;Protection;Event detection;Condition Wait;Mutexes;FIFO Waiters;Semaphores;Signaling and Synchronization},
+	doi={10.1109/ICPADS.2008.98}
+}
+
+
+
