@@ -42,15 +42,31 @@ As discussed mutual exclusion does only allow one process or thread to access th
 
 \subsubsection{Deadlock}\label{subsubsec:deadlock}
 
+A deadlock happens when each process of a set of processes are waiting for a resource held by other processes in the same set. The processes which are in a deadlock wait indefinetly for the resources and never terminate. So the resources that these waiting processes hold are also not released and are also not available to other processes. As one can see, this leads to a situation where no process can make any process. To understand this better \cref{fig:deadlock} visualizes a deadlock with two processes. In this example Process 1 holds Resource 1 and waits for Resource 2, while Process 2 holds Resource 2 and waits for resource r1. So both processes are waiting for each other to release the needed resources. \cite{Deadlock,chahar2013deadlock}
 
+\begin{figure}[h!]
+   \centering
+   \captionsetup{justification=centering}
+   \caption{Deadlock between two processes, which wait for each other to release the needed resources \cite{Deadlock}.}
+   \includegraphics[width=110mm]{images/deadlock.png}
+   \label{fig:deadlock}
+\end{figure}
 
 \subsubsection{Process Starvation}\label{subsubsec:process-starvation}
 
-
+So will wait to enter the criticial section. And a process that trys to entry the critical section, must eventually enter. Starvation is when that particular process will never enter the critical section. This usually happens when a synchronization method allows one or more processes to make progress while ignoring a particular process or processes. So this requires some sort of low and high priority processes. When we always have high priority processes available and some low priority processes, it might happen that these low priority processes will never be able to enter the critical section. This is a problem, since these low priority processes might be important for the system. \cite{Starvation}
 
 \subsubsection{Priority Inversion}\label{subsubsec:priority-inversion}
 
+What could happen too is that while a low priority process is accessing a shared resource, a high priority process is waiting for that resource. This is called priority inversion. \cite{priorityInversion}
+
+\subsubsection{Increased Response Times}\label{subsubsec:increased-response-times}
+
+So as we see traditional synchronization might lead to problems. But even if these problmes do not occure we can see that mutual exclusion will always lead to waiting processes which leads to increased response times. This could lead to not meeting the timing constraints of a \ac{HRTS} environment. So synchronization mechanisms are needed that do not introduce blocking.
+
 \section{Wait-Free Synchronization}\label{sec:wait-free}
+
+Wait-free synchronization solves all the problems mentioned before. Wait-free synchronization guarantees that every process will complete its operation in a finite number of steps, regardless of contention from other processes. This means starvation or a deadlock is by definition not possible anymore. Since starvation or blocking cannot happen anymore priority inversion is eliminated too, because there is not anymore the possibility that a low priority process blocks the task of an high priority process. This ensures system responsiveness and predictability thus ability to meet timing constraints, which are essential for hard real-time applications. 
 
 \section{Lock-Free Synchronization}\label{sec:lock-free}
 

@@ -96,7 +96,7 @@
       \verb https://arxiv.org/abs/1909.09600
       \endverb
     \endentry
-    \entry{kode2024analysisSynchronization}{unknown}{}
+    \entry{kode2024analysisSynchronization}{misc}{}
       \name{author}{2}{}{%
         {{hash=9754bcd51e4eb13c99f06d37181a6401}{%
            family={Kode},
@@ -119,11 +119,18 @@
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{month}{09}
+      \field{eprintclass}{cs.OS}
+      \field{eprinttype}{arXiv}
       \field{title}{Analysis of Synchronization Mechanisms in Operating Systems}
       \field{year}{2024}
-      \verb{doi}
-      \verb 10.48550/arXiv.2409.11271
+      \verb{eprint}
+      \verb 2409.11271
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2409.11271
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2409.11271
       \endverb
     \endentry
     \entry{kogan2012methodology}{article}{}
@@ -459,86 +466,365 @@
       \verb https://arxiv.org/abs/2311.05063
       \endverb
     \endentry
-    \entry{jitter}{misc}{}
-      \name{author}{1}{}{%
-        {{hash=e6c151d449e1db05b1ffb5ad5ec656cf}{%
-           family={ni},
-           familyi={n\bibinitperiod}}}%
+    \entry{HardSoftRealTime}{inbook}{}
+      \name{author}{3}{}{%
+        {{hash=1dcd945ad8c729f7a378c70d2d4a19de}{%
+           family={Kavi},
+           familyi={K\bibinitperiod},
+           given={Krishna},
+           giveni={K\bibinitperiod}}}%
+        {{hash=38cd90afed387246274943a899d36898}{%
+           family={Akl},
+           familyi={A\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=d835080bcec2319814961343f600720b}{%
+           family={Hurson},
+           familyi={H\bibinitperiod},
+           given={Ali},
+           giveni={A\bibinitperiod}}}%
       }
-      \strng{namehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
-      \strng{fullhash}{e6c151d449e1db05b1ffb5ad5ec656cf}
-      \strng{bibnamehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
-      \strng{authorbibnamehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
-      \strng{authornamehash}{e6c151d449e1db05b1ffb5ad5ec656cf}
-      \strng{authorfullhash}{e6c151d449e1db05b1ffb5ad5ec656cf}
+      \strng{namehash}{db42535bade69a916c40dd482edb62d9}
+      \strng{fullhash}{2a5902d19cc7d273185232eb039bb1f9}
+      \strng{bibnamehash}{2a5902d19cc7d273185232eb039bb1f9}
+      \strng{authorbibnamehash}{2a5902d19cc7d273185232eb039bb1f9}
+      \strng{authornamehash}{db42535bade69a916c40dd482edb62d9}
+      \strng{authorfullhash}{2a5902d19cc7d273185232eb039bb1f9}
       \field{sortinit}{6}
       \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://www.ni.com/docs/de-DE/bundle/labview-nxg-rt-module-programming-with-rt-target/page/determinism-real-time.html}}
-      \field{title}{Determinism and Jitter in a Real-Time System}
-      \field{year}{2016}
+      \field{isbn}{9780470050118}
+      \field{month}{03}
+      \field{title}{Real‐Time Systems: An Introduction and the State‐of‐the‐Art}
+      \field{year}{2009}
+      \verb{doi}
+      \verb 10.1002/9780470050118.ecse344
+      \endverb
     \endentry
-    \entry{real-time}{misc}{}
-      \name{author}{1}{}{%
-        {{hash=56a21a482f349b9aa485ad72542881e1}{%
-           family={Kay},
-           familyi={K\bibinitperiod},
-           given={Jackie},
+    \entry{BrakeByWire}{article}{}
+      \name{author}{8}{}{%
+        {{hash=6d0d33a049087876f09c6eaaf3a1da88}{%
+           family={Hua},
+           familyi={H\bibinitperiod},
+           given={Xuehui},
+           giveni={X\bibinitperiod}}}%
+        {{hash=b4c0336ba09a68e0e5a750d182beacf2}{%
+           family={Zeng},
+           familyi={Z\bibinitperiod},
+           given={Jinbin},
            giveni={J\bibinitperiod}}}%
+        {{hash=a65bf344dd53e07eca0aa929775ae35b}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Haoxin},
+           giveni={H\bibinitperiod}}}%
+        {{hash=c615c319dc4da1b095f5b32e69a80c1a}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Jingkai},
+           giveni={J\bibinitperiod}}}%
+        {{hash=1e5b61bc85ec5319d5ac57c788125d39}{%
+           family={Luo},
+           familyi={L\bibinitperiod},
+           given={Maolin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=2a072ae07cdff3dbce0c99c3bf5dd05f}{%
+           family={Feng},
+           familyi={F\bibinitperiod},
+           given={Xiaoming},
+           giveni={X\bibinitperiod}}}%
+        {{hash=a419e32b801913b6999d7b579ec89749}{%
+           family={Xiong},
+           familyi={X\bibinitperiod},
+           given={Huiyuan},
+           giveni={H\bibinitperiod}}}%
+        {{hash=3ac2e699df35184895ad9294ee2de586}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Weibin},
+           giveni={W\bibinitperiod}}}%
       }
-      \strng{namehash}{56a21a482f349b9aa485ad72542881e1}
-      \strng{fullhash}{56a21a482f349b9aa485ad72542881e1}
-      \strng{bibnamehash}{56a21a482f349b9aa485ad72542881e1}
-      \strng{authorbibnamehash}{56a21a482f349b9aa485ad72542881e1}
-      \strng{authornamehash}{56a21a482f349b9aa485ad72542881e1}
-      \strng{authorfullhash}{56a21a482f349b9aa485ad72542881e1}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://design.ros2.org/articles/realtime_background.html}}
-      \field{title}{Introduction to Real-time Systems}
-      \field{year}{2016}
-    \endentry
-    \entry{IPC}{misc}{}
-      \name{author}{1}{}{%
-        {{hash=a6eb56f80be8a120436d6f1c9b8d87ca}{%
-           family={geeksforgeeks},
-           familyi={g\bibinitperiod}}}%
-      }
-      \strng{namehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
-      \strng{fullhash}{a6eb56f80be8a120436d6f1c9b8d87ca}
-      \strng{bibnamehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
-      \strng{authorbibnamehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
-      \strng{authornamehash}{a6eb56f80be8a120436d6f1c9b8d87ca}
-      \strng{authorfullhash}{a6eb56f80be8a120436d6f1c9b8d87ca}
+      \strng{namehash}{f24f117bbaaf142bf384bda3f24dab08}
+      \strng{fullhash}{f1b8ab25a0b2da5c35bedec87abe550e}
+      \strng{bibnamehash}{f1b8ab25a0b2da5c35bedec87abe550e}
+      \strng{authorbibnamehash}{f1b8ab25a0b2da5c35bedec87abe550e}
+      \strng{authornamehash}{f24f117bbaaf142bf384bda3f24dab08}
+      \strng{authorfullhash}{f1b8ab25a0b2da5c35bedec87abe550e}
       \field{sortinit}{9}
       \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Processes}
+      \field{month}{03}
+      \field{title}{A Review of Automobile Brake-by-Wire Control Technology}
+      \field{volume}{11}
+      \field{year}{2023}
+      \field{pages}{994}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/pr11040994
+      \endverb
+    \endentry
+    \entry{IPC}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://www.geeksforgeeks.org/inter-process-communication-ipc/}}
       \field{title}{Inter Process Communication (IPC)}
       \field{year}{2025}
     \endentry
-    \entry{OracleIPC}{misc}{}
-      \name{author}{1}{}{%
-        {{hash=30162ed78b6c10f731411f2fc440c24f}{%
-           family={Oracle},
-           familyi={O\bibinitperiod}}}%
+    \entry{IPCMechanisms}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=0989f033c794cc516b653e1c2a35d74c}{%
+           family={Venkataraman},
+           familyi={V\bibinitperiod},
+           given={Aditya},
+           giveni={A\bibinitperiod}}}%
+        {{hash=a8770570314c306f85a85458bf5695f4}{%
+           family={Jagadeesha},
+           familyi={J\bibinitperiod},
+           given={Kishore\bibnamedelima Kumar},
+           giveni={K\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
       }
-      \strng{namehash}{30162ed78b6c10f731411f2fc440c24f}
-      \strng{fullhash}{30162ed78b6c10f731411f2fc440c24f}
-      \strng{bibnamehash}{30162ed78b6c10f731411f2fc440c24f}
-      \strng{authorbibnamehash}{30162ed78b6c10f731411f2fc440c24f}
-      \strng{authornamehash}{30162ed78b6c10f731411f2fc440c24f}
-      \strng{authorfullhash}{30162ed78b6c10f731411f2fc440c24f}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \strng{namehash}{719faded4591961d8ed2ddc1ff8e9d93}
+      \strng{fullhash}{719faded4591961d8ed2ddc1ff8e9d93}
+      \strng{bibnamehash}{719faded4591961d8ed2ddc1ff8e9d93}
+      \strng{authorbibnamehash}{719faded4591961d8ed2ddc1ff8e9d93}
+      \strng{authornamehash}{719faded4591961d8ed2ddc1ff8e9d93}
+      \strng{authorfullhash}{719faded4591961d8ed2ddc1ff8e9d93}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://docs.oracle.com/cd/E19455-01/806-4750/6jdqdfltn/index.html#:~:text=Real,will%20depend%20upon%20application%20behavior}}
-      \field{title}{Interprocess Communication}
+      \field{title}{Evaluation of Inter-Process Communication Mechanisms}
+      \field{year}{2015}
+      \verb{urlraw}
+      \verb https://api.semanticscholar.org/CorpusID:6899525
+      \endverb
+      \verb{url}
+      \verb https://api.semanticscholar.org/CorpusID:6899525
+      \endverb
+    \endentry
+    \entry{SharedMemory}{inbook}{}
+      \name{author}{1}{}{%
+        {{hash=a4dfa4a15dd530d8dc5c104e8fb2337d}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={K.\bibnamedelimi C.},
+           giveni={K\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
+      \strng{fullhash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
+      \strng{bibnamehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
+      \strng{authorbibnamehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
+      \strng{authornamehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
+      \strng{authorfullhash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This chapter covers process management. It introduces the concept of processes and demonstrates the basic technique of multitasking by context switching. It shows how to create processes dynamically and discusses the goals, policy, and algorithms of process scheduling. It covers process synchronization and shows how to implement the various kinds of process synchronization mechanisms, which include sleep/wakeup, mutexes, and semaphores. It shows how to use the process synchronization mechanisms to implement event-driven embedded systems. It discusses interprocess communication (IPC) schemes, which include shared memory, pipes, and message passing. It shows how to integrate these concepts to implement a uniprocessor (UP) kernel for process management, and it shows the programming techniques for both non-preemptive and preemptive process scheduling. The UP kernel serves as the foundation for developing complete operating systems (OS) in later chapters.}
+      \field{booktitle}{Embedded and Real-Time Operating Systems}
+      \field{isbn}{978-3-031-28701-5}
+      \field{title}{Process Management in Embedded Systems}
+      \field{year}{2023}
+      \field{pages}{115\bibrangedash 168}
+      \range{pages}{54}
+      \verb{doi}
+      \verb 10.1007/978-3-031-28701-5_5
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-3-031-28701-5_5
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-031-28701-5_5
+      \endverb
+    \endentry
+    \entry{SharedMemoryMessagePassing}{article}{}
+      \name{author}{6}{}{%
+        {{hash=9456b7ccea841fa3f8894a658f46813e}{%
+           family={Mogare},
+           familyi={M\bibinitperiod},
+           given={Sarvesh},
+           giveni={S\bibinitperiod}}}%
+        {{hash=44191d48f06462d060743c2eef2a5078}{%
+           family={Mahamune},
+           familyi={M\bibinitperiod},
+           given={Abhijeet},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8fb46dee6dcfe590c72875cfaa55784c}{%
+           family={Sathe},
+           familyi={S\bibinitperiod},
+           given={Dipak},
+           giveni={D\bibinitperiod}}}%
+        {{hash=14f258dccc259eed4a5e62af6d8d6120}{%
+           family={Bhangare},
+           familyi={B\bibinitperiod},
+           given={Harshal},
+           giveni={H\bibinitperiod}}}%
+        {{hash=ffef5248435a58f5a5a45e519b60cb7c}{%
+           family={Deshmukh},
+           familyi={D\bibinitperiod},
+           given={Minal},
+           giveni={M\bibinitperiod}}}%
+        {{hash=224cbc20dd3a116719200ff5dffb3cbb}{%
+           family={Ingale},
+           familyi={I\bibinitperiod},
+           given={Anup},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{dd85982a7efd52d9c7de77f68d6811fe}
+      \strng{fullhash}{34c16716cc6e7c74d4ee8945a2b0e307}
+      \strng{bibnamehash}{34c16716cc6e7c74d4ee8945a2b0e307}
+      \strng{authorbibnamehash}{34c16716cc6e7c74d4ee8945a2b0e307}
+      \strng{authornamehash}{dd85982a7efd52d9c7de77f68d6811fe}
+      \strng{authorfullhash}{34c16716cc6e7c74d4ee8945a2b0e307}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Research Journal of Modernization in Engineering Technology and Science (IRJMETS)}
+      \field{month}{11}
+      \field{title}{Message Passing VS Shared Memory-a Survey Of Trade Off In IPC}
+      \field{volume}{06}
+      \field{year}{2024}
+    \endentry
+    \entry{criticalSectionMutex}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=54280ee5d6c291b696b69461f4ced244}{%
+           family={Suleman},
+           familyi={S\bibinitperiod},
+           given={M.\bibnamedelimi Aater},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=5c37647ea7ea3d969c75fa814163e18f}{%
+           family={Mutlu},
+           familyi={M\bibinitperiod},
+           given={Onur},
+           giveni={O\bibinitperiod}}}%
+        {{hash=dfdef60a424243feb8bd3e8293c4306f}{%
+           family={Qureshi},
+           familyi={Q\bibinitperiod},
+           given={Moinuddin\bibnamedelima K.},
+           giveni={M\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=8fcb98f713d8a5893c333afc73f5e16b}{%
+           family={Patt},
+           familyi={P\bibinitperiod},
+           given={Yale\bibnamedelima N.},
+           giveni={Y\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Washington, DC, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{00c43079dae7459654cc15c5b2854ec3}
+      \strng{fullhash}{b5bdfed2125cff6f217db347faf9a651}
+      \strng{bibnamehash}{b5bdfed2125cff6f217db347faf9a651}
+      \strng{authorbibnamehash}{b5bdfed2125cff6f217db347faf9a651}
+      \strng{authornamehash}{00c43079dae7459654cc15c5b2854ec3}
+      \strng{authorfullhash}{b5bdfed2125cff6f217db347faf9a651}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{To improve the performance of a single application on Chip Multiprocessors (CMPs), the application must be split into threads which execute concurrently on multiple cores. In multi-threaded applications, critical sections are used to ensure that only one thread accesses shared data at any given time. Critical sections can serialize the execution of threads, which significantly reduces performance and scalability.This paper proposes Accelerated Critical Sections (ACS), a technique that leverages the high-performance core(s) of an Asymmetric Chip Multiprocessor (ACMP) to accelerate the execution of critical sections. In ACS, selected critical sections are executed by a high-performance core, which can execute the critical section faster than the other, smaller cores. As a result, ACS reduces serialization: it lowers the likelihood of threads waiting for a critical section to finish. Our evaluation on a set of 12 critical-section-intensive workloads shows that ACS reduces the average execution time by 34\% compared to an equal-area 32T-core symmetric CMP and by 23\% compared to an equal-area ACMP. Moreover, for 7 out of the 12 workloads, ACS improves scalability by increasing the number of threads at which performance saturates.}
+      \field{booktitle}{Proceedings of the 14th International Conference on Architectural Support for Programming Languages and Operating Systems}
+      \field{isbn}{9781605584065}
+      \field{series}{ASPLOS XIV}
+      \field{title}{Accelerating critical section execution with asymmetric multi-core architectures}
+      \field{year}{2009}
+      \field{pages}{253\bibrangedash 264}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1145/1508244.1508274
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/1508244.1508274
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/1508244.1508274
+      \endverb
+      \keyw{cmp,critical sections,heterogeneous cores,locks,multi-core,parallel programming}
+    \endentry
+    \entry{DiffProcessThread}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://opensourceforgeeks.blogspot.com/2014/01/race-condition-synchronization-atomic.html}}
+      \field{title}{Difference between Process and Thread}
+      \field{year}{2025}
+    \endentry
+    \entry{Race-Condition}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=e11d1e2904679f3038721779f8c47dfd}{%
+           family={Thakur},
+           familyi={T\bibinitperiod},
+           given={Aniket},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{e11d1e2904679f3038721779f8c47dfd}
+      \strng{fullhash}{e11d1e2904679f3038721779f8c47dfd}
+      \strng{bibnamehash}{e11d1e2904679f3038721779f8c47dfd}
+      \strng{authorbibnamehash}{e11d1e2904679f3038721779f8c47dfd}
+      \strng{authornamehash}{e11d1e2904679f3038721779f8c47dfd}
+      \strng{authorfullhash}{e11d1e2904679f3038721779f8c47dfd}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://opensourceforgeeks.blogspot.com/2014/01/race-condition-synchronization-atomic.html}}
+      \field{title}{Race Condition, Synchronization, atomic operations and Volatile keyword.}
+      \field{year}{2014}
+    \endentry
+    \entry{Deadlock}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.geeksforgeeks.org/introduction-of-deadlock-in-operating-system/}}
+      \field{title}{Introduction of Deadlock in Operating System}
+      \field{year}{2025}
+    \endentry
+    \entry{chahar2013deadlock}{article}{}
+      \name{author}{2}{}{%
+        {{hash=0a709ec82a393eab0a17ed1e6e72562b}{%
+           family={Chahar},
+           familyi={C\bibinitperiod},
+           given={Pooja},
+           giveni={P\bibinitperiod}}}%
+        {{hash=11e60e35b40ac89df1aa975d8579f368}{%
+           family={Dalal},
+           familyi={D\bibinitperiod},
+           given={Surjeet},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Citeseer}%
+      }
+      \strng{namehash}{755293b18daee9403f0d3951edb7dbfd}
+      \strng{fullhash}{755293b18daee9403f0d3951edb7dbfd}
+      \strng{bibnamehash}{755293b18daee9403f0d3951edb7dbfd}
+      \strng{authorbibnamehash}{755293b18daee9403f0d3951edb7dbfd}
+      \strng{authornamehash}{755293b18daee9403f0d3951edb7dbfd}
+      \strng{authorfullhash}{755293b18daee9403f0d3951edb7dbfd}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Scientific and Research Publications}
+      \field{number}{7}
+      \field{title}{Deadlock resolution techniques: an overview}
+      \field{volume}{3}
+      \field{year}{2013}
+      \field{pages}{1\bibrangedash 5}
+      \range{pages}{5}
     \endentry
   \enddatalist
 \endrefsection
