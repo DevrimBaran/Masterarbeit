@@ -784,6 +784,14 @@
       \field{title}{Race Condition, Synchronization, atomic operations and Volatile keyword.}
       \field{year}{2014}
     \endentry
+    \entry{MutualExclusion}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.geeksforgeeks.org/introduction-of-deadlock-in-operating-system/}}
+      \field{title}{Introduction of Deadlock in Operating System}
+      \field{year}{2025}
+    \endentry
     \entry{Deadlock}{misc}{}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
@@ -825,6 +833,97 @@
       \field{year}{2013}
       \field{pages}{1\bibrangedash 5}
       \range{pages}{5}
+    \endentry
+    \entry{Starvation}{inbook}{}
+      \name{author}{1}{}{%
+        {{hash=a228256fe74a44f7da1f2879d472b9ff}{%
+           family={Buhr},
+           familyi={B\bibinitperiod},
+           given={Peter\bibnamedelima A.},
+           giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Cham}%
+      }
+      \list{publisher}{1}{%
+        {Springer International Publishing}%
+      }
+      \strng{namehash}{a228256fe74a44f7da1f2879d472b9ff}
+      \strng{fullhash}{a228256fe74a44f7da1f2879d472b9ff}
+      \strng{bibnamehash}{a228256fe74a44f7da1f2879d472b9ff}
+      \strng{authorbibnamehash}{a228256fe74a44f7da1f2879d472b9ff}
+      \strng{authornamehash}{a228256fe74a44f7da1f2879d472b9ff}
+      \strng{authorfullhash}{a228256fe74a44f7da1f2879d472b9ff}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The introduction of threads and locks into a programming language introduces new kinds of errors not present in sequential programming; several of these errors have been mentioned in previous chapters. When writing concurrent programs, it is important to understand the new kinds of errors so they can be avoided or debugged when they occur. Therefore, it is appropriate to take a short diversion from the discussion of specifying concurrency to explain these new programming problems.}
+      \field{booktitle}{Understanding Control Flow: Concurrent Programming Using $\mu$C++}
+      \field{isbn}{978-3-319-25703-7}
+      \field{title}{Concurrency Errors}
+      \field{year}{2016}
+      \field{pages}{395\bibrangedash 423}
+      \range{pages}{29}
+      \verb{doi}
+      \verb 10.1007/978-3-319-25703-7_8
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-3-319-25703-7_8
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-3-319-25703-7_8
+      \endverb
+    \endentry
+    \entry{priorityInversion}{article}{}
+      \name{author}{5}{}{%
+        {{hash=8e448470980462cb6c82de10f864754c}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Yun},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=2a5d97744ec5a0e9e2b2963c742e69ea}{%
+           family={Anceaume},
+           familyi={A\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod}}}%
+        {{hash=95d8c20619ed410940d7cc9ad2a1cacc}{%
+           family={Brasileiro},
+           familyi={B\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod}}}%
+        {{hash=45a450ab5a31bf3c8115cb6ed02c9505}{%
+           family={Greve},
+           familyi={G\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod}}}%
+        {{hash=418a6ed97360cfbc378d5e94b1528f47}{%
+           family={Hurfin},
+           familyi={H\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{6e843a47f7f3a29ffac089bdf61fc944}
+      \strng{fullhash}{e2dc99b12632932c3949fed4adb01e1b}
+      \strng{bibnamehash}{e2dc99b12632932c3949fed4adb01e1b}
+      \strng{authorbibnamehash}{e2dc99b12632932c3949fed4adb01e1b}
+      \strng{authornamehash}{6e843a47f7f3a29ffac089bdf61fc944}
+      \strng{authorfullhash}{e2dc99b12632932c3949fed4adb01e1b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Computers}
+      \field{number}{8}
+      \field{title}{Solving the group priority inversion problem in a timed asynchronous system}
+      \field{volume}{51}
+      \field{year}{2002}
+      \field{pages}{900\bibrangedash 915}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1109/TC.2002.1024738
+      \endverb
+      \keyw{Protocols;Fault tolerant systems;Real time systems;Delay;Synchronization;Computer Society;Processor scheduling;Mechanical factors;Predictive models;Detectors}
     \endentry
   \enddatalist
 \endrefsection

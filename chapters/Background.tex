@@ -38,7 +38,17 @@ So as we see, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especia
 
 \subsection{Mutual Exclusion}\label{subsec:mutual-exclusion}
 
-As discussed mutual exclusion does only allow one process or thread to access the shared resource at a time. This approach inherently relys on blocking some processes, which can lead to several issues, including deadlocks, process starvation, priority inversion, and increased response times. While explaining some of these problems, this paper will also give an superficial explanation on some non wait-free Sysnchronisation techniques. \cite{brandenburg2019multiprocessorrealtimelockingprotocols}
+As discussed mutual exclusion does only allow one process or thread to access the shared resource at a time. This includes that if a process p1 already accessed the shared resource x and is still working on it, a second process p2, which trys to access that shared resource x has to wait untill the process p1 finishes its task, where it needs that shared resource x. To achieve this mostly synchronisation techniques based on locks or semaphores are used to block the entry of an process to an already accessed and in use shared resource of an other process. See \cref{fig:mutual-exclusion} to gain an deeper understanding on how this works. This paper will not go into detail how traditional synchronisation techniques like locks or semaphores work, since for this work it is only important that these kind of methods manage the access of processes to shared resources in shared memorys via some kind of locks.
+
+\begin{figure}[h!]
+   \centering
+   \captionsetup{justification=centering}
+   \caption{Mutual exclusion between three tasks(processes), which access the same critical section. Multiple processes need to stop working and just wait for other processes to finish their work. See the waiting phase of the processes. \cite{MutualExclusion}}
+   \includegraphics[width=135mm]{images/mutual_exclusion.jpg}
+   \label{fig:mutual-exclusion}
+\end{figure}
+
+So we see that this approach inherently relys on blocking a set of processes, which can lead to several issues, including deadlocks, process starvation, priority inversion, and increased response times. \cite{brandenburg2019multiprocessorrealtimelockingprotocols}
 
 \subsubsection{Deadlock}\label{subsubsec:deadlock}
 
@@ -64,11 +74,13 @@ What could happen too is that while a low priority process is accessing a shared
 
 So as we see traditional synchronization might lead to problems. But even if these problmes do not occure we can see that mutual exclusion will always lead to waiting processes which leads to increased response times. This could lead to not meeting the timing constraints of a \ac{HRTS} environment. So synchronization mechanisms are needed that do not introduce blocking.
 
+\section{Lock-Free Synchronization}\label{sec:lock-free}
+
+As we see, we need synchronization techniques that do not block processes with any kind of locking mechanism as we saw before. One way could be the implementation of lock-free syschronization techniques. This would allow multiple processes to access the shared resource concurrently without blocking each other.  
+
 \section{Wait-Free Synchronization}\label{sec:wait-free}
 
-Wait-free synchronization solves all the problems mentioned before. Wait-free synchronization guarantees that every process will complete its operation in a finite number of steps, regardless of contention from other processes. This means starvation or a deadlock is by definition not possible anymore. Since starvation or blocking cannot happen anymore priority inversion is eliminated too, because there is not anymore the possibility that a low priority process blocks the task of an high priority process. This ensures system responsiveness and predictability thus ability to meet timing constraints, which are essential for hard real-time applications. 
-
-\section{Lock-Free Synchronization}\label{sec:lock-free}
+Wait-free synchronization solves all the problems mentioned before. Wait-free synchronization guarantees that every process will complete its operation in a finite number of steps, regardless of contention from other processes. This means starvation or a deadlock is by definition not possible anymore. Since starvation or blocking cannot happen anymore priority inversion is eliminated too, because there is not anymore the possibility that a low priority process blocks the task of an high priority process. This ensures system responsiveness and predictability thus ability to meet timing constraints, which are essential for hard real-time applications. In \cref{sec:state-of-the-art} we will look more into different techniques how wait-free synchronization can be achieved. Many wait-free synchronization algorithms are based on atomic operations, such as compare-and-swap (CAS) or load-linked/store-conditional (LL/SC). These operations allow processes to perform updates to shared data structures without the need for locks or other blocking mechanisms. This is particularly important in real-time systems, where timing constraints must be met and blocking operations can lead to missed constraints. \cite{waitFreeSynchronization}
 
 \section{Rust Programming Language}\label{sec:rust}
 
