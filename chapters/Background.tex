@@ -38,7 +38,7 @@ So as we see, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especia
 
 \subsection{Mutual Exclusion}\label{subsec:mutual-exclusion}
 
-As discussed mutual exclusion does only allow one process or thread to access the shared resource at a time. This includes that if a process p1 already accessed the shared resource x and is still working on it, a second process p2, which trys to access that shared resource x has to wait untill the process p1 finishes its task, where it needs that shared resource x. To achieve this mostly synchronisation techniques based on locks or semaphores are used to block the entry of an process to an already accessed and in use shared resource of an other process. See \cref{fig:mutual-exclusion} to gain an deeper understanding on how this works. This paper will not go into detail how traditional synchronisation techniques like locks or semaphores work, since for this work it is only important that these kind of methods manage the access of processes to shared resources in shared memorys via some kind of locks.
+As discussed mutual exclusion does only allow one process or thread to access the shared resource at a time. This includes that if a process p1 already accessed the shared resource x and is still working on it, a second process p2, which trys to access that shared resource x has to wait untill the process p1 finishes its task, where it needs that shared resource x. To achieve this mostly synchronisation techniques based on locks or semaphores are used to block the entry of an process to an already accessed and in use shared resource of an other process. See \cref{fig:mutual-exclusion} to gain an deeper understanding on how this works. This paper will not go into detail how traditional synchronisation techniques like locks or semaphores work, since for this work it is only important that these kind of methods manage the access of processes to shared resources in shared memorys via some kind of locks. A process will aquire a lock to access a shared resource and will release it, when its task is done. Another process trying to access the same resource while its in use has to wait untill the lock is released for that resource.
 
 \begin{figure}[h!]
    \centering
@@ -48,7 +48,7 @@ As discussed mutual exclusion does only allow one process or thread to access th
    \label{fig:mutual-exclusion}
 \end{figure}
 
-So we see that this approach inherently relys on blocking a set of processes, which can lead to several issues, including deadlocks, process starvation, priority inversion, and increased response times. \cite{brandenburg2019multiprocessorrealtimelockingprotocols}
+It is clear that this approach inherently relys on blocking a set of processes. This may lead to several issues, including deadlocks, process starvation, priority inversion, and increased response times. \cite{brandenburg2019multiprocessorrealtimelockingprotocols,MutexSemaphoreIPC}
 
 \subsubsection{Deadlock}\label{subsubsec:deadlock}
 
