@@ -28,7 +28,7 @@ The problem with this is that the system somehow has to manage how the processes
 
 So as we see, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especially when processes communicate via shared memory. Communication through shared memory always has a risk of race conditions (when multiple processes acces the same data and cause unexpected behaviour) and data inconsistency if the processes are not properly synchronized. Tratitional synchronization techniques ensure mutual exclusion (only one process at a time uses shared resource) thus avoiding race conditions and ensuring data consistency. Race conditions happen when for example two processes write to the same resource. Lets take a single counter instance with value 17 as a shared resource in a shared memory region. If one has process p1 and preocess p2 that increment the number we would think that the end result is 19. But what could happen is that p1 reads the value 17 and then p2 reads the value 17. Now internally both processes increment that number to 18 and both processes would write 18 to that shared resource. To understand this example more in detail \cref{fig:race-condition} visualizes a race condition with threads. The difference between processes and threads is just, that threads are part of a process which can perform multiple tasks simultaneously within that process \cite{DiffProcessThread}. So the concept shown in \cref{fig:race-condition} can be used for multiple processes too.
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
    \centering
    \captionsetup{justification=centering}
    \caption{Race condition between two threads, which write to the same shared variable \cite{Race-Condition}.}
@@ -40,7 +40,7 @@ So as we see, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especia
 
 As discussed mutual exclusion does only allow one process or thread to access the shared resource at a time. This includes that if a process p1 already accessed the shared resource x and is still working on it, a second process p2, which trys to access that shared resource x has to wait untill the process p1 finishes its task, where it needs that shared resource x. To achieve this mostly synchronisation techniques based on locks or semaphores are used to block the entry of an process to an already accessed and in use shared resource of an other process. See \cref{fig:mutual-exclusion} to gain an deeper understanding on how this works. This paper will not go into detail how traditional synchronisation techniques like locks or semaphores work, since for this work it is only important that these kind of methods manage the access of processes to shared resources in shared memorys via some kind of locks. A process will aquire a lock to access a shared resource and will release it, when its task is done. Another process trying to access the same resource while its in use has to wait untill the lock is released for that resource.
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
    \centering
    \captionsetup{justification=centering}
    \caption{Mutual exclusion between three tasks(processes), which access the same critical section. Multiple processes need to stop working and just wait for other processes to finish their work. See the waiting phase of the processes. \cite{MutualExclusion}}
@@ -54,7 +54,7 @@ It is clear that this approach inherently relys on blocking a set of processes. 
 
 A deadlock happens when each process of a set of processes are waiting for a resource held by other processes in the same set. The processes which are in a deadlock wait indefinetly for the resources and never terminate. So the resources that these waiting processes hold are also not released and are also not available to other processes. As one can see, this leads to a situation where no process can make any process. To understand this better \cref{fig:deadlock} visualizes a deadlock with two processes. In this example Process 1 holds Resource 1 and waits for Resource 2, while Process 2 holds Resource 2 and waits for resource r1. So both processes are waiting for each other to release the needed resources. \cite{Deadlock,chahar2013deadlock}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
    \centering
    \captionsetup{justification=centering}
    \caption{Deadlock between two processes, which wait for each other to release the needed resources \cite{Deadlock}.}
@@ -76,11 +76,117 @@ So as we see traditional synchronization might lead to problems. But even if the
 
 \section{Lock-Free Synchronization}\label{sec:lock-free}
 
-As we see, we need synchronization techniques that do not block processes with any kind of locking mechanism as we saw before. One way could be the implementation of lock-free syschronization techniques. This would allow multiple processes to access the shared resource concurrently without blocking each other.  
+As we see, we need synchronization techniques that do not block processes with any kind of locking mechanism as we saw before. One way could be the implementation of lock-free syschronization techniques. This would allow multiple processes to access the shared resource concurrently. Lock-free synchronization ensures that at least one process will make progress in a finite number of steps. However some processes may be unable to proceed, because lock-free synchronization does not guarantee that all processes will complete their operations in a finite number of steps. This means that starvation or even prioritiy inversion is still possible, as some processes, even high priority processes may be indefinitely delayed by others. There are different kind of mechanisms to achieve this. In this work the focus will lie on queue based techniques only to not exceed the limits of the thesis. We will look into one technique to understand in detail how lock free works. Many wait-free queues for example builds appon the lock-free technique introduced by Michael and Scott. \cite{MichaelScottQueue}
+
+\subsection{Michael and Scott's Lock-Free Queue}\label{subsec:michael-scott}
+
+Michael and Scott developed an algorithm seen in \cref{alg:michael-scott} using a linked-list as a shared data structure with a enqueue and a dequeue function to introduce lock-freedom. A linked-list is a list containing nodes containing data and a pointer called next which references the next node in the list, which can only be traversed in a single direction. There is also a pointer called head, which references the beginning node of the list and a pointer tails, which references the end node of the list. The core concept of the algorithm is the enqueue and dequeue functions in line 7 and 26 in \cref{alg:michael-scott} which are used to add and remove nodes to the shared data structure. When a process trys to add a node to the list, it first creates a new node and sets its next pointer to NULL. Then it tries to link the new node to the end of the list by using a \ac{CAS}. This operation atomically compares the current value of the tail pointer with the expected value and, if they match, updates the tail pointer to point to the new node. If another process has already modified the tail pointer, the \ac{CAS} operation will fail, and the process will retry until it succeeds. The dequeue function works similarly, but it removes nodes from the front of the list. It also uses \ac{CAS} to update the head pointer and remove nodes from the list. We can observe that this approach does not need any locks explained in \cref{sec:synchronization}. \cite{MichaelScottQueue}
+The algorithm also uses a technique called helping, where processes assist each other in completing their operations by updating pointers when they notice that another process is stuck. This happens in both enqueueing and dequeueing. When a process for example sees that the tail pointer is not pointing to the last node, because tail.ptr.next in line 13 or 30 in \cref{alg:michael-scott} is not NULL, it means that another process started it process by adding its node to the list, but is somehow lagging behind. So another process that started this process too will try to update the tail pointer to point it to the last node. This makes certain that every process can make progress independently from any contention, since the tail truly stays the last node added. \cite{MichaelScottQueue}
+The function Initialize we which starts at line 1 in \cref{alg:michael-scott} is just used to to create dummy nodes when there's no node in the list. This just simplifies the algorithm so that the head and tail pointers are not null. \cite{MichaelScottQueue}
+But as we see one problem may occur. If a process is trying to enqueue or dequeue, it can happen that the \ac{CAS} loop might fail indefinetly if other processes are constantly modifiying the tail or head pointer. This means that in very high contention scenarios, a process may be delayed indefinetly and starved out. In a broader sense some kind of priority inversion could be also the conclusion of process starvation, since the process starved out could be a higher priority process. This is why we need a slightly different approach which guerantees that every process will complete its operation in a finite number of steps. That approach will be explained in the next section. \cite{MichaelScottQueue}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Michael and Scott's Lock-Free Queue \cite{MichaelScottQueue}.}
+    \label{alg:michael-scott}
+    \scriptsize
+    \begin{algorithmic}[1]
+
+    \Function{Initialize}{Q : pointer to queue\_t}
+        \State node = \textbf{new} node() 
+        \Comment{Allocate a dummy node}
+        \State node.next.ptr = \texttt{NULL}
+        \Comment{Make it the only node in the list}
+        \State Q.Head = node 
+        \Comment{Both Head and Tail point}
+        \State Q.Tail = node 
+        \Comment{to this dummy node}
+    \EndFunction
+    
+    \Function{Enqueue}{Q : pointer to queue\_t, value : data\_type}
+        \State node = \textbf{new} node() 
+        \Comment{Allocate a new node from the free list}
+        \State node.value = value
+        \Comment{Copy enqueue value into node}
+        \State node.next.ptr = \texttt{NULL}
+        \Comment{Set next pointer of node to NULL}
+    
+        \Loop 
+        \Comment{Keep trying until Enqueue is done}
+            \State tail = Q.Tail
+            \Comment{Read Tail (pointer + count) together}
+            \State next = tail.ptr.next
+            \Comment{Read next ptr + count together}
+    
+            \If{tail == Q.Tail} 
+            \Comment{Are tail \& next consistent?}
+                \If{next.ptr == \texttt{NULL}}
+                \Comment{Tail is the last node?}
+                    \If{$CAS(\&\,tail.ptr.next,\; next,\; \langle node,\; next.count+1\rangle)$}
+                        \State \textbf{break}
+                        \Comment{Link the new node; Enqueue is done}
+                    \EndIf
+                \Else 
+                \Comment{Tail not pointing to the last node}
+                    \State CAS($\&$\,Q.Tail,\; tail,\; $\langle$ next.ptr,\; tail.count+1$\rangle$)
+                    \Comment{Move Tail forward (helping another enqueuer)}
+                \EndIf
+            \EndIf
+        \EndLoop
+    
+        \State 
+        $CAS(\&\,Q.Tail,\; tail,\; \langle node,\; tail.count+1\rangle)$
+        \Comment{Final attempt to swing Tail to the inserted node}
+    
+    \EndFunction
+    
+    \Function{Dequeue}{Q : pointer to queue\_t,\; pvalue : pointer to data\_type}
+        \Loop
+        \Comment{Keep trying until Dequeue is done}
+            \State head = Q.Head
+            \State tail = Q.Tail
+            \State next = head.ptr.next
+            \Comment{Read head->next}
+    
+            \If{head == Q.Head} 
+            \Comment{Still consistent?}
+                \If{head.ptr == tail.ptr} 
+                \Comment{Empty or Tail behind?}
+                    \If{next.ptr == \texttt{NULL}}
+                    \Comment{Queue is empty}
+                        \State \textbf{return} FALSE
+                    \Else
+                        \Comment{Tail is behind, help move it}
+                        \State 
+                        $CAS(\&\,Q.Tail,\; tail,\; \langle next.ptr,\; tail.count+1\rangle$)
+                    \EndIf
+    
+                \Else
+                    \Comment{No need to adjust Tail}
+                    \State *pvalue = next.ptr.value
+                    \Comment{Read value before CAS}
+                    \If{$CAS(\&\,Q.Head,\; head,\; \langle next.ptr,\; head.count+1\rangle)$}
+                        \State \textbf{break}
+                        \Comment{Dequeue is done}
+                    \EndIf
+                \EndIf
+            \EndIf
+        \EndLoop
+    
+        \State \textbf{free}(head.ptr)
+        \Comment{Safe to free old dummy node}
+        \State \textbf{return} TRUE
+    
+    \EndFunction
+    
+    \end{algorithmic}
+\end{algorithm}
+
 
 \section{Wait-Free Synchronization}\label{sec:wait-free}
 
-Wait-free synchronization solves all the problems mentioned before. Wait-free synchronization guarantees that every process will complete its operation in a finite number of steps, regardless of contention from other processes. This means starvation or a deadlock is by definition not possible anymore. Since starvation or blocking cannot happen anymore priority inversion is eliminated too, because there is not anymore the possibility that a low priority process blocks the task of an high priority process. This ensures system responsiveness and predictability thus ability to meet timing constraints, which are essential for hard real-time applications. In \cref{sec:state-of-the-art} we will look more into different techniques how wait-free synchronization can be achieved. Many wait-free synchronization algorithms are based on atomic operations, such as compare-and-swap (CAS) or load-linked/store-conditional (LL/SC). These operations allow processes to perform updates to shared data structures without the need for locks or other blocking mechanisms. This is particularly important in real-time systems, where timing constraints must be met and blocking operations can lead to missed constraints. \cite{waitFreeSynchronization}
+We saw that lock-freedom solves the problem, that a system can get into a deadlock. But this is not enough, in a fully automated modern manufacturing line for example we do not want any process to not complete its task, since that could mean that some modules in a automated manufacturing line would never finish their work in a worst case scenario. And since in such a line every part is necessary that would mean that the line would stop at some point. So we need a solution where every process finishes their task in a finite number of steps and not just one. Wait-free synchronization guarantees that every process will complete its operation in a finite number of steps, regardless of contention. This means that even process starvation is by definition not possible anymore. Since starvation cannot happen anymore priority inversion is eliminated too, because there is not anymore the possibility that a low priority process blocks the task of an high priority process. This ensures system responsiveness and predictability thus ability to meet timing constraints, which are essential for hard real-time applications. In \cref{sec:state-of-the-art} we will look more into different techniques how wait-free synchronization can be achieved.
 
 \section{Rust Programming Language}\label{sec:rust}
 
