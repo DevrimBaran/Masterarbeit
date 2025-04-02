@@ -31,8 +31,9 @@ So as we see, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especia
 \begin{figure}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Race condition between two threads, which write to the same shared variable \cite{Race-Condition}.}
+   \caption{Race condition between two threads, which write to the same shared variable.}
    \includegraphics[width=115mm]{images/race-condition.png}
+   \cite{Race-Condition}
    \label{fig:race-condition}
 \end{figure}
 
@@ -43,8 +44,9 @@ As discussed mutual exclusion does only allow one process or thread to access th
 \begin{figure}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Mutual exclusion between three tasks(processes), which access the same critical section. Multiple processes need to stop working and just wait for other processes to finish their work. See the waiting phase of the processes. \cite{MutualExclusion}}
+   \caption{Mutual exclusion between three tasks(processes), which access the same critical section. Multiple processes need to stop working and just wait for other processes to finish their work. See the waiting phase of the processes.}
    \includegraphics[width=135mm]{images/mutual_exclusion.jpg}
+   \cite{MutualExclusion}
    \label{fig:mutual-exclusion}
 \end{figure}
 
@@ -53,8 +55,9 @@ It is clear that this approach inherently relys on blocking a set of processes. 
 \begin{figure}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Deadlock between two processes, which wait for each other to release the needed resources \cite{Deadlock}.}
+   \caption{Deadlock between two processes, which wait for each other to release the needed resources.}
    \includegraphics[width=110mm]{images/deadlock.png}
+   \cite{Deadlock}
    \label{fig:deadlock}
 \end{figure}
 
@@ -66,7 +69,7 @@ We mentioned several problems of synchronisation. What if when multiple processe
 
 Even worse, what if two or more processes already accessed a resource and now each of them wait that the other process releases the lock for the resource each of them aquired? This results in a situation  seen in \cref{fig:deadlock} where these processes now indefinetlywait for each other and never terminate. So the resources that these waiting processes hold are also never released and are also never available to other processes maybe needed by other systems. As one can see, this a system into a state which would make no progress any further and would also not respond to any command anymore. \cite{Deadlock,chahar2013deadlock}
 
-For instance a driverless car with a brake-by-wire system, could eventually not brake if needed and a fatal car crash would happen. 
+For instance a driverless car with a brake-by-wire system, where processes responsible for braking are in a deadlock, could eventually not brake if needed and a fatal car crash would happen. 
 
 
 \subsubsection{Priority Inversion}\label{subsubsec:priority-inversion}
