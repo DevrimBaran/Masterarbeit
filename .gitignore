@@ -17,6 +17,10 @@ latexindent.pl
 /LatexIndent
 /path-helper-files
 /defaultSettings.yaml
+/path
+/web_scraper/__pycache__
+/web_scraper/path
+/web_scraper/geckodriver*
 
 !images/logo-isw.pdf
 !Name_Thema.pdf
