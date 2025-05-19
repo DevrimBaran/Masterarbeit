@@ -1,1 +1,36 @@
 \chapter{Methodology}
+To achieve the goal that is defined in \cref{sec:objective}, we first need to find all wait-free data structures that could be used for \ac{IPC} through shared memory in \ac{HRTS}. To do this a method was used that is more known from mapping studys or literature reviews. Multiple python scripts were implemented mult to do this. A web scraper script was written to scrape over google scholar with the following querys seen in \cref{alg:python_scraper}:
+\begin{itemize}
+   \item "wait-free queue"
+   \item "wait-free" ("mpmc" OR "multi-producer multi-consumer" OR "multi-writer multi-reader" OR "many-to-many") "queue"
+   \item "wait-free" ("mpsc" OR "multi-producer single-consumer" OR "single-writer multi-reader" OR "many-to-one") "queue"
+   \item "wait-free" ("spsc" OR "single-producer single-consumer" OR "single-writer single-reader" OR "one-to-one") "queue"
+   \item "wait-free" ("spmc" OR "single-producer multi-consumer" OR "multi-writer single-reader" OR "one-to-many") "queue"
+\end{itemize}
+In google scholar a whitespace is considered as an AND. The rest is interpreted as read. With this approach i got a list of 1324 papers. The papers were then written into a csv file split into query, rank (number of paper), title, year, authors, venue, citations, abstract snippet, full\_abstract and url with ";" as an delimiter. To extract all of this the information in google scholar was extracted and then for the full abstract the scraper went onto the source url and extracted the abstract there. If the url was a direct pdf link, a pdf reader was used to find the abstract. If an abstract was not extractable (some source site which was not considered or other problems), "ABSTRACT\_NOT\_FOUND" was written instead or if the paper was accessible the full paper was written instead into that cell. Because a lot of scientific web pages will put ceptchas if continuously requests are made undetected\_chromedriver was importet and used as the web driver. It is an enhanced version of chromedriver which bypasses anti bot detections. After that I also implemented a regex analyzer to analyze the abstracts of the found papers on the words "lock\-free", "wait\-free", and "obstruction\-free" and also again without a hyphon inbetween these words seen in \cref{alg:python_regex}. If these keywords were not found in the abstract or the abstract contained the flag "ABSTRACT\_NOT\_FOUND" the paper was removed from the csv. This left 475 papers that contained at least one of these words in their abstract. After that with \cref{alg:python_dup_rem} the duplicates were removed by the algorithm, which left 325 papers. The duplicates were removed by checking the url of the paper. Now what was left had to be manually analyzed to see if the paper was relevant for the topic. Since libre office and microsoft excel has a limit of 32.767 charachters per cell also with \cref{alg:python_abs_split} a abstract splitter had to be build to split the abstract into multiple cells. Analyzing was done by reading the paper and checking if the paper was developing an wait-free fifo queue. While dooing that also backward and forward search was done to even find more papers. In the end 25 papers were left from the 325 papers and 3 more paper were found by backward and forward search. The papers were then split into 4 categories:
+\begin{itemize}
+   \item \ac{MPMC} queues \cite{Kogan2011WaitFreeQueues,FeldmanDechev2015WaitFreeRingBuffer,kogan2012methodology,StellwegQueue,FeldmanDechevV2,FeldmanDechevV3,RamalheteQueue,wCQWaitFreeQueue,naderibeni2023waitfreequeuepolylogarithmicstep,johnen_et_al:LIPIcs.OPODIS.2022.4,Naderibeni2022WaitFree,Bedin2024WaitFreeBurden,Verma2013Scalable,KhanchandaniQueuePrimitives,FastFetchAndAddWaitFreeQueue}
+   \item \ac{MPSC} queues \cite{WangCacheCoherent,adampsc,jiffy,JayantiLog,Drescher2015GuardedSections}
+   \item \ac{SPMC} queues with \cite{Mateíspmc}
+   \item \ac{SPSC} queues with \cite{Lamport1983SPSCCircularBuffer,torquati2010singleproducersingleconsumerqueuessharedcache,Aldinucci2012EfficientSync,Wang2013BQueue,DehnaviQueue,MaffioneCacheAware,ffq}
+\end{itemize}
+Now the wait-free fifo queues had to be compared performance wise. Since some of the queues were simililarily implemented it would be reasonable to implement all of them, but more if similar algorithms were grouped into groups and then these groups got compared by implementing one algorihtm from each group. So these papers had to be split into sub categories except for the \ac{SPMC} category since there was only one paper. The \ac{SPSC} and \ac{MPSC} all had distinct ways of implementing the queues so no sub categories were made. However the \ac{MPMC} queue category could be split into 9 sub categopries where category 1 and 2 wass again split into 2 sub categories. The diffent groups mostly groupt together different versions of the same algorithm:
+\begin{itemize}
+   \item Group 1: Linked-List queues with peer helping via shared descriptors
+   \begin{itemize}
+      \item Group 1.1: Phase-Based priority helping \cite{Kogan2011WaitFreeQueues,kogan2012methodology}
+      \item Group 1.2: Turn-Based helping with \cite{RamalheteQueue}
+   \end{itemize}
+   \item Group 2: Array/Ring-Buffer queues with FAA-Distributed indexing and slot level coordination
+   \begin{itemize}
+      \item Group 2.1: Direct CAS on slot with helping for unfilled reservations \cite{FastFetchAndAddWaitFreeQueue}
+      \item Group 2.2: Sequence ID (seqid) matching and bitmasked slot state management \cite{FeldmanDechev2015WaitFreeRingBuffer,FeldmanDechevV2,FeldmanDechevV3}
+   \end{itemize}
+   \item Group 3: Segment array queues with FAA Indexing and collaborative slot management \cite{wCQWaitFreeQueue}
+   \item Group 4: Tree-based queues with hierarchical metadata propagation for ordering with \cite{naderibeni2023waitfreequeuepolylogarithmicstep,Naderibeni2022WaitFree}
+   \item Group 5: Hybrid queues: Array sub-queues with tree based timestamp coordination and FAA-coordinated dequeues \cite{johnen_et_al:LIPIcs.OPODIS.2022.4}
+   \item Group 6: Dedicated helper thread mediated queues \cite{Verma2013Scalable}
+   \item Group 7: Array queues with specialized packed head/tail primitives and abstracted indexing set \cite{KhanchandaniQueuePrimitives}
+   \item Group 8: Static segmented array queue with element-level atomic state flags and segment locators \cite{StellwegQueue}
+   \item Group 9: Array queues with CAS-based slot management and FIFO ordering \cite{Bedin2024WaitFreeBurden}
+\end{itemize}

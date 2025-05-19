@@ -1,14 +1,18 @@
 import csv
 import pathlib
+import sys
+
+csv.field_size_limit(sys.maxsize)
 
 def remove_duplicates(csv_path):
    """
    Remove duplicate rows in the CSV based on the 'url' field.
    """
-   temp_path = csv_path.with_suffix('.tmp')
+   
+   dest = csv_path.with_name(csv_path.stem + "_dedup" + csv_path.suffix)
    seen = set()
    with csv_path.open('r', newline='', encoding='utf-8') as infile, \
-      temp_path.open('w', newline='', encoding='utf-8') as outfile:
+      dest.open('w', newline='', encoding='utf-8') as outfile:
       reader = csv.DictReader(infile, delimiter=';')
       writer = csv.DictWriter(outfile, fieldnames=reader.fieldnames, delimiter=';')
       writer.writeheader()
@@ -17,10 +21,9 @@ def remove_duplicates(csv_path):
          if url and url not in seen:
                seen.add(url)
                writer.writerow(row)
-   temp_path.replace(csv_path)
    
 def main():
-   remove_duplicates(pathlib.Path('google_scholar.csv'))
+   remove_duplicates(pathlib.Path('web_scraper/papers_regex_filtered.csv'))
    print("Done removing duplicates.")
 
 

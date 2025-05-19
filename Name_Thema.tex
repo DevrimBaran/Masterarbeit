@@ -7,6 +7,7 @@
                 oneside,
                 toc=bibliography,
                 toc=listof
+                listof=flat,
                 ]{scrbook}
 
 \input{settings}
@@ -26,6 +27,7 @@
 \date{\today}
 \supervisor{Marc Fischer}
 \professor{Prof. Andreas Wortmann}
+
 
 \begin{document} 
     \frontmatter
@@ -54,6 +56,7 @@
     \input{chapters/Introduction}
     \input{chapters/Background}
     \input{chapters/Related_Work}
+    \input{chapters/Methodology}
     \input{chapters/Identification}
     \input{chapters/Implementation}
     \input{chapters/Results}
@@ -85,7 +88,7 @@
     
     % Appendix, if needed:
     \appendix
-    \chapter{Appendix}
+    \input{chapters/Appendix}
 
 
 \end{document}

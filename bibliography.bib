@@ -18,6 +18,48 @@
 	keywords = {wait-free synchronization, linearization},
 }
 
+@conference{FeldmanDechevV2,
+	author       = {Dechev, Damian and Feldman, Steven and Barrington, Andrew},
+	title        = {A Scalable Multi-Producer Multi-Consumer Wait-Free Ring Buffer.},
+	annote       = {Abstract not provided.},
+	url          = {https://www.osti.gov/biblio/1531271},
+	place        = {United States},
+	organization = {Sandia National Lab. (SNL-NM), Albuquerque, NM (United States)},
+	year         = {2015},
+	month        = {04}}
+
+
+
+@inproceedings{FeldmanDechevV3,
+	author = {Barrington, Andrew and Feldman, Steven and Dechev, Damian},
+	title = {A scalable multi-producer multi-consumer wait-free ring buffer},
+	year = {2015},
+	isbn = {9781450331968},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/2695664.2695924},
+	doi = {10.1145/2695664.2695924},
+	abstract = {A ring buffer or cyclical queue is a First In, First Out (FIFO) queue that stores elements on a fixed-length array. This allows for efficient O(1) operations, cache-aware optimizations, and low memory overhead. Because ring buffers are limited to only the array and two counters they are desirable for systems with limited memory. Many applications (e.g. cloud-based services) depend on ring buffers to pass work from one thread to another. The rise in many-core architecture has resulted in increased performance from shared data structures such as ring buffers. Existing research has forgone the use of locks and permitted greater scalability and core utilization for such designs. Such non-blocking designs are categorized by the level of progress they guarantee with wait-freedom being the most desirable categorization. Such a guarantee provides freedom from deadlock, livelock, and thread starvation. Lock-free and obstruction-free designs are not safe from all of these pitfalls [5].},
+	booktitle = {Proceedings of the 30th Annual ACM Symposium on Applied Computing},
+	pages = {1321–1328},
+	numpages = {8},
+	keywords = {concurrent, non-blocking, parallel, queue, ring buffer, wait-free},
+	location = {Salamanca, Spain},
+	series = {SAC '15}
+}
+
+@INPROCEEDINGS{StellwegQueue,
+	author={Stellwag, Philippe and Ditter, Alexander and Schroder-Preikschat, Wolfgang},
+	booktitle={2009 IEEE International Symposium on Industrial Embedded Systems}, 
+	title={A wait-free queue for multiple enqueuers and multiple dequeuers using local preferences and pragmatic extensions}, 
+	year={2009},
+	volume={},
+	number={},
+	pages={237-248},
+	keywords={Delay;Data structures;Application software;Operating systems;Multicore processing;Real time systems;Parallel robots;Robot control;Control systems;Yarn},
+	doi={10.1109/SIES.2009.5196220}}
+
+
 @article{kogan2012methodology,
 	author = {Kogan, Alex and Petrank, Erez},
 	title = {A methodology for creating fast wait-free data structures},
@@ -160,6 +202,71 @@
 	location = {Barcelona, Spain},
 	series = {PMAM'16}
 }
+
+@inproceedings{Aldinucci2012EfficientSync,
+	author    = {Aldinucci, Marco and Danelutto, Marco and Kilpatrick, Peter and Meneghin, Massimiliano and Torquati, Massimo},
+	title     = {An Efficient Synchronisation Mechanism for Multi-Core Systems},
+	booktitle = {Euro-Par 2012 Parallel Processing},
+	year      = {2012},
+	editor    = {Kaklamanis, Christos and Papatheodorou, Theodore and Spirakis, Paul G.},
+	series    = {Lecture Notes in Computer Science},
+	volume    = {7484},
+	publisher = {Springer},
+	address   = {Berlin, Heidelberg},
+	note      = {The provided PDF indicates this work is related to Euro-Par 2012. Exact page numbers for this specific title within the proceedings were not found in the immediate search; the closely related paper "An Efficient Unbounded Lock-Free Queue for Multi-core Systems" by the same authors appears on pages 662-673 of the same volume.}
+}
+
+@article{Wang2013BQueue,
+	author    = {Wang, Junchang and Zhang, Kai and Tang, Xinan and Hua, Bei},
+	title     = {B-Queue: Efficient and Practical Queuing for Fast Core-to-Core Communication},
+	journal   = {International Journal of Parallel Programming},
+	year      = {2013},
+	volume    = {41},
+	number    = {1},
+	pages     = {137--159},
+	month     = {2},
+	abstract  = {Core-to-core communication is critical to the effective use of multi-core processors. A number of software based concurrent lock-free queues have been proposed to address this problem. Existing solutions, however, suffer from performance degradation in real testbeds, or rely on auxiliary hardware or software timers to handle the deadlock problem when batching is used, making those solutions good in theory but difficult to use in practice. This paper describes the pros and cons of existing concurrent lock-free queues in both dummy and real testbeds and proposes B-Queue, an efficient and practical single-producer-single-consumer concurrent lock-free queue that solves the deadlock problem gracefully by introducing a self-adaptive backtracking mechanism. Experiments show that in real massively-parallel applications, B-Queue is faster than FastForward and MCRingBuffer, the two state-of-the-art concurrent lock-free queues, by up to 10x and 5x, respectively. Moreover, B-Queue outperforms FastForward and MCRingBuffer in terms of stability and scalability, making it a good candidate for fast core-to-core communication on multi-core architectures.},
+	issn      = {1573-7640},
+	doi       = {10.1007/s10766-012-0213-x},
+	url       = {https://doi.org/10.1007/s10766-012-0213-x}
+}
+
+@inproceedings{DehnaviQueue,
+	author={Dehnavi, Saeid and Goswami, Dip and Goossens, Kees},
+	booktitle={2021 IEEE 14th International Symposium on Embedded Multicore/Many-core Systems-on-Chip (MCSoC)}, 
+	title={Analyzable Publish-Subcribe Communication Through a Wait-Free FIFO Channel for MPSoC Real-Time Applications}, 
+	year={2021},
+	volume={},
+	number={},
+	pages={388-395},
+	keywords={Performance evaluation;Protocols;Service robots;Stochastic processes;Publish-subscribe;Programming;System recovery;Multi-Processor Systems on Chip;Real-Time Systems;Wait-Free Asynchronous Communication;Publish-Subscribe Communication},
+	doi={10.1109/MCSoC51149.2021.00064}}
+
+@inproceedings{ffq,
+	author = {Giacomoni, John and Moseley, Tipp and Vachharajani, Manish},
+	year = {2008},
+	month = {01},
+	pages = {},
+	title = {FastForward for Efficient Pipeline Parallelism: A Cache-Optimized Concurrent Lock-Free Queue},
+	journal = {Proceedings of the ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming, PPOPP},
+	doi = {10.1145/1345206.1345215}
+}
+
+@article{MaffioneCacheAware,
+author = {Maffione, Vincenzo and Lettieri, Giuseppe and Rizzo, Luigi},
+title = {Cache-aware design of general-purpose Single-Producer–Single-Consumer queues},
+journal = {Software: Practice and Experience},
+volume = {49},
+number = {5},
+pages = {748-779},
+keywords = {cache-aware design, FastForward, Lamport lock-free queue, SPSC},
+doi = {https://doi.org/10.1002/spe.2675},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.2675},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/spe.2675},
+abstract = {Summary Data processing pipelines normally use lockless Single-Producer–Single-Consumer (SPSC) queues to efficiently decouple their processing threads and achieve high throughput, minimizing the cost of synchronization. SPSC queues have been widely studied, mostly for applications such as streaming data or network monitoring, where the main goal is maximizing throughput. There are now many applications, such as virtual-machine–virtual-machine communication, software-defined networking, and message-based kernels, where low latency is also important, and the tradeoffs between high-throughput and low-latency algorithms have not been studied equally well. Furthermore, at high or variable transaction rates, the effect of memory hierarchies and cache coherence subsystems may be dominant and yield surprising results. In this paper, we make two contributions. First, we provide a comprehensive study of the two main families of SPSC queues, namely, “Lamport” and “FastForward” queues, with a detailed analytical and experimental characterization of their behavior in terms of operating regimes, throughput, latency, and cache misses. Second, we propose two new queue variants, namely, improved FastForward and batched improved FastForward, which have better worst-case behavior than other variants in terms of cache misses, which is an important feature for a number of applications. Together, these two contributions provide practical guidelines to choose the best solution depending on the application requirements.},
+year = {2019}
+}
+
 
 @misc{torquati2010singleproducersingleconsumerqueuessharedcache,
       title={Single-Producer/Single-Consumer Queues on Shared Cache Multi-Core Systems}, 
@@ -436,6 +543,44 @@
 	url={https://api.semanticscholar.org/CorpusID:218073330}
 }
 
+@techreport{Drescher2015GuardedSections,
+	author      = {Gabor Drescher and Wolfgang Schr{\"o}der-Preikschat},
+	title       = {An Experiment in Wait-Free Synchronisation of Priority-Controlled Simultaneous Processes: Guarded Sections},
+	institution = {Friedrich-Alexander-Universit{\"a}t Erlangen-N{\"u}rnberg, Dept. of Computer Science},
+	year        = {2015},
+	number      = {CS-2015-01},
+	month       = {1},
+	url         = {https://www4.cs.fau.de/Publications/2015/drescher_15_cstr.pdf}
+}
+
+@InProceedings{Mateíspmc,
+	author="David, Matei",
+	editor="Guerraoui, Rachid",
+	title="A Single-Enqueuer Wait-Free Queue Implementation",
+	booktitle="Distributed Computing",
+	year="2004",
+	publisher="Springer Berlin Heidelberg",
+	address="Berlin, Heidelberg",
+	pages="132--143",
+	abstract="We study wait-free linearizable Queue implementations in asynchronous shared-memory systems from other consensus number 2 objects, such as Fetch{\&}Add and Swap. The best previously known implementation allows at most two processes to perform Dequeue operations. We provide a new implementation, when only one process performs Enqueue operations and any number of processes perform Dequeue operations. A nice feature of this implementation is the fact that both Enqueue and Dequeue operations take constant time.",
+	isbn="978-3-540-30186-8"
+}
+
+@InProceedings{JayantiLog,
+	author="Jayanti, Prasad
+	and Petrovic, Srdjan",
+	editor="Sarukkai, Sundar
+	and Sen, Sandeep",
+	title="Logarithmic-Time Single Deleter, Multiple Inserter Wait-Free Queues and Stacks",
+	booktitle="FSTTCS 2005: Foundations of Software Technology and Theoretical Computer Science",
+	year="2005",
+	publisher="Springer Berlin Heidelberg",
+	address="Berlin, Heidelberg",
+	pages="408--419",
+	abstract="Despite the ubiquitous need for shared FIFO queues in parallel applications and operating systems, there are no sublinear-time wait-free queue algorithms that can support more than a single enqueuer and a single dequeuer. Two independently designed algorithms---David's recent algorithm [1] and the algorithm in this paper---break this barrier. While David's algorithm is capable of supporting multiple dequeuers (but only one enqueuer), our algorithm can support multiple enqueuers (but only one dequeuer). David's algorithm achieves O(1) time complexity for both enqueue and dequeue operations, but its space complexity is infinite because of the use of infinite sized arrays. The author states that he can bound the space requirement, but only at the cost of increasing the time complexity to O(n), where n is the number of dequeuers. A significant feature of our algorithm is that its time and space complexities are both bounded and small: enqueue and dequeue operations run in {\$}O({\backslash}lg n){\$}time, and the space complexity is O(n+m), where n is the number of enqueuers and m is the actual number of items currently present in the queue. David's algorithm uses fetch{\&}increment and swap instructions, which are both at level 2 of Herlihy's Consensus hierarchy, along with queue. Our algorithm uses the LL/SC instructions, which are universal. However, since these instructions have constant time wait-free implementation from CAS and restricted LL/SC that are widely supported on modern architectures, our algorithms can run efficiently on current machines. Thus, in applications where there are multiple producers and a single consumer (e.g., certain server queues and resource queues), our algorithm provides the best known solution to implementing a wait-free queue. Using similar ideas, we can also efficiently implement a stack that supports multiple pushers and a single popper.",
+	isbn="978-3-540-32419-5"
+}
+
 @article{jiffy,
 	author       = {Dolev Adas and
 							Roy Friedman},
@@ -509,6 +654,74 @@
 	numpages = {30}
 }
 
+@article{Naderibeni2022WaitFree,
+	author       = {Hossein Naderibeni},
+	title        = {A Wait-free Queue with Poly-logarithmic Worst-case Step Complexity},
+	school       = {York University},
+	year         = {2022},
+	month        = {11},
+	url          = {https://yorkspace.library.yorku.ca/items/205390f7-c334-428c-9ad1-69be91a1c7f6},
+	note         = {A Thesis submitted to the Faculty of Graduate Studies in Partial Fulfillment of the Requirements for the Degree of Master of Science, Graduate Program in Computer Science}
+}
+
+@article{Verma2013Scalable,
+	author       = {Mudit Verma},
+	title        = {Scalable and Performance-Critical Data Structures for Multicores},
+	school       = {Instituto Superior T\'{e}cnico, Universidade de Lisboa},
+	year         = {2013},
+	month        = {6},
+	url          = {https://web.tecnico.ulisboa.pt/~ist14191/repository/Thesis_Mudit_Verma.pdf},
+	note         = {Thesis to obtain the Master of Science Degree in Information Systems and Computer Engineering}
+}
+
+@inproceedings{KhanchandaniQueuePrimitives,
+	author = {Khanchandani, Pankaj and Wattenhofer, Roger},
+	title = {On the Importance of Synchronization Primitives with Low Consensus Numbers},
+	year = {2018},
+	isbn = {9781450363723},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3154273.3154306},
+	doi = {10.1145/3154273.3154306},
+	abstract = {The consensus number of a synchronization primitive is the maximum number of processes for which the primitive can solve consensus. This has been the traditional measure of power of a synchronization primitive. Thus, the compare-and-swap primitive, which has infinite consensus number, is considered most powerful and has been the primitive of choice for implementing concurrent data structures. In this work, we show that the synchronization primitives with low consensus numbers can also be potentially powerful by using them along with the compare-and-swap primitive to design an O (√n) time wait-free and linearizable concurrent queue. The best known time bound for a wait-free and linearizable concurrent queue using only the compare-and-swap primitive is O(n). Here, n is the total number of processes that can access the queue.The queue object maintains a sequence of elements and supports the operations enqueue(x) and dequeue(). The wait-free property implies that every call to enqueue(x) and dequeue() finishes in a bounded number of steps irrespective of the schedule of other n --1 processes. The linearizable property implies that the enqueue(x) and dequeue() calls appear to be instantaneously applied within the duration of respective calls. We design a wait-free and a linearizable concurrent queue using shared memory registers that support the compare-and-swap primitive and two other primitives of consensus number one and two respectively. The enqueue(x) and dequeue() operations take O (√n) steps each. The total number of registers required are O(nm) of O (max{log n, log m }) bits each, where m is a bound on the total number of enqueue(x) operations.},
+	booktitle = {Proceedings of the 19th International Conference on Distributed Computing and Networking},
+	articleno = {18},
+	numpages = {10},
+	keywords = {concurrent queue, sublinear wait-free, wait-free queue},
+	location = {Varanasi, India},
+	series = {ICDCN '18}
+}
+
+@article{Bedin2024WaitFreeBurden,
+	author    = {Bédin, Denis and Lépine, François and Mostéfaoui, Achour and Perez, Damien and Perrin, Matthieu},
+	title     = {Wait-free Algorithms: the Burden of the Past},
+	year      = {2024},
+	month     = {3},
+	journal   = {Research Square},
+	doi       = {10.21203/rs.3.rs-4125819/v1},
+	url       = {https://doi.org/10.21203/rs.3.rs-4125819/v1},
+	note      = {Preprint, Version v1, Posted: March 22, 2024. This work is licensed under a Creative Commons Attribution 4.0 International License.}
+}
+
+@InProceedings{johnen_et_al:LIPIcs.OPODIS.2022.4,
+	author =	{Johnen, Colette and Khattabi, Adnane and Milani, Alessia},
+	title =	{{Efficient Wait-Free Queue Algorithms with Multiple Enqueuers and Multiple Dequeuers}},
+	booktitle =	{26th International Conference on Principles of Distributed Systems (OPODIS 2022)},
+	pages =	{4:1--4:19},
+	series =	{Leibniz International Proceedings in Informatics (LIPIcs)},
+	ISBN =	{978-3-95977-265-5},
+	ISSN =	{1868-8969},
+	year =	{2023},
+	volume =	{253},
+	editor =	{Hillel, Eshcar and Palmieri, Roberto and Rivi\`{e}re, Etienne},
+	publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+	address =	{Dagstuhl, Germany},
+	URL =		{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4},
+	URN =		{urn:nbn:de:0030-drops-176240},
+	doi =		{10.4230/LIPIcs.OPODIS.2022.4},
+	annote =	{Keywords: Distributed computing, distributed algorithms, FIFO queue, shared memory, fault tolerance, concurrent data structures, relaxed specifications, complexity}
+}
+
 @misc{naderibeni2023waitfreequeuepolylogarithmicstep,
 	title={A Wait-free Queue with Polylogarithmic Step Complexity}, 
 	author={Hossein Naderibeni and Eric Ruppert},
@@ -537,7 +750,7 @@
 	series = {PPoPP '22}
 }
 
-@article{10.1145/3155284.3019022,
+@article{RamalheteQueue,
 author = {Ramalhete, Pedro and Correia, Andreia},
 title = {POSTER: A Wait-Free Queue with Wait-Free Memory Reclamation},
 year = {2017},
@@ -575,22 +788,24 @@ keywords = {low latency, non-blocking queue, wait-free}
 	series = {PPoPP '17}
 }
 
-@inproceedings{10.1145/1941553.1941585,
-author = {Kogan, Alex and Petrank, Erez},
-title = {Wait-free queues with multiple enqueuers and dequeuers},
-year = {2011},
-isbn = {9781450301190},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/1941553.1941585},
-doi = {10.1145/1941553.1941585},
-abstract = {The queue data structure is fundamental and ubiquitous. Lock-free versions of the queue are well known. However, an important open question is whether practical wait-free queues exist. Until now, only versions with limited concurrency were proposed. In this paper we provide a design for a practical wait-free queue. Our construction is based on the highly efficient lock-free queue of Michael and Scott. To achieve wait-freedom, we employ a priority-based helping scheme in which faster threads help the slower peers to complete their pending operations. We have implemented our scheme on multicore machines and present performance measurements comparing our implementation with that of Michael and Scott in several system configurations.},
-booktitle = {Proceedings of the 16th ACM Symposium on Principles and Practice of Parallel Programming},
-pages = {223–234},
-numpages = {12},
-keywords = {wait-free algorithms, concurrent queues},
-location = {San Antonio, TX, USA},
-series = {PPoPP '11}
+@article{FeldmanDechev2015WaitFreeRingBuffer,
+	author = {Feldman, Steven and Dechev, Damian},
+	title = {A wait-free multi-producer multi-consumer ring buffer},
+	year = {2015},
+	issue_date = {September 2015},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	volume = {15},
+	number = {3},
+	issn = {1559-6915},
+	url = {https://doi.org/10.1145/2835260.2835264},
+	doi = {10.1145/2835260.2835264},
+	abstract = {The ring buffer is a staple data structure used in many algorithms and applications. It is highly desirable in high-demand use cases such as multimedia, network routing, and trading systems. This work presents a new ring buffer design that is, to the best of our knowledge, the only array-based first-in-first-out ring buffer to provide wait-freedom. Wait-freedom guarantees that each thread completes its operation within a finite number of steps. This property is desirable for real-time and mission critical systems.This work is an extension and refinement of our earlier work. We have improved and expanded algorithm descriptions and pseudo-code, and we have performed all new performance evaluations.In contrast to other concurrent ring buffer designs, our implementation includes new methodology to prevent thread starvation and livelock from occurring.},
+	journal = {SIGAPP Appl. Comput. Rev.},
+	month = oct,
+	pages = {59–71},
+	numpages = {13},
+	keywords = {wait-free, ring buffer, parallel, non-blocking, concurrent}
 }
 
 @article{Kogan2011WaitFreeQueues,
@@ -613,7 +828,36 @@ series = {PPoPP '11}
 	keywords = {wait-free algorithms, concurrent queues}
 }
 
-@inproceedings{10.1145/2851141.2851168,
+@article{WangCacheCoherent,
+	author={Wang, Junchang and Jin, Qi and Fu, Xiong and Li, Yun and Shi, Peichang},
+	journal={IEEE Access}, 
+	title={Accelerating Wait-Free Algorithms: Pragmatic Solutions on Cache-Coherent Multicore Architectures}, 
+	year={2019},
+	volume={7},
+	number={},
+	pages={74653-74669},
+	keywords={Multicore processing;Acceleration;Hardware;Instruction sets;Concurrent computing;Indexes;Multicore;wait-free algorithm;MPSC queue},
+	doi={10.1109/ACCESS.2019.2920781}}
+
+@inproceedings{adampsc,
+	author = {Adas, Dolev and Friedman, Roy},
+	title = {A Fast Wait-Free Multi-Producers Single-Consumer Queue},
+	year = {2022},
+	isbn = {9781450395601},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3491003.3491004},
+	doi = {10.1145/3491003.3491004},
+	abstract = {In sharded data processing systems, sharded in-memory key-value stores, data flow programming and load sharing, multiple concurrent data producers feed requests into the same data consumer. This can be naturally realized through concurrent queues, where each consumer pulls its tasks from its dedicated queue. For scalability, wait-free queues are preferred over lock based structures. The vast majority of wait-free queue implementations, and even lock-free ones, support the multi-producer multi-consumer model. Yet, this comes at a premium, since implementing wait-free multi-producer multi-consumer queues requires utilizing complex helper data structures. The latter increases the memory consumption of such queues and limits their performance and scalability. Many such designs employ (hardware) cache unfriendly access patterns. In this work we study the implementation of wait-free multi-producer single-consumer queues. Specifically, we propose Jiffy, an efficient memory frugal novel wait-free multi-producer single-consumer queue and formally prove its correctness. We compare the performance and memory requirements of Jiffy with other state of the art lock-free and wait-free queues. We show that indeed Jiffy can maintain good performance with up to 128 threads, delivers up to 50\% better throughput than the next best construction we compared against, and consumes ≈ 90\% less memory.},
+	booktitle = {Proceedings of the 23rd International Conference on Distributed Computing and Networking},
+	pages = {77–86},
+	numpages = {10},
+	keywords = {Multi Producer Single Consumer, Unboubnded Queue, Wait-free},
+	location = {Delhi, AA, India},
+	series = {ICDCN '22}
+}
+
+@inproceedings{FastFetchAndAddWaitFreeQueue,
 author = {Yang, Chaoran and Mellor-Crummey, John},
 title = {A wait-free queue as fast as fetch-and-add},
 year = {2016},
@@ -630,24 +874,3 @@ keywords = {fast-path-slow-path, non-blocking queue, wait-free},
 location = {Barcelona, Spain},
 series = {PPoPP '16}
 }
-
-@article{FastFetchAndAddWaitFreeQueue,
-	author = {Yang, Chaoran and Mellor-Crummey, John},
-	title = {A wait-free queue as fast as fetch-and-add},
-	year = {2016},
-	issue_date = {August 2016},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	volume = {51},
-	number = {8},
-	issn = {0362-1340},
-	url = {https://doi.org/10.1145/3016078.2851168},
-	doi = {10.1145/3016078.2851168},
-	abstract = {Concurrent data structures that have fast and predictable performance are of critical importance for harnessing the power of multicore processors, which are now ubiquitous. Although wait-free objects, whose operations complete in a bounded number of steps, were devised more than two decades ago, wait-free objects that can deliver scalable high performance are still rare.In this paper, we present the first wait-free FIFO queue based on fetch-and-add (FAA). While compare-and-swap (CAS) based non-blocking algorithms may perform poorly due to work wasted by CAS failures, algorithms that coordinate using FAA, which is guaranteed to succeed, can in principle perform better under high contention. Along with FAA, our queue uses a custom epoch-based scheme to reclaim memory; on x86 architectures, it requires no extra memory fences on our algorithm's typical execution path. An empirical study of our new FAA-based wait-free FIFO queue under high contention on four different architectures with many hardware threads shows that it outperforms prior queue designs that lack a wait-free progress guarantee. Surprisingly, at the highest level of contention, the throughput of our queue is often as high as that of a microbenchmark that only performs FAA. As a result, our fast wait-free queue implementation is useful in practice on most multi-core systems today. We believe that our design can serve as an example of how to construct other fast wait-free objects.},
-	journal = {SIGPLAN Not.},
-	month = feb,
-	articleno = {16},
-	numpages = {13},
-	keywords = {fast-path-slow-path, non-blocking queue, wait-free}
-}
-
