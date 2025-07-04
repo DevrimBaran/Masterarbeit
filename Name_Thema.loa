@@ -15,8 +15,4 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {algorithm}{\numberline {2}{\ignorespaces Python web scraper}}{33}{algorithm.2}%
-\contentsline {algorithm}{\numberline {3}{\ignorespaces Python regex analyzer}}{43}{algorithm.3}%
-\contentsline {algorithm}{\numberline {4}{\ignorespaces Python duplicate remover}}{44}{algorithm.4}%
-\contentsline {algorithm}{\numberline {5}{\ignorespaces Python abstract splitter}}{44}{algorithm.5}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

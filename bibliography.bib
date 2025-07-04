@@ -48,17 +48,6 @@
 	series = {SAC '15}
 }
 
-@INPROCEEDINGS{StellwegQueue,
-	author={Stellwag, Philippe and Ditter, Alexander and Schroder-Preikschat, Wolfgang},
-	booktitle={2009 IEEE International Symposium on Industrial Embedded Systems}, 
-	title={A wait-free queue for multiple enqueuers and multiple dequeuers using local preferences and pragmatic extensions}, 
-	year={2009},
-	volume={},
-	number={},
-	pages={237-248},
-	keywords={Delay;Data structures;Application software;Operating systems;Multicore processing;Real time systems;Parallel robots;Robot control;Control systems;Yarn},
-	doi={10.1109/SIES.2009.5196220}}
-
 
 @article{kogan2012methodology,
 	author = {Kogan, Alex and Petrank, Erez},
@@ -231,16 +220,17 @@
 	url       = {https://doi.org/10.1007/s10766-012-0213-x}
 }
 
-@inproceedings{DehnaviQueue,
-	author={Dehnavi, Saeid and Goswami, Dip and Goossens, Kees},
-	booktitle={2021 IEEE 14th International Symposium on Embedded Multicore/Many-core Systems-on-Chip (MCSoC)}, 
-	title={Analyzable Publish-Subcribe Communication Through a Wait-Free FIFO Channel for MPSoC Real-Time Applications}, 
-	year={2021},
-	volume={},
-	number={},
-	pages={388-395},
-	keywords={Performance evaluation;Protocols;Service robots;Stochastic processes;Publish-subscribe;Programming;System recovery;Multi-Processor Systems on Chip;Real-Time Systems;Wait-Free Asynchronous Communication;Publish-Subscribe Communication},
-	doi={10.1109/MCSoC51149.2021.00064}}
+@software{githubMA,
+  author = {Demir, Devrim Baran},
+  howpublished = {\url{https://github.com/DevrimBaran/MA.git}},
+}
+
+@software{mirigithub,
+  title = {miri},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/rust-lang/miri.git}},
+}
 
 @inproceedings{ffq,
 	author = {Giacomoni, John and Moseley, Tipp and Vachharajani, Manish},
@@ -654,16 +644,6 @@ year = {2019}
 	numpages = {30}
 }
 
-@article{Naderibeni2022WaitFree,
-	author       = {Hossein Naderibeni},
-	title        = {A Wait-free Queue with Poly-logarithmic Worst-case Step Complexity},
-	school       = {York University},
-	year         = {2022},
-	month        = {11},
-	url          = {https://yorkspace.library.yorku.ca/items/205390f7-c334-428c-9ad1-69be91a1c7f6},
-	note         = {A Thesis submitted to the Faculty of Graduate Studies in Partial Fulfillment of the Requirements for the Degree of Master of Science, Graduate Program in Computer Science}
-}
-
 @article{Verma2013Scalable,
 	author       = {Mudit Verma},
 	title        = {Scalable and Performance-Critical Data Structures for Multicores},
@@ -672,64 +652,6 @@ year = {2019}
 	month        = {6},
 	url          = {https://web.tecnico.ulisboa.pt/~ist14191/repository/Thesis_Mudit_Verma.pdf},
 	note         = {Thesis to obtain the Master of Science Degree in Information Systems and Computer Engineering}
-}
-
-@inproceedings{KhanchandaniQueuePrimitives,
-	author = {Khanchandani, Pankaj and Wattenhofer, Roger},
-	title = {On the Importance of Synchronization Primitives with Low Consensus Numbers},
-	year = {2018},
-	isbn = {9781450363723},
-	publisher = {Association for Computing Machinery},
-	address = {New York, NY, USA},
-	url = {https://doi.org/10.1145/3154273.3154306},
-	doi = {10.1145/3154273.3154306},
-	abstract = {The consensus number of a synchronization primitive is the maximum number of processes for which the primitive can solve consensus. This has been the traditional measure of power of a synchronization primitive. Thus, the compare-and-swap primitive, which has infinite consensus number, is considered most powerful and has been the primitive of choice for implementing concurrent data structures. In this work, we show that the synchronization primitives with low consensus numbers can also be potentially powerful by using them along with the compare-and-swap primitive to design an O (√n) time wait-free and linearizable concurrent queue. The best known time bound for a wait-free and linearizable concurrent queue using only the compare-and-swap primitive is O(n). Here, n is the total number of processes that can access the queue.The queue object maintains a sequence of elements and supports the operations enqueue(x) and dequeue(). The wait-free property implies that every call to enqueue(x) and dequeue() finishes in a bounded number of steps irrespective of the schedule of other n --1 processes. The linearizable property implies that the enqueue(x) and dequeue() calls appear to be instantaneously applied within the duration of respective calls. We design a wait-free and a linearizable concurrent queue using shared memory registers that support the compare-and-swap primitive and two other primitives of consensus number one and two respectively. The enqueue(x) and dequeue() operations take O (√n) steps each. The total number of registers required are O(nm) of O (max{log n, log m }) bits each, where m is a bound on the total number of enqueue(x) operations.},
-	booktitle = {Proceedings of the 19th International Conference on Distributed Computing and Networking},
-	articleno = {18},
-	numpages = {10},
-	keywords = {concurrent queue, sublinear wait-free, wait-free queue},
-	location = {Varanasi, India},
-	series = {ICDCN '18}
-}
-
-@article{Bedin2024WaitFreeBurden,
-	author    = {Bédin, Denis and Lépine, François and Mostéfaoui, Achour and Perez, Damien and Perrin, Matthieu},
-	title     = {Wait-free Algorithms: the Burden of the Past},
-	year      = {2024},
-	month     = {3},
-	journal   = {Research Square},
-	doi       = {10.21203/rs.3.rs-4125819/v1},
-	url       = {https://doi.org/10.21203/rs.3.rs-4125819/v1},
-	note      = {Preprint, Version v1, Posted: March 22, 2024. This work is licensed under a Creative Commons Attribution 4.0 International License.}
-}
-
-@InProceedings{johnen_et_al:LIPIcs.OPODIS.2022.4,
-	author =	{Johnen, Colette and Khattabi, Adnane and Milani, Alessia},
-	title =	{{Efficient Wait-Free Queue Algorithms with Multiple Enqueuers and Multiple Dequeuers}},
-	booktitle =	{26th International Conference on Principles of Distributed Systems (OPODIS 2022)},
-	pages =	{4:1--4:19},
-	series =	{Leibniz International Proceedings in Informatics (LIPIcs)},
-	ISBN =	{978-3-95977-265-5},
-	ISSN =	{1868-8969},
-	year =	{2023},
-	volume =	{253},
-	editor =	{Hillel, Eshcar and Palmieri, Roberto and Rivi\`{e}re, Etienne},
-	publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
-	address =	{Dagstuhl, Germany},
-	URL =		{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4},
-	URN =		{urn:nbn:de:0030-drops-176240},
-	doi =		{10.4230/LIPIcs.OPODIS.2022.4},
-	annote =	{Keywords: Distributed computing, distributed algorithms, FIFO queue, shared memory, fault tolerance, concurrent data structures, relaxed specifications, complexity}
-}
-
-@misc{naderibeni2023waitfreequeuepolylogarithmicstep,
-	title={A Wait-free Queue with Polylogarithmic Step Complexity}, 
-	author={Hossein Naderibeni and Eric Ruppert},
-	year={2023},
-	eprint={2305.07229},
-	archivePrefix={arXiv},
-	primaryClass={cs.DC},
-	url={https://arxiv.org/abs/2305.07229}, 
 }
 
 @inproceedings{wCQWaitFreeQueue,
@@ -762,6 +684,7 @@ number = {8},
 issn = {0362-1340},
 url = {https://doi.org/10.1145/3155284.3019022},
 doi = {10.1145/3155284.3019022},
+note = {Full version available at \url{https://github.com/pramalhe/ConcurrencyFreaks/blob/master/papers/crturnqueue-2016.pdf}},
 abstract = {Queues are a widely deployed data structure. They are used extensively in many multi threaded applications, or as a communication mechanism between threads or processes. We propose a new linearizable multi-producer-multi-consumer queue we named Turn queue, with wait-free progress bounded by the number of threads, and with wait-free bounded memory reclamation. Its main characteristics are: a simple algorithm that does no memory allocation apart from creating the node that is placed in the queue, a new wait-free consensus algorithm using only the atomic instruction compare-and-swap (CAS), and is easy to plugin with other algorithms for either enqueue or dequeue methods.},
 journal = {SIGPLAN Not.},
 month = jan,
