@@ -133,6 +133,15 @@
       url={https://arxiv.org/abs/2311.05063}, 
 }
 
+@article{memorytomemory,
+author = {Bédin, Denis and Lépine, François and Mostéfaoui, Achour and Perez, Damien and Perrin, Matthieu},
+year = {2024},
+month = {03},
+pages = {},
+title = {Wait-free Algorithms: the Burden of the Past},
+doi = {10.21203/rs.3.rs-4125819/v1}
+}
+
 @misc{brandenburg2019multiprocessorrealtimelockingprotocols,
       title={Multiprocessor Real-Time Locking Protocols: A Systematic Review}, 
       author={Björn B. Brandenburg},
@@ -401,6 +410,43 @@ year = {2019}
 	author={Aditya Venkataraman and Kishore Kumar Jagadeesha},
 	year={2015},
 	url={https://api.semanticscholar.org/CorpusID:6899525}
+}
+
+@inproceedings{polylog,
+	author = {Naderibeni, Hossein and Ruppert, Eric},
+	title = {A Wait-free Queue with Polylogarithmic Step Complexity},
+	year = {2023},
+	isbn = {9798400701214},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3583668.3594565},
+	doi = {10.1145/3583668.3594565},
+	abstract = {We present a novel linearizable wait-free queue implementation using single-word CAS instructions. Previous lock-free queue implementations from CAS all have amortized step complexity of Ω(p) per operation in worst-case executions, where p is the number of processes that access the queue. Our new wait-free queue takes O(log p) steps per enqueue and O(log2 p + log q) steps per dequeue, where q is the size of the queue. A bounded-space version of the implementation has O(log p log(p + q)) amortized step complexity per operation.},
+	booktitle = {Proceedings of the 2023 ACM Symposium on Principles of Distributed Computing},
+	pages = {124–134},
+	numpages = {11},
+	keywords = {wait-free queues, concurrent data structures},
+	location = {Orlando, FL, USA},
+	series = {PODC '23}
+}
+
+@InProceedings{johnen_et_al:LIPIcs.OPODIS.2022.4,
+	author =	{Johnen, Colette and Khattabi, Adnane and Milani, Alessia},
+	title =	{{Efficient Wait-Free Queue Algorithms with Multiple Enqueuers and Multiple Dequeuers}},
+	booktitle =	{26th International Conference on Principles of Distributed Systems (OPODIS 2022)},
+	pages =	{4:1--4:19},
+	series =	{Leibniz International Proceedings in Informatics (LIPIcs)},
+	ISBN =	{978-3-95977-265-5},
+	ISSN =	{1868-8969},
+	year =	{2023},
+	volume =	{253},
+	editor =	{Hillel, Eshcar and Palmieri, Roberto and Rivi\`{e}re, Etienne},
+	publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+	address =	{Dagstuhl, Germany},
+	URL =		{https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4},
+	URN =		{urn:nbn:de:0030-drops-176240},
+	doi =		{10.4230/LIPIcs.OPODIS.2022.4},
+	annote =	{Keywords: Distributed computing, distributed algorithms, FIFO queue, shared memory, fault tolerance, concurrent data structures, relaxed specifications, complexity}
 }
 
 @Inbook{SharedMemory,
@@ -762,6 +808,42 @@ keywords = {low latency, non-blocking queue, wait-free}
 	keywords={Multicore processing;Acceleration;Hardware;Instruction sets;Concurrent computing;Indexes;Multicore;wait-free algorithm;MPSC queue},
 	doi={10.1109/ACCESS.2019.2920781}}
 
+@inproceedings{10.1145/121132.121151,
+author = {Anderson, Thomas E. and Bershad, Brian N. and Lazowska, Edward D. and Levy, Henry M.},
+title = {Scheduler activations: effective kernel support for the user-level management of parallelism},
+year = {1991},
+isbn = {0897914473},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/121132.121151},
+doi = {10.1145/121132.121151},
+abstract = {Threads are the vehicle for concurrency in many approaches to parallel programming. Threads separate the notion of a sequential execution stream from the other aspects of traditional UNIX-like processes, such as address spaces and I/O descriptors. The objective of this separation is to make the expression and control of parallelism sufficiently cheap that the programmer or compiler can exploit even fine-grained parallelism with acceptable overhead.Threads can be supported either by the operating system kernel or by user-level library code in the application address space, but neither approach has been fully satisfactory. This paper addresses this dilemma. First, we argue that the performance of kernel threads is inherently worse than that of user-level threads, rather than this being an artifact of existing implementations; we thus argue that managing parallelism at the user level is essential to high-performance parallel computing. Next, we argue that the lack of system integration exhibited by user-level threads is a consequence of the lack of kernel support for user-level threads provided by contemporary multiprocessor operating systems; we thus argue that kernel threads or processes, as currently conceived, are the wrong abstraction on which to support user-level management of parallelism. Finally, we describe the design, implementation, and performance of a new kernel interface and user-level thread package that together provide the same functionality as kernel threads without compromising the performance and flexibility advantages of user-level management of parallelism.},
+booktitle = {Proceedings of the Thirteenth ACM Symposium on Operating Systems Principles},
+pages = {95–109},
+numpages = {15},
+location = {Pacific Grove, California, USA},
+series = {SOSP '91}
+}
+
+@article{processesVSthreads,
+author = {Anderson, Thomas E. and Bershad, Brian N. and Lazowska, Edward D. and Levy, Henry M.},
+title = {Scheduler activations: effective kernel support for the user-level management of parallelism},
+year = {1991},
+issue_date = {Oct. 1991},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {25},
+number = {5},
+issn = {0163-5980},
+url = {https://doi.org/10.1145/121133.121151},
+doi = {10.1145/121133.121151},
+abstract = {Threads are the vehicle for concurrency in many approaches to parallel programming. Threads separate the notion of a sequential execution stream from the other aspects of traditional UNIX-like processes, such as address spaces and I/O descriptors. The objective of this separation is to make the expression and control of parallelism sufficiently cheap that the programmer or compiler can exploit even fine-grained parallelism with acceptable overhead.Threads can be supported either by the operating system kernel or by user-level library code in the application address space, but neither approach has been fully satisfactory. This paper addresses this dilemma. First, we argue that the performance of kernel threads is inherently worse than that of user-level threads, rather than this being an artifact of existing implementations; we thus argue that managing parallelism at the user level is essential to high-performance parallel computing. Next, we argue that the lack of system integration exhibited by user-level threads is a consequence of the lack of kernel support for user-level threads provided by contemporary multiprocessor operating systems; we thus argue that kernel threads or processes, as currently conceived, are the wrong abstraction on which to support user-level management of parallelism. Finally, we describe the design, implementation, and performance of a new kernel interface and user-level thread package that together provide the same functionality as kernel threads without compromising the performance and flexibility advantages of user-level management of parallelism.},
+journal = {SIGOPS Oper. Syst. Rev.},
+month = sep,
+pages = {95–109},
+numpages = {15}
+}
+
 @inproceedings{adampsc,
 	author = {Adas, Dolev and Friedman, Roy},
 	title = {A Fast Wait-Free Multi-Producers Single-Consumer Queue},
@@ -796,4 +878,22 @@ numpages = {13},
 keywords = {fast-path-slow-path, non-blocking queue, wait-free},
 location = {Barcelona, Spain},
 series = {PPoPP '16}
+}
+
+@inproceedings{halfincrementhalfmax,
+	author = {Khanchandani, Pankaj and Wattenhofer, Roger},
+	title = {On the Importance of Synchronization Primitives with Low Consensus Numbers},
+	year = {2018},
+	isbn = {9781450363723},
+	publisher = {Association for Computing Machinery},
+	address = {New York, NY, USA},
+	url = {https://doi.org/10.1145/3154273.3154306},
+	doi = {10.1145/3154273.3154306},
+	abstract = {The consensus number of a synchronization primitive is the maximum number of processes for which the primitive can solve consensus. This has been the traditional measure of power of a synchronization primitive. Thus, the compare-and-swap primitive, which has infinite consensus number, is considered most powerful and has been the primitive of choice for implementing concurrent data structures. In this work, we show that the synchronization primitives with low consensus numbers can also be potentially powerful by using them along with the compare-and-swap primitive to design an O (√n) time wait-free and linearizable concurrent queue. The best known time bound for a wait-free and linearizable concurrent queue using only the compare-and-swap primitive is O(n). Here, n is the total number of processes that can access the queue.The queue object maintains a sequence of elements and supports the operations enqueue(x) and dequeue(). The wait-free property implies that every call to enqueue(x) and dequeue() finishes in a bounded number of steps irrespective of the schedule of other n --1 processes. The linearizable property implies that the enqueue(x) and dequeue() calls appear to be instantaneously applied within the duration of respective calls. We design a wait-free and a linearizable concurrent queue using shared memory registers that support the compare-and-swap primitive and two other primitives of consensus number one and two respectively. The enqueue(x) and dequeue() operations take O (√n) steps each. The total number of registers required are O(nm) of O (max{log n, log m }) bits each, where m is a bound on the total number of enqueue(x) operations.},
+	booktitle = {Proceedings of the 19th International Conference on Distributed Computing and Networking},
+	articleno = {18},
+	numpages = {10},
+	keywords = {wait-free queue, sublinear wait-free, concurrent queue},
+	location = {Varanasi, India},
+	series = {ICDCN '18}
 }
