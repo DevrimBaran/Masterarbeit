@@ -92,9 +92,7 @@ So lets say 2 processes p1 and p2 untill line 16 executes one after the other. W
 
 The dequeue function works analogously, but instead of adding a node to the end of the list it removes a node from the front of the list. And since another process which could not finish its enqueue would cause confusion for other processes in the dequeue function, the process which could not finish its enqueue will also be helped in the dequeue function. \cite{MichaelScottQueue}
 
-Initialization starts at line 1 in \cref{alg:michael-scott}, which is just used to to create dummy nodes when there's no node in the list. This just simplifies the algorithm so that the head and tail pointers are not null. \cite{MichaelScottQueue}
-
-It can be observed that this approach does not need any locks explained in \cref{sec:synchronization}. Still this approach has one major problem. If for instance process p1 is trying to enqueue, it can happen that the \ac{CAS} loop might fail indefinetly if for an indefinite time other processes are always executing line 16 immediately befor p1 could execute line 16. This means that in very high contention scenarios, a process may be delayed indefinetly and starve out. In a \ac{HRTS} this could lead to violating timing constraints, since the process would not finish his task in the defined timing window, which is unacceptable. This is why a slightly different approach which guerantees that every process will complete its operation in a finite number of steps is in need. \cite{MichaelScottQueue}
+Initialization starts at line 1 in \cref{alg:michael-scott}, which is just used to to create dummy nodes when there's no node in the list. This just simplifies the algorithm so that the head and tail pointers are not null. It can be observed that this approach does not need any locks explained in \cref{sec:synchronization}. Still this approach has one major problem. If for instance process p1 is trying to enqueue, it can happen that the \ac{CAS} loop might fail indefinetly if for an indefinite time other processes are always executing line 16 immediately befor p1 could execute line 16. This means that in very high contention scenarios, a process may be delayed indefinetly and starve out. In a \ac{HRTS} this could lead to violating timing constraints, since the process would not finish his task in the defined timing window, which is unacceptable. This is why a slightly different approach which guerantees that every process will complete its operation in a finite number of steps is in need. \cite{MichaelScottQueue}
 
 \begin{algorithm}[!ht]
     \centering
@@ -207,7 +205,7 @@ An operation available on ARM, MIPS and Alpha architecutures usually implied wit
 \end{itemize}
 \cite{Fuchs2014EvaluationOT}
 
-\subsubsection{\ac{CAS}}\label{subsubsec:compare-and-swap}
+\subsubsection{\acf{CAS}}\label{subsubsec:compare-and-swap}
 It is already explained how \ac{CAS} works in \cref{subsec:michael-scott}. Furthermore to the explanation in \cref{subsec:michael-scott} \ac{CAS} is an atomic primitive that is supported on \enquote{intel x386, x64 and most general purpose architectures with operands that are restricted to pointer size} \cite{Fuchs2014EvaluationOT}.
 \begin{itemize}
     \item \enquote{CAS(R,e,n) returns true and sets the value of R to n if the value in R is e. Otherwise, it returns false.} \cite{Fuchs2014EvaluationOT}

@@ -756,13 +756,64 @@
       \endverb
       \keyw{cmp,critical sections,heterogeneous cores,locks,multi-core,parallel programming}
     \endentry
-    \entry{DiffProcessThread}{misc}{}
+    \entry{processesVSthreads}{article}{}
+      \name{author}{4}{}{%
+        {{hash=e6ec29e41ca57cb718a923870350287f}{%
+           family={Anderson},
+           familyi={A\bibinitperiod},
+           given={Thomas\bibnamedelima E.},
+           giveni={T\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=eb9010a267978b9709295841b49e5a20}{%
+           family={Bershad},
+           familyi={B\bibinitperiod},
+           given={Brian\bibnamedelima N.},
+           giveni={B\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+        {{hash=92d59443a9e1660e8aa3b86e8ecf8738}{%
+           family={Lazowska},
+           familyi={L\bibinitperiod},
+           given={Edward\bibnamedelima D.},
+           giveni={E\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=550bc4e2a13a4d8654716be09b444fc0}{%
+           family={Levy},
+           familyi={L\bibinitperiod},
+           given={Henry\bibnamedelima M.},
+           giveni={H\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{0bee8ccea44405ba0cf157d97b15ad81}
+      \strng{fullhash}{39534a605937e5cd7e720d60c681f076}
+      \strng{bibnamehash}{39534a605937e5cd7e720d60c681f076}
+      \strng{authorbibnamehash}{39534a605937e5cd7e720d60c681f076}
+      \strng{authornamehash}{0bee8ccea44405ba0cf157d97b15ad81}
+      \strng{authorfullhash}{39534a605937e5cd7e720d60c681f076}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://opensourceforgeeks.blogspot.com/2014/01/race-condition-synchronization-atomic.html}}
-      \field{title}{Difference between Process and Thread}
-      \field{year}{2025}
+      \field{abstract}{Threads are the vehicle for concurrency in many approaches to parallel programming. Threads separate the notion of a sequential execution stream from the other aspects of traditional UNIX-like processes, such as address spaces and I/O descriptors. The objective of this separation is to make the expression and control of parallelism sufficiently cheap that the programmer or compiler can exploit even fine-grained parallelism with acceptable overhead.Threads can be supported either by the operating system kernel or by user-level library code in the application address space, but neither approach has been fully satisfactory. This paper addresses this dilemma. First, we argue that the performance of kernel threads is inherently worse than that of user-level threads, rather than this being an artifact of existing implementations; we thus argue that managing parallelism at the user level is essential to high-performance parallel computing. Next, we argue that the lack of system integration exhibited by user-level threads is a consequence of the lack of kernel support for user-level threads provided by contemporary multiprocessor operating systems; we thus argue that kernel threads or processes, as currently conceived, are the wrong abstraction on which to support user-level management of parallelism. Finally, we describe the design, implementation, and performance of a new kernel interface and user-level thread package that together provide the same functionality as kernel threads without compromising the performance and flexibility advantages of user-level management of parallelism.}
+      \field{issn}{0163-5980}
+      \field{journaltitle}{SIGOPS Oper. Syst. Rev.}
+      \field{month}{9}
+      \field{number}{5}
+      \field{title}{Scheduler activations: effective kernel support for the user-level management of parallelism}
+      \field{volume}{25}
+      \field{year}{1991}
+      \field{pages}{95\bibrangedash 109}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1145/121133.121151
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/121133.121151
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/121133.121151
+      \endverb
     \endentry
     \entry{Race-Condition}{misc}{}
       \name{author}{1}{}{%
@@ -939,6 +990,7 @@
       \strng{authorbibnamehash}{e2dc99b12632932c3949fed4adb01e1b}
       \strng{authornamehash}{6e843a47f7f3a29ffac089bdf61fc944}
       \strng{authorfullhash}{e2dc99b12632932c3949fed4adb01e1b}
+      \field{extraname}{1}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
@@ -985,6 +1037,76 @@
       \field{year}{1996}
       \verb{doi}
       \verb 10.1145/248052.248106
+      \endverb
+    \endentry
+    \entry{Fuchs2014EvaluationOT}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=9a517cd990ad766459eca655cf835490}{%
+           family={Fuchs},
+           familyi={F\bibinitperiod},
+           given={Tobias},
+           giveni={T\bibinitperiod}}}%
+        {{hash=cf36eef47a309f65609f42c1b1ebb0ca}{%
+           family={Murakami},
+           familyi={M\bibinitperiod},
+           given={Haruki},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{b26d4d6363c09460938bcdf09092ef52}
+      \strng{fullhash}{b26d4d6363c09460938bcdf09092ef52}
+      \strng{bibnamehash}{b26d4d6363c09460938bcdf09092ef52}
+      \strng{authorbibnamehash}{b26d4d6363c09460938bcdf09092ef52}
+      \strng{authornamehash}{b26d4d6363c09460938bcdf09092ef52}
+      \strng{authorfullhash}{b26d4d6363c09460938bcdf09092ef52}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Evaluation of Task Scheduling Algorithms and Wait-Free Data Structures for Embedded Multi-Core Systems}
+      \field{year}{2014}
+      \verb{urlraw}
+      \verb https://api.semanticscholar.org/CorpusID:218073330
+      \endverb
+      \verb{url}
+      \verb https://api.semanticscholar.org/CorpusID:218073330
+      \endverb
+    \endentry
+    \entry{Drescher2015GuardedSections}{report}{}
+      \name{author}{2}{}{%
+        {{hash=ecc745339594c9646856402c71556684}{%
+           family={Drescher},
+           familyi={D\bibinitperiod},
+           given={Gabor},
+           giveni={G\bibinitperiod}}}%
+        {{hash=b73e5ae0ef3829534895c950d2eec3a5}{%
+           family={Schröder-Preikschat},
+           familyi={S\bibinithyphendelim P\bibinitperiod},
+           given={Wolfgang},
+           giveni={W\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Friedrich-Alexander-Universität Erlangen-Nürnberg, Dept. of Computer Science}%
+      }
+      \strng{namehash}{2d289632161e45098545c8ea73919a3f}
+      \strng{fullhash}{2d289632161e45098545c8ea73919a3f}
+      \strng{bibnamehash}{2d289632161e45098545c8ea73919a3f}
+      \strng{authorbibnamehash}{2d289632161e45098545c8ea73919a3f}
+      \strng{authornamehash}{2d289632161e45098545c8ea73919a3f}
+      \strng{authorfullhash}{2d289632161e45098545c8ea73919a3f}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{1}
+      \field{number}{CS-2015-01}
+      \field{title}{An Experiment in Wait-Free Synchronisation of Priority-Controlled Simultaneous Processes: Guarded Sections}
+      \field{type}{techreport}
+      \field{year}{2015}
+      \verb{urlraw}
+      \verb https://www4.cs.fau.de/Publications/2015/drescher_15_cstr.pdf
+      \endverb
+      \verb{url}
+      \verb https://www4.cs.fau.de/Publications/2015/drescher_15_cstr.pdf
       \endverb
     \endentry
     \entry{culic2022lowRust}{article}{}
@@ -1141,8 +1263,8 @@
       \strng{authorbibnamehash}{a5eadd65db9af944abc0097da217346d}
       \strng{authornamehash}{a5eadd65db9af944abc0097da217346d}
       \strng{authorfullhash}{a5eadd65db9af944abc0097da217346d}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{A concurrent object is a data object shared by concurrent processes. Linearizability is a correctness condition for concurrent objects that exploits the semantics of abstract data types. It permits a high degree of concurrency, yet it permits programmers to specify and reason about concurrent objects using known techniques from the sequential domain. Linearizability provides the illusion that each operation applied by concurrent processes takes effect instantaneously at some point between its invocation and its response, implying that the meaning of a concurrent object's operations can be given by pre- and post-conditions. This paper defines linearizability, compares it to other correctness conditions, presents and demonstrates a method for proving the correctness of implementations, and shows how to reason about concurrent objects, given they are linearizable.}
@@ -1164,139 +1286,6 @@
       \verb{url}
       \verb https://doi.org/10.1145/78969.78972
       \endverb
-    \endentry
-    \entry{naderibeni2023waitfreequeuepolylogarithmicstep}{misc}{}
-      \name{author}{2}{}{%
-        {{hash=961dfd6665995ba159d0c5d4ffe86d33}{%
-           family={Naderibeni},
-           familyi={N\bibinitperiod},
-           given={Hossein},
-           giveni={H\bibinitperiod}}}%
-        {{hash=95a70219729d51b1acf9994c0df4799f}{%
-           family={Ruppert},
-           familyi={R\bibinitperiod},
-           given={Eric},
-           giveni={E\bibinitperiod}}}%
-      }
-      \strng{namehash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \strng{fullhash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \strng{bibnamehash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \strng{authorbibnamehash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \strng{authornamehash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \strng{authorfullhash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{eprintclass}{cs.DC}
-      \field{eprinttype}{arXiv}
-      \field{title}{A Wait-free Queue with Polylogarithmic Step Complexity}
-      \field{year}{2023}
-      \verb{eprint}
-      \verb 2305.07229
-      \endverb
-      \verb{urlraw}
-      \verb https://arxiv.org/abs/2305.07229
-      \endverb
-      \verb{url}
-      \verb https://arxiv.org/abs/2305.07229
-      \endverb
-    \endentry
-    \entry{wCQWaitFreeQueue}{inproceedings}{}
-      \name{author}{2}{}{%
-        {{hash=f05752d008c1e9536a4347edecbfe5de}{%
-           family={Nikolaev},
-           familyi={N\bibinitperiod},
-           given={Ruslan},
-           giveni={R\bibinitperiod}}}%
-        {{hash=4b7b20a645f1ce1fc9d078ff9c6a0104}{%
-           family={Ravindran},
-           familyi={R\bibinitperiod},
-           given={Binoy},
-           giveni={B\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Seoul, Republic of Korea}%
-      }
-      \list{publisher}{1}{%
-        {Association for Computing Machinery}%
-      }
-      \strng{namehash}{90634ef7d967fd7fba143f72186d4e87}
-      \strng{fullhash}{90634ef7d967fd7fba143f72186d4e87}
-      \strng{bibnamehash}{90634ef7d967fd7fba143f72186d4e87}
-      \strng{authorbibnamehash}{90634ef7d967fd7fba143f72186d4e87}
-      \strng{authornamehash}{90634ef7d967fd7fba143f72186d4e87}
-      \strng{authorfullhash}{90634ef7d967fd7fba143f72186d4e87}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{abstract}{The concurrency literature presents a number of approaches for building non-blocking, FIFO, multiple-producer and multiple-consumer (MPMC) queues. However, existing wait-free queues are either not very scalable or suffer from potentially unbounded memory usage. We present a wait-free queue, wCQ, which uses its own variation of the fast-path-slow-path methodology to attain wait-freedom and bound memory usage. wCQ is memory efficient and its performance is often on par with the best known concurrent queue designs.}
-      \field{booktitle}{Proceedings of the 27th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming}
-      \field{isbn}{9781450392044}
-      \field{series}{PPoPP '22}
-      \field{title}{wCQ: a fast wait-free queue with bounded memory usage}
-      \field{year}{2022}
-      \field{pages}{461\bibrangedash 462}
-      \range{pages}{2}
-      \verb{doi}
-      \verb 10.1145/3503221.3508440
-      \endverb
-      \verb{urlraw}
-      \verb https://doi.org/10.1145/3503221.3508440
-      \endverb
-      \verb{url}
-      \verb https://doi.org/10.1145/3503221.3508440
-      \endverb
-      \keyw{FIFO queue,ring buffer,wait-free}
-    \endentry
-    \entry{WaitFreeQueueWithWaitFreeMemoryReclamation}{inproceedings}{}
-      \name{author}{2}{}{%
-        {{hash=0d6863606a4572f22563b4c94aca9733}{%
-           family={Ramalhete},
-           familyi={R\bibinitperiod},
-           given={Pedro},
-           giveni={P\bibinitperiod}}}%
-        {{hash=4a3ea75ba26a4b444b69d07dfecc5f09}{%
-           family={Correia},
-           familyi={C\bibinitperiod},
-           given={Andreia},
-           giveni={A\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Austin, Texas, USA}%
-      }
-      \list{publisher}{1}{%
-        {Association for Computing Machinery}%
-      }
-      \strng{namehash}{a3e766b5e3097816c2d98a368fc140a5}
-      \strng{fullhash}{a3e766b5e3097816c2d98a368fc140a5}
-      \strng{bibnamehash}{a3e766b5e3097816c2d98a368fc140a5}
-      \strng{authorbibnamehash}{a3e766b5e3097816c2d98a368fc140a5}
-      \strng{authornamehash}{a3e766b5e3097816c2d98a368fc140a5}
-      \strng{authorfullhash}{a3e766b5e3097816c2d98a368fc140a5}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{abstract}{Queues are a widely deployed data structure. They are used extensively in many multi threaded applications, or as a communication mechanism between threads or processes. We propose a new linearizable multi-producer-multi-consumer queue we named Turn queue, with wait-free progress bounded by the number of threads, and with wait-free bounded memory reclamation. Its main characteristics are: a simple algorithm that does no memory allocation apart from creating the node that is placed in the queue, a new wait-free consensus algorithm using only the atomic instruction compare-and-swap (CAS), and is easy to plugin with other algorithms for either enqueue or dequeue methods.}
-      \field{booktitle}{Proceedings of the 22nd ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming}
-      \field{isbn}{9781450344937}
-      \field{series}{PPoPP '17}
-      \field{title}{POSTER: A Wait-Free Queue with Wait-Free Memory Reclamation}
-      \field{year}{2017}
-      \field{pages}{453\bibrangedash 454}
-      \range{pages}{2}
-      \verb{doi}
-      \verb 10.1145/3018743.3019022
-      \endverb
-      \verb{urlraw}
-      \verb https://doi.org/10.1145/3018743.3019022
-      \endverb
-      \verb{url}
-      \verb https://doi.org/10.1145/3018743.3019022
-      \endverb
-      \keyw{low latency,non-blocking queue,wait-free}
     \endentry
     \entry{Kogan2011WaitFreeQueues}{article}{}
       \name{author}{2}{}{%
@@ -1324,8 +1313,8 @@
       \strng{authornamehash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
       \strng{authorfullhash}{4b9a61a33ee74fcc51fd2bd3b2ab3602}
       \field{extraname}{2}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{The queue data structure is fundamental and ubiquitous. Lock-free versions of the queue are well known. However, an important open question is whether practical wait-free queues exist. Until now, only versions with limited concurrency were proposed. In this paper we provide a design for a practical wait-free queue. Our construction is based on the highly efficient lock-free queue of Michael and Scott. To achieve wait-freedom, we employ a priority-based helping scheme in which faster threads help the slower peers to complete their pending operations. We have implemented our scheme on multicore machines and present performance measurements comparing our implementation with that of Michael and Scott in several system configurations.}
@@ -1349,7 +1338,283 @@
       \endverb
       \keyw{wait-free algorithms,concurrent queues}
     \endentry
-    \entry{FastFetchAndAddWaitFreeQueue}{article}{}
+    \entry{FeldmanDechev2015WaitFreeRingBuffer}{article}{}
+      \name{author}{2}{}{%
+        {{hash=b779b6db9912a687c01ad289178b59af}{%
+           family={Feldman},
+           familyi={F\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=b3b380a947b24acf7d6c382a0aaa5a2a}{%
+           family={Dechev},
+           familyi={D\bibinitperiod},
+           given={Damian},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{c047047e5b2e70c248226800562b5c41}
+      \strng{fullhash}{c047047e5b2e70c248226800562b5c41}
+      \strng{bibnamehash}{c047047e5b2e70c248226800562b5c41}
+      \strng{authorbibnamehash}{c047047e5b2e70c248226800562b5c41}
+      \strng{authornamehash}{c047047e5b2e70c248226800562b5c41}
+      \strng{authorfullhash}{c047047e5b2e70c248226800562b5c41}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The ring buffer is a staple data structure used in many algorithms and applications. It is highly desirable in high-demand use cases such as multimedia, network routing, and trading systems. This work presents a new ring buffer design that is, to the best of our knowledge, the only array-based first-in-first-out ring buffer to provide wait-freedom. Wait-freedom guarantees that each thread completes its operation within a finite number of steps. This property is desirable for real-time and mission critical systems.This work is an extension and refinement of our earlier work. We have improved and expanded algorithm descriptions and pseudo-code, and we have performed all new performance evaluations.In contrast to other concurrent ring buffer designs, our implementation includes new methodology to prevent thread starvation and livelock from occurring.}
+      \field{issn}{1559-6915}
+      \field{journaltitle}{SIGAPP Appl. Comput. Rev.}
+      \field{month}{10}
+      \field{number}{3}
+      \field{title}{A wait-free multi-producer multi-consumer ring buffer}
+      \field{volume}{15}
+      \field{year}{2015}
+      \field{pages}{59\bibrangedash 71}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1145/2835260.2835264
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/2835260.2835264
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/2835260.2835264
+      \endverb
+      \keyw{wait-free,ring buffer,parallel,non-blocking,concurrent}
+    \endentry
+    \entry{FeldmanDechevV2}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=b3b380a947b24acf7d6c382a0aaa5a2a}{%
+           family={Dechev},
+           familyi={D\bibinitperiod},
+           given={Damian},
+           giveni={D\bibinitperiod}}}%
+        {{hash=b779b6db9912a687c01ad289178b59af}{%
+           family={Feldman},
+           familyi={F\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=617e8895a56ea7ee35b8ecb5b14107f5}{%
+           family={Barrington},
+           familyi={B\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Sandia National Lab. (SNL-NM), Albuquerque, NM (United States)}%
+      }
+      \strng{namehash}{7a6e2bd7348c7bdc276abc87ad810d85}
+      \strng{fullhash}{f7219887323a034b9b3a8de99ea33982}
+      \strng{bibnamehash}{f7219887323a034b9b3a8de99ea33982}
+      \strng{authorbibnamehash}{f7219887323a034b9b3a8de99ea33982}
+      \strng{authornamehash}{7a6e2bd7348c7bdc276abc87ad810d85}
+      \strng{authorfullhash}{f7219887323a034b9b3a8de99ea33982}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{annotation}{Abstract not provided.}
+      \field{month}{04}
+      \field{title}{A Scalable Multi-Producer Multi-Consumer Wait-Free Ring Buffer.}
+      \field{year}{2015}
+      \verb{urlraw}
+      \verb https://www.osti.gov/biblio/1531271
+      \endverb
+      \verb{url}
+      \verb https://www.osti.gov/biblio/1531271
+      \endverb
+    \endentry
+    \entry{FeldmanDechevV3}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=617e8895a56ea7ee35b8ecb5b14107f5}{%
+           family={Barrington},
+           familyi={B\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod}}}%
+        {{hash=b779b6db9912a687c01ad289178b59af}{%
+           family={Feldman},
+           familyi={F\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=b3b380a947b24acf7d6c382a0aaa5a2a}{%
+           family={Dechev},
+           familyi={D\bibinitperiod},
+           given={Damian},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Salamanca, Spain}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{a302ad2d7a31ae2e265ab04538dfc95e}
+      \strng{fullhash}{4724147e4894240077db8fedab574d05}
+      \strng{bibnamehash}{4724147e4894240077db8fedab574d05}
+      \strng{authorbibnamehash}{4724147e4894240077db8fedab574d05}
+      \strng{authornamehash}{a302ad2d7a31ae2e265ab04538dfc95e}
+      \strng{authorfullhash}{4724147e4894240077db8fedab574d05}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A ring buffer or cyclical queue is a First In, First Out (FIFO) queue that stores elements on a fixed-length array. This allows for efficient O(1) operations, cache-aware optimizations, and low memory overhead. Because ring buffers are limited to only the array and two counters they are desirable for systems with limited memory. Many applications (e.g. cloud-based services) depend on ring buffers to pass work from one thread to another. The rise in many-core architecture has resulted in increased performance from shared data structures such as ring buffers. Existing research has forgone the use of locks and permitted greater scalability and core utilization for such designs. Such non-blocking designs are categorized by the level of progress they guarantee with wait-freedom being the most desirable categorization. Such a guarantee provides freedom from deadlock, livelock, and thread starvation. Lock-free and obstruction-free designs are not safe from all of these pitfalls [5].}
+      \field{booktitle}{Proceedings of the 30th Annual ACM Symposium on Applied Computing}
+      \field{isbn}{9781450331968}
+      \field{series}{SAC '15}
+      \field{title}{A scalable multi-producer multi-consumer wait-free ring buffer}
+      \field{year}{2015}
+      \field{pages}{1321\bibrangedash 1328}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1145/2695664.2695924
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/2695664.2695924
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/2695664.2695924
+      \endverb
+      \keyw{concurrent,non-blocking,parallel,queue,ring buffer,wait-free}
+    \endentry
+    \entry{RamalheteQueue}{article}{}
+      \name{author}{2}{}{%
+        {{hash=0d6863606a4572f22563b4c94aca9733}{%
+           family={Ramalhete},
+           familyi={R\bibinitperiod},
+           given={Pedro},
+           giveni={P\bibinitperiod}}}%
+        {{hash=4a3ea75ba26a4b444b69d07dfecc5f09}{%
+           family={Correia},
+           familyi={C\bibinitperiod},
+           given={Andreia},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{a3e766b5e3097816c2d98a368fc140a5}
+      \strng{fullhash}{a3e766b5e3097816c2d98a368fc140a5}
+      \strng{bibnamehash}{a3e766b5e3097816c2d98a368fc140a5}
+      \strng{authorbibnamehash}{a3e766b5e3097816c2d98a368fc140a5}
+      \strng{authornamehash}{a3e766b5e3097816c2d98a368fc140a5}
+      \strng{authorfullhash}{a3e766b5e3097816c2d98a368fc140a5}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Queues are a widely deployed data structure. They are used extensively in many multi threaded applications, or as a communication mechanism between threads or processes. We propose a new linearizable multi-producer-multi-consumer queue we named Turn queue, with wait-free progress bounded by the number of threads, and with wait-free bounded memory reclamation. Its main characteristics are: a simple algorithm that does no memory allocation apart from creating the node that is placed in the queue, a new wait-free consensus algorithm using only the atomic instruction compare-and-swap (CAS), and is easy to plugin with other algorithms for either enqueue or dequeue methods.}
+      \field{issn}{0362-1340}
+      \field{journaltitle}{SIGPLAN Not.}
+      \field{month}{1}
+      \field{note}{Full version available at \url{https://github.com/pramalhe/ConcurrencyFreaks/blob/master/papers/crturnqueue-2016.pdf}}
+      \field{number}{8}
+      \field{title}{POSTER: A Wait-Free Queue with Wait-Free Memory Reclamation}
+      \field{volume}{52}
+      \field{year}{2017}
+      \field{pages}{453\bibrangedash 454}
+      \range{pages}{2}
+      \verb{doi}
+      \verb 10.1145/3155284.3019022
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3155284.3019022
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3155284.3019022
+      \endverb
+      \keyw{low latency,non-blocking queue,wait-free}
+    \endentry
+    \entry{wCQWaitFreeQueue}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=f05752d008c1e9536a4347edecbfe5de}{%
+           family={Nikolaev},
+           familyi={N\bibinitperiod},
+           given={Ruslan},
+           giveni={R\bibinitperiod}}}%
+        {{hash=4b7b20a645f1ce1fc9d078ff9c6a0104}{%
+           family={Ravindran},
+           familyi={R\bibinitperiod},
+           given={Binoy},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Seoul, Republic of Korea}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{90634ef7d967fd7fba143f72186d4e87}
+      \strng{fullhash}{90634ef7d967fd7fba143f72186d4e87}
+      \strng{bibnamehash}{90634ef7d967fd7fba143f72186d4e87}
+      \strng{authorbibnamehash}{90634ef7d967fd7fba143f72186d4e87}
+      \strng{authornamehash}{90634ef7d967fd7fba143f72186d4e87}
+      \strng{authorfullhash}{90634ef7d967fd7fba143f72186d4e87}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The concurrency literature presents a number of approaches for building non-blocking, FIFO, multiple-producer and multiple-consumer (MPMC) queues. However, existing wait-free queues are either not very scalable or suffer from potentially unbounded memory usage. We present a wait-free queue, wCQ, which uses its own variation of the fast-path-slow-path methodology to attain wait-freedom and bound memory usage. wCQ is memory efficient and its performance is often on par with the best known concurrent queue designs.}
+      \field{booktitle}{Proceedings of the 27th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming}
+      \field{isbn}{9781450392044}
+      \field{series}{PPoPP '22}
+      \field{title}{wCQ: a fast wait-free queue with bounded memory usage}
+      \field{year}{2022}
+      \field{pages}{461\bibrangedash 462}
+      \range{pages}{2}
+      \verb{doi}
+      \verb 10.1145/3503221.3508440
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3503221.3508440
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3503221.3508440
+      \endverb
+      \keyw{FIFO queue,ring buffer,wait-free}
+    \endentry
+    \entry{Verma2013Scalable}{article}{}
+      \name{author}{1}{}{%
+        {{hash=454bd008ab3fb087453eff1af1e0ab9d}{%
+           family={Verma},
+           familyi={V\bibinitperiod},
+           given={Mudit},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Instituto Superior Técnico, Universidade de Lisboa}%
+      }
+      \strng{namehash}{454bd008ab3fb087453eff1af1e0ab9d}
+      \strng{fullhash}{454bd008ab3fb087453eff1af1e0ab9d}
+      \strng{bibnamehash}{454bd008ab3fb087453eff1af1e0ab9d}
+      \strng{authorbibnamehash}{454bd008ab3fb087453eff1af1e0ab9d}
+      \strng{authornamehash}{454bd008ab3fb087453eff1af1e0ab9d}
+      \strng{authorfullhash}{454bd008ab3fb087453eff1af1e0ab9d}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{6}
+      \field{note}{Thesis to obtain the Master of Science Degree in Information Systems and Computer Engineering}
+      \field{title}{Scalable and Performance-Critical Data Structures for Multicores}
+      \field{year}{2013}
+      \verb{urlraw}
+      \verb https://web.tecnico.ulisboa.pt/~ist14191/repository/Thesis_Mudit_Verma.pdf
+      \endverb
+      \verb{url}
+      \verb https://web.tecnico.ulisboa.pt/~ist14191/repository/Thesis_Mudit_Verma.pdf
+      \endverb
+    \endentry
+    \entry{FastFetchAndAddWaitFreeQueue}{inproceedings}{}
       \name{author}{2}{}{%
         {{hash=0956a3b98766209bb5506efb6a250dc7}{%
            family={Yang},
@@ -1363,7 +1628,7 @@
            giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
-        {New York, NY, USA}%
+        {Barcelona, Spain}%
       }
       \list{publisher}{1}{%
         {Association for Computing Machinery}%
@@ -1374,28 +1639,125 @@
       \strng{authorbibnamehash}{92c2b603305ad567504e8c57d20fc062}
       \strng{authornamehash}{92c2b603305ad567504e8c57d20fc062}
       \strng{authorfullhash}{92c2b603305ad567504e8c57d20fc062}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{Concurrent data structures that have fast and predictable performance are of critical importance for harnessing the power of multicore processors, which are now ubiquitous. Although wait-free objects, whose operations complete in a bounded number of steps, were devised more than two decades ago, wait-free objects that can deliver scalable high performance are still rare.In this paper, we present the first wait-free FIFO queue based on fetch-and-add (FAA). While compare-and-swap (CAS) based non-blocking algorithms may perform poorly due to work wasted by CAS failures, algorithms that coordinate using FAA, which is guaranteed to succeed, can in principle perform better under high contention. Along with FAA, our queue uses a custom epoch-based scheme to reclaim memory; on x86 architectures, it requires no extra memory fences on our algorithm's typical execution path. An empirical study of our new FAA-based wait-free FIFO queue under high contention on four different architectures with many hardware threads shows that it outperforms prior queue designs that lack a wait-free progress guarantee. Surprisingly, at the highest level of contention, the throughput of our queue is often as high as that of a microbenchmark that only performs FAA. As a result, our fast wait-free queue implementation is useful in practice on most multi-core systems today. We believe that our design can serve as an example of how to construct other fast wait-free objects.}
-      \field{issn}{0362-1340}
-      \field{journaltitle}{SIGPLAN Not.}
-      \field{month}{2}
-      \field{number}{8}
+      \field{booktitle}{Proceedings of the 21st ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming}
+      \field{isbn}{9781450340922}
+      \field{series}{PPoPP '16}
       \field{title}{A wait-free queue as fast as fetch-and-add}
-      \field{volume}{51}
       \field{year}{2016}
       \verb{doi}
-      \verb 10.1145/3016078.2851168
+      \verb 10.1145/2851141.2851168
       \endverb
       \verb{urlraw}
-      \verb https://doi.org/10.1145/3016078.2851168
+      \verb https://doi.org/10.1145/2851141.2851168
       \endverb
       \verb{url}
-      \verb https://doi.org/10.1145/3016078.2851168
+      \verb https://doi.org/10.1145/2851141.2851168
       \endverb
       \keyw{fast-path-slow-path,non-blocking queue,wait-free}
+    \endentry
+    \entry{WangCacheCoherent}{article}{}
+      \name{author}{5}{}{%
+        {{hash=e0a8d59e95c8fb8191847e347c1b8203}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Junchang},
+           giveni={J\bibinitperiod}}}%
+        {{hash=43651b11d7e29333a7ed0d32e50fca5d}{%
+           family={Jin},
+           familyi={J\bibinitperiod},
+           given={Qi},
+           giveni={Q\bibinitperiod}}}%
+        {{hash=ab4559e1e0999756997ca95d0a70319c}{%
+           family={Fu},
+           familyi={F\bibinitperiod},
+           given={Xiong},
+           giveni={X\bibinitperiod}}}%
+        {{hash=28aa5e4b66ee78162017f27b0b9d360b}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Yun},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=ae4a9a2a2deedd1f89a82bd7d90f89f2}{%
+           family={Shi},
+           familyi={S\bibinitperiod},
+           given={Peichang},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{12a1de7126b0bc22fe1d7dfddf31a0ad}
+      \strng{fullhash}{028e679f6278919151790ac974d7ec89}
+      \strng{bibnamehash}{028e679f6278919151790ac974d7ec89}
+      \strng{authorbibnamehash}{028e679f6278919151790ac974d7ec89}
+      \strng{authornamehash}{12a1de7126b0bc22fe1d7dfddf31a0ad}
+      \strng{authorfullhash}{028e679f6278919151790ac974d7ec89}
+      \field{extraname}{2}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Access}
+      \field{title}{Accelerating Wait-Free Algorithms: Pragmatic Solutions on Cache-Coherent Multicore Architectures}
+      \field{volume}{7}
+      \field{year}{2019}
+      \field{pages}{74653\bibrangedash 74669}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1109/ACCESS.2019.2920781
+      \endverb
+      \keyw{Multicore processing;Acceleration;Hardware;Instruction sets;Concurrent computing;Indexes;Multicore;wait-free algorithm;MPSC queue}
+    \endentry
+    \entry{adampsc}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=c4857a9fb983af0770322cf0d6ffab92}{%
+           family={Adas},
+           familyi={A\bibinitperiod},
+           given={Dolev},
+           giveni={D\bibinitperiod}}}%
+        {{hash=2a5497b630106858c42489823a43b8a5}{%
+           family={Friedman},
+           familyi={F\bibinitperiod},
+           given={Roy},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Delhi, AA, India}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{dc956c6385edb57f65a48b3cffac3eee}
+      \strng{fullhash}{dc956c6385edb57f65a48b3cffac3eee}
+      \strng{bibnamehash}{dc956c6385edb57f65a48b3cffac3eee}
+      \strng{authorbibnamehash}{dc956c6385edb57f65a48b3cffac3eee}
+      \strng{authornamehash}{dc956c6385edb57f65a48b3cffac3eee}
+      \strng{authorfullhash}{dc956c6385edb57f65a48b3cffac3eee}
+      \field{extraname}{1}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{In sharded data processing systems, sharded in-memory key-value stores, data flow programming and load sharing, multiple concurrent data producers feed requests into the same data consumer. This can be naturally realized through concurrent queues, where each consumer pulls its tasks from its dedicated queue. For scalability, wait-free queues are preferred over lock based structures. The vast majority of wait-free queue implementations, and even lock-free ones, support the multi-producer multi-consumer model. Yet, this comes at a premium, since implementing wait-free multi-producer multi-consumer queues requires utilizing complex helper data structures. The latter increases the memory consumption of such queues and limits their performance and scalability. Many such designs employ (hardware) cache unfriendly access patterns. In this work we study the implementation of wait-free multi-producer single-consumer queues. Specifically, we propose Jiffy, an efficient memory frugal novel wait-free multi-producer single-consumer queue and formally prove its correctness. We compare the performance and memory requirements of Jiffy with other state of the art lock-free and wait-free queues. We show that indeed Jiffy can maintain good performance with up to 128 threads, delivers up to 50\% better throughput than the next best construction we compared against, and consumes ≈ 90\% less memory.}
+      \field{booktitle}{Proceedings of the 23rd International Conference on Distributed Computing and Networking}
+      \field{isbn}{9781450395601}
+      \field{series}{ICDCN '22}
+      \field{title}{A Fast Wait-Free Multi-Producers Single-Consumer Queue}
+      \field{year}{2022}
+      \field{pages}{77\bibrangedash 86}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1145/3491003.3491004
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3491003.3491004
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3491003.3491004
+      \endverb
+      \keyw{Multi Producer Single Consumer,Unboubnded Queue,Wait-free}
     \endentry
     \entry{jiffy}{article}{}
       \name{author}{2}{}{%
@@ -1416,6 +1778,7 @@
       \strng{authorbibnamehash}{dc956c6385edb57f65a48b3cffac3eee}
       \strng{authornamehash}{dc956c6385edb57f65a48b3cffac3eee}
       \strng{authorfullhash}{dc956c6385edb57f65a48b3cffac3eee}
+      \field{extraname}{2}
       \field{sortinit}{4}
       \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
@@ -1434,6 +1797,575 @@
       \verb{url}
       \verb https://arxiv.org/abs/2010.14189
       \endverb
+    \endentry
+    \entry{JayantiLog}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=484b7fb55efe31d50fa5e2c8a1f8f6c2}{%
+           family={Jayanti},
+           familyi={J\bibinitperiod},
+           given={Prasad},
+           giveni={P\bibinitperiod}}}%
+        {{hash=580324dd7ff65361b51bc296778b53ad}{%
+           family={Petrovic},
+           familyi={P\bibinitperiod},
+           given={Srdjan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=0cbc9b2ef61180d00eb8372c8f087680}{%
+           family={Sarukkai},
+           familyi={S\bibinitperiod},
+           given={Sundar},
+           giveni={S\bibinitperiod}}}%
+        {{hash=8bf050e506ee5412b6b94b7da02ddfd9}{%
+           family={Sen},
+           familyi={S\bibinitperiod},
+           given={Sandeep},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer Berlin Heidelberg}%
+      }
+      \strng{namehash}{5cac70a29a6b374fe391873451d56f92}
+      \strng{fullhash}{5cac70a29a6b374fe391873451d56f92}
+      \strng{bibnamehash}{5cac70a29a6b374fe391873451d56f92}
+      \strng{authorbibnamehash}{5cac70a29a6b374fe391873451d56f92}
+      \strng{authornamehash}{5cac70a29a6b374fe391873451d56f92}
+      \strng{authorfullhash}{5cac70a29a6b374fe391873451d56f92}
+      \strng{editorbibnamehash}{2ad8656a4fba938d8df89fd588227b06}
+      \strng{editornamehash}{2ad8656a4fba938d8df89fd588227b06}
+      \strng{editorfullhash}{2ad8656a4fba938d8df89fd588227b06}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Despite the ubiquitous need for shared FIFO queues in parallel applications and operating systems, there are no sublinear-time wait-free queue algorithms that can support more than a single enqueuer and a single dequeuer. Two independently designed algorithms---David's recent algorithm [1] and the algorithm in this paper---break this barrier. While David's algorithm is capable of supporting multiple dequeuers (but only one enqueuer), our algorithm can support multiple enqueuers (but only one dequeuer). David's algorithm achieves O(1) time complexity for both enqueue and dequeue operations, but its space complexity is infinite because of the use of infinite sized arrays. The author states that he can bound the space requirement, but only at the cost of increasing the time complexity to O(n), where n is the number of dequeuers. A significant feature of our algorithm is that its time and space complexities are both bounded and small: enqueue and dequeue operations run in {\$}O({\backslash}lg n){\$}time, and the space complexity is O(n+m), where n is the number of enqueuers and m is the actual number of items currently present in the queue. David's algorithm uses fetch{\&}increment and swap instructions, which are both at level 2 of Herlihy's Consensus hierarchy, along with queue. Our algorithm uses the LL/SC instructions, which are universal. However, since these instructions have constant time wait-free implementation from CAS and restricted LL/SC that are widely supported on modern architectures, our algorithms can run efficiently on current machines. Thus, in applications where there are multiple producers and a single consumer (e.g., certain server queues and resource queues), our algorithm provides the best known solution to implementing a wait-free queue. Using similar ideas, we can also efficiently implement a stack that supports multiple pushers and a single popper.}
+      \field{booktitle}{FSTTCS 2005: Foundations of Software Technology and Theoretical Computer Science}
+      \field{isbn}{978-3-540-32419-5}
+      \field{title}{Logarithmic-Time Single Deleter, Multiple Inserter Wait-Free Queues and Stacks}
+      \field{year}{2005}
+      \field{pages}{408\bibrangedash 419}
+      \range{pages}{12}
+    \endentry
+    \entry{Mateíspmc}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=828988af31fb341df13626992abd5494}{%
+           family={David},
+           familyi={D\bibinitperiod},
+           given={Matei},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=6d84b5e8da24c645eb6bc438af7621c4}{%
+           family={Guerraoui},
+           familyi={G\bibinitperiod},
+           given={Rachid},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer Berlin Heidelberg}%
+      }
+      \strng{namehash}{828988af31fb341df13626992abd5494}
+      \strng{fullhash}{828988af31fb341df13626992abd5494}
+      \strng{bibnamehash}{828988af31fb341df13626992abd5494}
+      \strng{authorbibnamehash}{828988af31fb341df13626992abd5494}
+      \strng{authornamehash}{828988af31fb341df13626992abd5494}
+      \strng{authorfullhash}{828988af31fb341df13626992abd5494}
+      \strng{editorbibnamehash}{6d84b5e8da24c645eb6bc438af7621c4}
+      \strng{editornamehash}{6d84b5e8da24c645eb6bc438af7621c4}
+      \strng{editorfullhash}{6d84b5e8da24c645eb6bc438af7621c4}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We study wait-free linearizable Queue implementations in asynchronous shared-memory systems from other consensus number 2 objects, such as Fetch{\&}Add and Swap. The best previously known implementation allows at most two processes to perform Dequeue operations. We provide a new implementation, when only one process performs Enqueue operations and any number of processes perform Dequeue operations. A nice feature of this implementation is the fact that both Enqueue and Dequeue operations take constant time.}
+      \field{booktitle}{Distributed Computing}
+      \field{isbn}{978-3-540-30186-8}
+      \field{title}{A Single-Enqueuer Wait-Free Queue Implementation}
+      \field{year}{2004}
+      \field{pages}{132\bibrangedash 143}
+      \range{pages}{12}
+    \endentry
+    \entry{torquati2010singleproducersingleconsumerqueuessharedcache}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=f37b393564e895df695e4e4a17df5158}{%
+           family={Torquati},
+           familyi={T\bibinitperiod},
+           given={Massimo},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{f37b393564e895df695e4e4a17df5158}
+      \strng{fullhash}{f37b393564e895df695e4e4a17df5158}
+      \strng{bibnamehash}{f37b393564e895df695e4e4a17df5158}
+      \strng{authorbibnamehash}{f37b393564e895df695e4e4a17df5158}
+      \strng{authornamehash}{f37b393564e895df695e4e4a17df5158}
+      \strng{authorfullhash}{f37b393564e895df695e4e4a17df5158}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.DS}
+      \field{eprinttype}{arXiv}
+      \field{title}{Single-Producer/Single-Consumer Queues on Shared Cache Multi-Core Systems}
+      \field{year}{2010}
+      \verb{eprint}
+      \verb 1012.1824
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1012.1824
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1012.1824
+      \endverb
+    \endentry
+    \entry{Aldinucci2012EfficientSync}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=e43721106d72fc1d3b453af3297e26cf}{%
+           family={Aldinucci},
+           familyi={A\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=9153adc04187d83034fd2440938b5c08}{%
+           family={Danelutto},
+           familyi={D\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=323105f0e62160e7e4668b8518a131ae}{%
+           family={Kilpatrick},
+           familyi={K\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=6d5923d469934dd7ae594119719bf3e7}{%
+           family={Meneghin},
+           familyi={M\bibinitperiod},
+           given={Massimiliano},
+           giveni={M\bibinitperiod}}}%
+        {{hash=f37b393564e895df695e4e4a17df5158}{%
+           family={Torquati},
+           familyi={T\bibinitperiod},
+           given={Massimo},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=ea403fb7df75474b98c5b08956cf2b99}{%
+           family={Kaklamanis},
+           familyi={K\bibinitperiod},
+           given={Christos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=51bcb3582b688c30c5f20893bed40e32}{%
+           family={Papatheodorou},
+           familyi={P\bibinitperiod},
+           given={Theodore},
+           giveni={T\bibinitperiod}}}%
+        {{hash=c4296491852f37edf0749e69549f8d93}{%
+           family={Spirakis},
+           familyi={S\bibinitperiod},
+           given={Paul\bibnamedelima G.},
+           giveni={P\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{a6cce4fcd9132364f3d195a6a412bea0}
+      \strng{fullhash}{26a008c4b70d8de2cdbde8553292cddc}
+      \strng{bibnamehash}{26a008c4b70d8de2cdbde8553292cddc}
+      \strng{authorbibnamehash}{26a008c4b70d8de2cdbde8553292cddc}
+      \strng{authornamehash}{a6cce4fcd9132364f3d195a6a412bea0}
+      \strng{authorfullhash}{26a008c4b70d8de2cdbde8553292cddc}
+      \strng{editorbibnamehash}{bfa4d7a907a789211ecbae80072aa76c}
+      \strng{editornamehash}{d6f7d3f2180a7c31deb69af36f1eb43f}
+      \strng{editorfullhash}{bfa4d7a907a789211ecbae80072aa76c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Euro-Par 2012 Parallel Processing}
+      \field{note}{The provided PDF indicates this work is related to Euro-Par 2012. Exact page numbers for this specific title within the proceedings were not found in the immediate search; the closely related paper "An Efficient Unbounded Lock-Free Queue for Multi-core Systems" by the same authors appears on pages 662-673 of the same volume.}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{An Efficient Synchronisation Mechanism for Multi-Core Systems}
+      \field{volume}{7484}
+      \field{year}{2012}
+    \endentry
+    \entry{Wang2013BQueue}{article}{}
+      \name{author}{4}{}{%
+        {{hash=e0a8d59e95c8fb8191847e347c1b8203}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Junchang},
+           giveni={J\bibinitperiod}}}%
+        {{hash=accfaf086a407bfb746d7875478d9130}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Kai},
+           giveni={K\bibinitperiod}}}%
+        {{hash=35a098040eeafe8a89bd3744a1c95bc2}{%
+           family={Tang},
+           familyi={T\bibinitperiod},
+           given={Xinan},
+           giveni={X\bibinitperiod}}}%
+        {{hash=47611cea10d61ad644a8845f50745c6f}{%
+           family={Hua},
+           familyi={H\bibinitperiod},
+           given={Bei},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{12a1de7126b0bc22fe1d7dfddf31a0ad}
+      \strng{fullhash}{d7a537002e3a3ddd2d1681371de16f2c}
+      \strng{bibnamehash}{d7a537002e3a3ddd2d1681371de16f2c}
+      \strng{authorbibnamehash}{d7a537002e3a3ddd2d1681371de16f2c}
+      \strng{authornamehash}{12a1de7126b0bc22fe1d7dfddf31a0ad}
+      \strng{authorfullhash}{d7a537002e3a3ddd2d1681371de16f2c}
+      \field{extraname}{3}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Core-to-core communication is critical to the effective use of multi-core processors. A number of software based concurrent lock-free queues have been proposed to address this problem. Existing solutions, however, suffer from performance degradation in real testbeds, or rely on auxiliary hardware or software timers to handle the deadlock problem when batching is used, making those solutions good in theory but difficult to use in practice. This paper describes the pros and cons of existing concurrent lock-free queues in both dummy and real testbeds and proposes B-Queue, an efficient and practical single-producer-single-consumer concurrent lock-free queue that solves the deadlock problem gracefully by introducing a self-adaptive backtracking mechanism. Experiments show that in real massively-parallel applications, B-Queue is faster than FastForward and MCRingBuffer, the two state-of-the-art concurrent lock-free queues, by up to 10x and 5x, respectively. Moreover, B-Queue outperforms FastForward and MCRingBuffer in terms of stability and scalability, making it a good candidate for fast core-to-core communication on multi-core architectures.}
+      \field{issn}{1573-7640}
+      \field{journaltitle}{International Journal of Parallel Programming}
+      \field{month}{2}
+      \field{number}{1}
+      \field{title}{B-Queue: Efficient and Practical Queuing for Fast Core-to-Core Communication}
+      \field{volume}{41}
+      \field{year}{2013}
+      \field{pages}{137\bibrangedash 159}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1007/s10766-012-0213-x
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/s10766-012-0213-x
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/s10766-012-0213-x
+      \endverb
+    \endentry
+    \entry{MaffioneCacheAware}{article}{}
+      \name{author}{3}{}{%
+        {{hash=2630298e3e735abe5d9c43d3216ec56c}{%
+           family={Maffione},
+           familyi={M\bibinitperiod},
+           given={Vincenzo},
+           giveni={V\bibinitperiod}}}%
+        {{hash=21cb682c89fb7da394bf0ac4b6beffb3}{%
+           family={Lettieri},
+           familyi={L\bibinitperiod},
+           given={Giuseppe},
+           giveni={G\bibinitperiod}}}%
+        {{hash=f3979b0ef39c09fb1a256385bc04510e}{%
+           family={Rizzo},
+           familyi={R\bibinitperiod},
+           given={Luigi},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{54e81428b9099c1e9a777ba1e3eac84f}
+      \strng{fullhash}{a5ef44bf2600d79207a5c237eba98efe}
+      \strng{bibnamehash}{a5ef44bf2600d79207a5c237eba98efe}
+      \strng{authorbibnamehash}{a5ef44bf2600d79207a5c237eba98efe}
+      \strng{authornamehash}{54e81428b9099c1e9a777ba1e3eac84f}
+      \strng{authorfullhash}{a5ef44bf2600d79207a5c237eba98efe}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Summary Data processing pipelines normally use lockless Single-Producer–Single-Consumer (SPSC) queues to efficiently decouple their processing threads and achieve high throughput, minimizing the cost of synchronization. SPSC queues have been widely studied, mostly for applications such as streaming data or network monitoring, where the main goal is maximizing throughput. There are now many applications, such as virtual-machine–virtual-machine communication, software-defined networking, and message-based kernels, where low latency is also important, and the tradeoffs between high-throughput and low-latency algorithms have not been studied equally well. Furthermore, at high or variable transaction rates, the effect of memory hierarchies and cache coherence subsystems may be dominant and yield surprising results. In this paper, we make two contributions. First, we provide a comprehensive study of the two main families of SPSC queues, namely, “Lamport” and “FastForward” queues, with a detailed analytical and experimental characterization of their behavior in terms of operating regimes, throughput, latency, and cache misses. Second, we propose two new queue variants, namely, improved FastForward and batched improved FastForward, which have better worst-case behavior than other variants in terms of cache misses, which is an important feature for a number of applications. Together, these two contributions provide practical guidelines to choose the best solution depending on the application requirements.}
+      \field{journaltitle}{Software: Practice and Experience}
+      \field{number}{5}
+      \field{title}{Cache-aware design of general-purpose Single-Producer–Single-Consumer queues}
+      \field{volume}{49}
+      \field{year}{2019}
+      \field{pages}{748\bibrangedash 779}
+      \range{pages}{32}
+      \verb{doi}
+      \verb https://doi.org/10.1002/spe.2675
+      \endverb
+      \verb{eprint}
+      \verb https://onlinelibrary.wiley.com/doi/pdf/10.1002/spe.2675
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.2675
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.2675
+      \endverb
+      \keyw{cache-aware design,FastForward,Lamport lock-free queue,SPSC}
+    \endentry
+    \entry{ffq}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=b514a5268b3b1eccf24a64d2fe6548a7}{%
+           family={Giacomoni},
+           familyi={G\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a4e255eeb1abbade96b4512629c25c8c}{%
+           family={Moseley},
+           familyi={M\bibinitperiod},
+           given={Tipp},
+           giveni={T\bibinitperiod}}}%
+        {{hash=c64dc0bf806d87658ef9c0475404b604}{%
+           family={Vachharajani},
+           familyi={V\bibinitperiod},
+           given={Manish},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{47f31305f5ed5ab4e028a91ba66498c4}
+      \strng{fullhash}{4eaefb75fc0fbd7cec7cecc20dbd9590}
+      \strng{bibnamehash}{4eaefb75fc0fbd7cec7cecc20dbd9590}
+      \strng{authorbibnamehash}{4eaefb75fc0fbd7cec7cecc20dbd9590}
+      \strng{authornamehash}{47f31305f5ed5ab4e028a91ba66498c4}
+      \strng{authorfullhash}{4eaefb75fc0fbd7cec7cecc20dbd9590}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming, PPOPP}
+      \field{month}{01}
+      \field{title}{FastForward for Efficient Pipeline Parallelism: A Cache-Optimized Concurrent Lock-Free Queue}
+      \field{year}{2008}
+      \verb{doi}
+      \verb 10.1145/1345206.1345215
+      \endverb
+    \endentry
+    \entry{githubMA}{software}{}
+      \name{author}{1}{}{%
+        {{hash=211801f9679f2af4a58da2d17dd050bb}{%
+           family={Demir},
+           familyi={D\bibinitperiod},
+           given={Devrim\bibnamedelima Baran},
+           giveni={D\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+      }
+      \strng{namehash}{211801f9679f2af4a58da2d17dd050bb}
+      \strng{fullhash}{211801f9679f2af4a58da2d17dd050bb}
+      \strng{bibnamehash}{211801f9679f2af4a58da2d17dd050bb}
+      \strng{authorbibnamehash}{211801f9679f2af4a58da2d17dd050bb}
+      \strng{authornamehash}{211801f9679f2af4a58da2d17dd050bb}
+      \strng{authorfullhash}{211801f9679f2af4a58da2d17dd050bb}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{howpublished}{\url{https://github.com/DevrimBaran/MA.git}}
+    \endentry
+    \entry{halfincrementhalfmax}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=d4a1c4cb44225517cad3c617c4c813c2}{%
+           family={Khanchandani},
+           familyi={K\bibinitperiod},
+           given={Pankaj},
+           giveni={P\bibinitperiod}}}%
+        {{hash=5c162b9d03517a96680df0dc8d8263eb}{%
+           family={Wattenhofer},
+           familyi={W\bibinitperiod},
+           given={Roger},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Varanasi, India}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{b6ead4f1892fb58b4155b44188cbd9d5}
+      \strng{fullhash}{b6ead4f1892fb58b4155b44188cbd9d5}
+      \strng{bibnamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
+      \strng{authorbibnamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
+      \strng{authornamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
+      \strng{authorfullhash}{b6ead4f1892fb58b4155b44188cbd9d5}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The consensus number of a synchronization primitive is the maximum number of processes for which the primitive can solve consensus. This has been the traditional measure of power of a synchronization primitive. Thus, the compare-and-swap primitive, which has infinite consensus number, is considered most powerful and has been the primitive of choice for implementing concurrent data structures. In this work, we show that the synchronization primitives with low consensus numbers can also be potentially powerful by using them along with the compare-and-swap primitive to design an O (√n) time wait-free and linearizable concurrent queue. The best known time bound for a wait-free and linearizable concurrent queue using only the compare-and-swap primitive is O(n). Here, n is the total number of processes that can access the queue.The queue object maintains a sequence of elements and supports the operations enqueue(x) and dequeue(). The wait-free property implies that every call to enqueue(x) and dequeue() finishes in a bounded number of steps irrespective of the schedule of other n --1 processes. The linearizable property implies that the enqueue(x) and dequeue() calls appear to be instantaneously applied within the duration of respective calls. We design a wait-free and a linearizable concurrent queue using shared memory registers that support the compare-and-swap primitive and two other primitives of consensus number one and two respectively. The enqueue(x) and dequeue() operations take O (√n) steps each. The total number of registers required are O(nm) of O (max{log n, log m }) bits each, where m is a bound on the total number of enqueue(x) operations.}
+      \field{booktitle}{Proceedings of the 19th International Conference on Distributed Computing and Networking}
+      \field{isbn}{9781450363723}
+      \field{series}{ICDCN '18}
+      \field{title}{On the Importance of Synchronization Primitives with Low Consensus Numbers}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.1145/3154273.3154306
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3154273.3154306
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3154273.3154306
+      \endverb
+      \keyw{wait-free queue,sublinear wait-free,concurrent queue}
+    \endentry
+    \entry{memorytomemory}{article}{}
+      \name{author}{5}{}{%
+        {{hash=fea087bb4fbab906efd7ec82de2512f4}{%
+           family={Bédin},
+           familyi={B\bibinitperiod},
+           given={Denis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=53f178191c99309899a3674f5b0a6960}{%
+           family={Lépine},
+           familyi={L\bibinitperiod},
+           given={François},
+           giveni={F\bibinitperiod}}}%
+        {{hash=ecb5b691e27c1385dd9abff66650dbaa}{%
+           family={Mostéfaoui},
+           familyi={M\bibinitperiod},
+           given={Achour},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8712f43c719249dc3e88d719e46422ce}{%
+           family={Perez},
+           familyi={P\bibinitperiod},
+           given={Damien},
+           giveni={D\bibinitperiod}}}%
+        {{hash=13b8b6bffdd3640c7bb2923cb7c7a954}{%
+           family={Perrin},
+           familyi={P\bibinitperiod},
+           given={Matthieu},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{768c2db05e0ce52dfc817f766c34c700}
+      \strng{fullhash}{8c5c0e4fa8c31c3ce9f7b03b00f29cf3}
+      \strng{bibnamehash}{8c5c0e4fa8c31c3ce9f7b03b00f29cf3}
+      \strng{authorbibnamehash}{8c5c0e4fa8c31c3ce9f7b03b00f29cf3}
+      \strng{authornamehash}{768c2db05e0ce52dfc817f766c34c700}
+      \strng{authorfullhash}{8c5c0e4fa8c31c3ce9f7b03b00f29cf3}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{03}
+      \field{title}{Wait-free Algorithms: the Burden of the Past}
+      \field{year}{2024}
+      \verb{doi}
+      \verb 10.21203/rs.3.rs-4125819/v1
+      \endverb
+    \endentry
+    \entry{johnen_et_al:LIPIcs.OPODIS.2022.4}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=dcae8774e0eb4cbbaa0b8a163873b0a6}{%
+           family={Johnen},
+           familyi={J\bibinitperiod},
+           given={Colette},
+           giveni={C\bibinitperiod}}}%
+        {{hash=fdfd4d3058e65dbada4554b3bfebafae}{%
+           family={Khattabi},
+           familyi={K\bibinitperiod},
+           given={Adnane},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d09e088478fd53c7006ab2c8b2b22d6c}{%
+           family={Milani},
+           familyi={M\bibinitperiod},
+           given={Alessia},
+           giveni={A\bibinitperiod}}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=6165fb8bfe080e15d9bb38ba107ed550}{%
+           family={Hillel},
+           familyi={H\bibinitperiod},
+           given={Eshcar},
+           giveni={E\bibinitperiod}}}%
+        {{hash=3d54deb174178429bf452f349c826bc8}{%
+           family={Palmieri},
+           familyi={P\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+        {{hash=25d0ca7b5c8e12746e39ccbde8af79a3}{%
+           family={Rivière},
+           familyi={R\bibinitperiod},
+           given={Etienne},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Dagstuhl, Germany}%
+      }
+      \list{publisher}{1}{%
+        {Schloss Dagstuhl -- Leibniz-Zentrum für Informatik}%
+      }
+      \strng{namehash}{3288cd2209b0f32f9ea996cfc3257b9d}
+      \strng{fullhash}{c69b369287210d661b08ce4ac93dfb10}
+      \strng{bibnamehash}{c69b369287210d661b08ce4ac93dfb10}
+      \strng{authorbibnamehash}{c69b369287210d661b08ce4ac93dfb10}
+      \strng{authornamehash}{3288cd2209b0f32f9ea996cfc3257b9d}
+      \strng{authorfullhash}{c69b369287210d661b08ce4ac93dfb10}
+      \strng{editorbibnamehash}{24eca8d263a6e71f950c4278f9b9285a}
+      \strng{editornamehash}{01caf0a5cad0887e44566005275a479f}
+      \strng{editorfullhash}{24eca8d263a6e71f950c4278f9b9285a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{annotation}{Keywords: Distributed computing, distributed algorithms, FIFO queue, shared memory, fault tolerance, concurrent data structures, relaxed specifications, complexity}
+      \field{booktitle}{26th International Conference on Principles of Distributed Systems (OPODIS 2022)}
+      \field{isbn}{978-3-95977-265-5}
+      \field{issn}{1868-8969}
+      \field{series}{Leibniz International Proceedings in Informatics (LIPIcs)}
+      \field{title}{{Efficient Wait-Free Queue Algorithms with Multiple Enqueuers and Multiple Dequeuers}}
+      \field{volume}{253}
+      \field{year}{2023}
+      \field{pages}{4:1\bibrangedash 4:19}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.4230/LIPIcs.OPODIS.2022.4
+      \endverb
+      \verb{urlraw}
+      \verb https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4
+      \endverb
+      \verb{url}
+      \verb https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4
+      \endverb
+    \endentry
+    \entry{polylog}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=961dfd6665995ba159d0c5d4ffe86d33}{%
+           family={Naderibeni},
+           familyi={N\bibinitperiod},
+           given={Hossein},
+           giveni={H\bibinitperiod}}}%
+        {{hash=95a70219729d51b1acf9994c0df4799f}{%
+           family={Ruppert},
+           familyi={R\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Orlando, FL, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{57323409a5ceee0e64ca3e31e04f42a8}
+      \strng{fullhash}{57323409a5ceee0e64ca3e31e04f42a8}
+      \strng{bibnamehash}{57323409a5ceee0e64ca3e31e04f42a8}
+      \strng{authorbibnamehash}{57323409a5ceee0e64ca3e31e04f42a8}
+      \strng{authornamehash}{57323409a5ceee0e64ca3e31e04f42a8}
+      \strng{authorfullhash}{57323409a5ceee0e64ca3e31e04f42a8}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We present a novel linearizable wait-free queue implementation using single-word CAS instructions. Previous lock-free queue implementations from CAS all have amortized step complexity of Ω(p) per operation in worst-case executions, where p is the number of processes that access the queue. Our new wait-free queue takes O(log p) steps per enqueue and O(log2 p + log q) steps per dequeue, where q is the size of the queue. A bounded-space version of the implementation has O(log p log(p + q)) amortized step complexity per operation.}
+      \field{booktitle}{Proceedings of the 2023 ACM Symposium on Principles of Distributed Computing}
+      \field{isbn}{9798400701214}
+      \field{series}{PODC '23}
+      \field{title}{A Wait-free Queue with Polylogarithmic Step Complexity}
+      \field{year}{2023}
+      \field{pages}{124\bibrangedash 134}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1145/3583668.3594565
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3583668.3594565
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3583668.3594565
+      \endverb
+      \keyw{wait-free queues,concurrent data structures}
     \endentry
   \enddatalist
 \endrefsection

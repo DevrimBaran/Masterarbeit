@@ -9,6 +9,11 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {algorithm}{\numberline {2}{\ignorespaces Lamport Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{19}{algorithm.2}%
+\contentsline {algorithm}{\numberline {3}{\ignorespaces Lazy Lamport Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{20}{algorithm.3}%
+\contentsline {algorithm}{\numberline {4}{\ignorespaces Batched Lamport Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{21}{algorithm.4}%
+\contentsline {algorithm}{\numberline {5}{\ignorespaces Improved FastForward Queue Operations\blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{22}{algorithm.5}%
+\contentsline {algorithm}{\numberline {6}{\ignorespaces Batched Improved FastForward Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{22}{algorithm.6}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
