@@ -9,11 +9,16 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {algorithm}{\numberline {2}{\ignorespaces Lamport Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{19}{algorithm.2}%
-\contentsline {algorithm}{\numberline {3}{\ignorespaces Lazy Lamport Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{20}{algorithm.3}%
-\contentsline {algorithm}{\numberline {4}{\ignorespaces Batched Lamport Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{21}{algorithm.4}%
-\contentsline {algorithm}{\numberline {5}{\ignorespaces Improved FastForward Queue Operations\blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{22}{algorithm.5}%
-\contentsline {algorithm}{\numberline {6}{\ignorespaces Batched Improved FastForward Queue Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{22}{algorithm.6}%
+\contentsline {algorithm}{\numberline {2}{\ignorespaces \acl {LLQ} \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{19}{algorithm.2}%
+\contentsline {algorithm}{\numberline {3}{\ignorespaces \acl {LLQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{20}{algorithm.3}%
+\contentsline {algorithm}{\numberline {4}{\ignorespaces \acl {BLQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{21}{algorithm.4}%
+\contentsline {algorithm}{\numberline {5}{\ignorespaces \acl {FFQ} Operations \blx@tocontentsinit {0}\cite {ffq}}}{22}{algorithm.5}%
+\contentsline {algorithm}{\numberline {6}{\ignorespaces \acl {IFFQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{22}{algorithm.6}%
+\contentsline {algorithm}{\numberline {7}{\ignorespaces \acl {BIFFQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{23}{algorithm.7}%
+\contentsline {algorithm}{\numberline {8}{\ignorespaces B-Queue with Self-Adaptive Backtracking\blx@tocontentsinit {0}\cite {Wang2013BQueue}}}{24}{algorithm.8}%
+\contentsline {algorithm}{\numberline {9}{\ignorespaces Dynamic List-based SPSC Queue (dSPSC) Operations \blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{25}{algorithm.9}%
+\contentsline {algorithm}{\numberline {10}{\ignorespaces \acl {uSPSC} Operations\blx@tocontentsinit {0}\cite {Aldinucci2012EfficientSync}}}{26}{algorithm.10}%
+\contentsline {algorithm}{\numberline {11}{\ignorespaces \acl {mSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{27}{algorithm.11}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

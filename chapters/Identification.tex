@@ -5,17 +5,17 @@
 An important question is what data structure to use for the implementation of a wait-free synchronisation technique for \ac{IPC}. M. Herlihy showed that every sequential data structure can be made wait-free \cite{herlihy1991wait}. So it is important to choose the optimal data structure for our use. Considering that the reason of this work is to optimize modern manufacturing and automation, some form of correct data flow order is as well necessary for correct work flow for instance in an modern manufacturing line or more critical in a driverless car. Hence an already natural fit like \ac{FIFO} queues. Natural because in such queues a producer process can enqueue messages and the consumer process can dequeue messages sequentially. This models real-world data flows (sensor readings, commands, network packets), which are inherently sequential. Consequently with such queues the order of the data flow is preversed without the need of implementing additional functionalities. In contrast, data structures like stacks, sets, or maps do not maintain this kind of arrival order and moreover add semantics like \ac{LIFO} order or key-value pairs, which are in most cases not desired or even unnecessary. This would bring in the need of additional functions to just get rid of undesired side effects. Furthermore in a queue only two operations exist, an enqueue and an dequeue operation. All the other data structures introduce more operations and therefore more complexity and therefore more performance overhead. The less operations exist, the less complex the implementation will be. Because of these advantages and also because of the fact that in most publications in the wait-free domain queues are beeing used, limiting this thesis to queues only is reasonable. \cite{jiffy}
 
 \section{Wait-Free Algorithms}\label{sec:wait-free-alg}
-With the appropriate data structure established, an important consideration is the selection of suitable algorithms. In \cref{ch:methodology} 4 different contention categories are defined. Which kind of algorithm going to be used will be decided contention based. Since all of them have different complexity in runtime, it is important to choose the right contention category for the right use case to save resources and have faster execution times to meet the timing constraints of \ac{HRTS}. In modern manufacturing and automation devices are used which can run multiple applications on a single device. This could mean that every application running on one device could be a producer and a consumer to each other (\ac{MPMC}) and also maybe some single application of all applications running on one device produces data for just a single other consuming application (\ac{SPSC}). And maybe some single application is a producer for multiple consuming applications (\ac{SPMC}) and multiple applications are producers of a single consuming application (\ac{MPSC}). So it can be that all cases can occur in just one device. This means that all the different cases of contention have to be considered. In the following the different cases and their algorithms will be discussed. Moreover they will be implemented and their performance tested via a benchmarked (how fast an algorithm can produce and consume items concurrently). Subsequently from each category the best algorithm will be chosen and their performance will be compared with each other to Identify, if 4 different categories are necessary. The reason for that is, that for instance the best performed \ac{MPMC} algorithm could outperform all other algorithms even for their contention category, since a \ac{MPMC} approach can cover all contention cases. The goal with this approach is to have as little overhead as possible, since an algorithm explicitly implemented for a \ac{MPMC} use case could have extreme overhead for a \ac{SPSC} case. The implementation will be discussed in \cref{ch:implementation} and the results of the performance readings will be discussed in \cref{ch:results}. The following subsections will give an overview of the different contention categories and their algorithms found. The subsections will also shortlyy describe how the enqueue and dequeue in these algorithms work. Given that all algorithms found are about inter-thread communication and not \ac{IPC}, the following explanation of the specific algorithms will include the terminology of threads to be precise about the papers. Later it will be explained how this was adapted to \ac{IPC} in \cref{ch:implementation}.
+With the appropriate data structure established, an important consideration is the selection of suitable algorithms. In \cref{ch:methodology} 4 different contention categories are defined. Which kind of algorithm going to be used will be decided contention based. Since all of them have different complexity in runtime, it is important to choose the right contention category for the right use case to save resources and have faster execution times to meet the timing constraints of \ac{HRTS}. In modern manufacturing and automation devices are used which can run multiple applications on a single device. This could mean that every application running on one device could be a producer and a consumer to each other (\ac{MPMC}) and also maybe some single application of all applications running on one device produces data for just a single other consuming application (\ac{SPSC}). And maybe some single application is a producer for multiple consuming applications (\ac{SPMC}) and multiple applications are producers of a single consuming application (\ac{MPSC}). So it can be that all cases can occur in just one device. This means that all the different cases of contention have to be considered. In the following the different cases and their algorithms will be discussed. Moreover they will be implemented and their performance tested via a benchmarked (how fast an algorithm can produce and consume items concurrently). Subsequently from each category the best algorithm will be chosen and their performance will be compared with each other to Identify, if 4 different categories are necessary. The reason for that is, that for instance the best performed \ac{MPMC} algorithm could outperform all other algorithms even for their contention category, since a \ac{MPMC} approach can cover all contention cases. The goal with this approach is to have as little overhead as possible, since an algorithm explicitly implemented for a \ac{MPMC} use case could have extreme overhead for a \ac{SPSC} case. The implementation will be discussed in \cref{ch:implementation} and the results of the performance readings will be discussed in \cref{ch:results}. The following subsections will give an overview of the different contention categories and their algorithms found. The subsections will also shortly describe how the enqueue and dequeue in these algorithms work. Given that all algorithms found are about inter-thread communication and not \ac{IPC}, the following explanation of the specific algorithms will include the terminology of threads to be precise about the papers. In \cref{ch:implementation} it will be elaborated how these thread based algorithms are adapted to \ac{IPC} in Rust. Other minor Rust-specific deviations from the following algorithms (different types required by Rust's safety model, additional memory fences, etc.) can be seen in the GitHub repository accompanying this thesis \cite{githubMA}. These are not detailed here as such explanations would provide limited value to the topic of this work, and while a comprehensive analysis would be relevant, it would require more extensive exploration than is feasible within the scope of this work.
 
-\subsection{Single Producer and Single Consumer}\label{subsec:single-producer-and-single-consumer}
+\subsection{\acf{SPSC}}\label{subsec:single-producer-and-single-consumer}
 This is the most simple form of \ac{IPC}. In \ac{SPSC} there is nearly no contention from other processes, because only one producer and one consumer is working. The only contention is between the consumer and producer. In this subsection the focus will lie on benchmarking all the different \ac{SPSC} approaches found so that the optimal algorithm for the \ac{SPSC} use case can be selected. The following list shows the algorithms that are used for the \ac{SPSC} contention case. Since \ac{BLQ}, \ac{LLQ}, \ac{BIFFQ} and \ac{IFFQ} are from the same paper, explanations and variables are shared between these algorithms to avoid redundancy:
 \subsubsection{Lamport's Queue}
-Uses a circular array with two shared indices for synchronization, based on the algorithm originally proposed by Leslie Lamport in 1983 \cite{Lamport1983SPSCCircularBuffer} and shown here in \cref{alg:lamport-queue} following Maffione et al.'s version \cite{MaffioneCacheAware}. The producer first checks if the queue is full by computing \texttt{write - read = N}, which requires reading the consumer's \texttt{read} index. If the queue is not full, it writes the input data to the slot at position \texttt{write} and increments \texttt{write} to signal that the written data is available. The consumer mirrors this behavior by checking if the queue is empty with \texttt{read = write} by reading the producer's \texttt{write} index. If the queue is not empty the consumer reads that data from the slot at position \texttt{read} and increments its \texttt{read} index to signal that the slot is available. Each operation requires accessing both shared indices plus the data slot, causing up to three cache misses per item when the queue moves between nearly empty and nearly full states, which reduces performance. According to Ulrich Drepper in 2007 cache misses occur when requested data is not in the local CPU core's cache and must be fetched from another core's cache, with the cache coherence protocol ensuring memory consistency across all cores \cite{drepper2007every}. Drepper showed that the performance can degrade by 390\%, 734\%, and 1,147\% for 2, 3, and 4 threads respectively and happens because cache lines, the 64-byte blocks (on x86 architecures) that move between CPU caches, ping-pong between the producer's and consumer's cores as they take turns accessing the same memory locations \cite{drepper2007every}.
+Uses a circular array with two shared indices for synchronization, based on the algorithm originally proposed by Leslie Lamport in 1983 \cite{Lamport1983SPSCCircularBuffer} and shown here in \cref{alg:lamport-queue} following Maffione et al.'s version \cite{MaffioneCacheAware}. The producer first checks if the queue is full by computing $\texttt{write} - \texttt{read} = N$, which requires reading the consumer's \texttt{read} index. If the queue is not full, it writes the input data to the slot at position \texttt{write} and increments \texttt{write} to signal that the written data is available. The consumer mirrors this behavior by checking if the queue is empty with \texttt{read = write} by reading the producer's \texttt{write} index. If the queue is not empty the consumer reads that data from the slot at position \texttt{read} and increments its \texttt{read} index to signal that the slot is available. Each operation requires accessing both shared indices plus the data slot, causing up to three cache misses per item when the queue moves between nearly empty and nearly full states, which reduces performance. According to Ulrich Drepper in 2007 cache misses occur when requested data is not in the local CPU core's cache and must be fetched from another core's cache, with the cache coherence protocol ensuring memory consistency across all cores \cite{drepper2007every}. Drepper showed that the performance can degrade by 390\%, 734\%, and 1,147\% for 2, 3, and 4 threads respectively and happens because cache lines, the 64-byte blocks (on x86 architecures) that move between CPU caches, ping-pong between the producer's and consumer's cores as they take turns accessing the same memory locations \cite{drepper2007every}.
 
 \begin{algorithm}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Lamport Queue Operations \cite{MaffioneCacheAware}}
+   \caption{\acl{LLQ} \cite{MaffioneCacheAware}}
    \label{alg:lamport-queue}
    \scriptsize
    \begin{algorithmic}[1]
@@ -44,13 +44,13 @@ Uses a circular array with two shared indices for synchronization, based on the 
    \cite{MaffioneCacheAware}
 \end{algorithm}
 
-\subsubsection{\acf{LLQ}}
-Reduces the described cache misses of Lamports queue by postponing index reads until necessary, as shown in \cref{alg:llq}. The producer maintains a local \texttt{read\_shadow} copy and only updates it when running out of known free slots. Similarly, the consumer uses \texttt{write\_shadow} to avoid repeatedly checking for new items. Additionally, LLQ keeps $K$ slots (where $K$ is slots per cache line, typically 8) permanently empty, preventing producer and consumer from touching the same cache line when the queue is full. These optimizations work particularly well when one thread is faster than the other, reducing worst-case misses from 3 to about 2 per item. \cite{MaffioneCacheAware}
+\subsubsection{\acl{LLQ}}
+Reduces the described cache misses of Lamports queue by postponing index reads until necessary, as shown in \cref{alg:llq}. The producer maintains a local \texttt{read\_shadow} copy and only updates it when running out of known free slots. Similarly, the consumer uses \texttt{write\_shadow} to avoid repeatedly checking for new items. Additionally, \ac{LLQ} keeps $K$ slots (where $K$ is slots per cache line, typically 8) permanently empty, preventing producer and consumer from touching the same cache line when the queue is full. These optimizations work well when one thread is faster than the other, reducing worst-case misses from 3 to about 2 per item. \cite{MaffioneCacheAware}
 
 \begin{algorithm}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Lazy Lamport Queue Operations \cite{MaffioneCacheAware}}
+   \caption{\acl{LLQ} Operations \cite{MaffioneCacheAware}}
    \label{alg:llq}
    \scriptsize
    \begin{algorithmic}[1]
@@ -84,13 +84,13 @@ Reduces the described cache misses of Lamports queue by postponing index reads u
    \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{\acf{BLQ}}
-Extends LLQ with explicit cache batching to further reduce synchronization costs, as detailed in \cref{alg:blq}. The producer accumulates items using private \texttt{write\_priv}, filling slots without updating the shared \texttt{write} index. Only \texttt{blq\_enqueue\_publish} makes the batch visible by advancing \texttt{write}. The consumer works symmetrically, using \texttt{read\_priv} for local progress before updating \texttt{read}. With typical batch sizes like $B = 32$, synchronization overhead is amortized across many operations, reducing the cache misses. This particularly benefits applications that naturally process data in batches, such as network packet processing. \cite{MaffioneCacheAware}
+\subsubsection{\acl{BLQ}}
+Extends \ac{LLQ} with explicit batching to further reduce synchronization costs, as detailed in \cref{alg:blq}. The producer accumulates items using private \texttt{write\_priv}, filling slots without updating the shared \texttt{write} index. Only \texttt{blq\_enqueue\_publish} makes the batch visible by advancing \texttt{write}. The consumer works symmetrically, using \texttt{read\_priv} for local progress before updating \texttt{read}. With typical batch sizes like $B = 32$, synchronization overhead is amortized across many operations, reducing cache misses. However, the application using this queue design must explicitly call the publish functions even with partial batches to avoid unbounded latency, because items remain invisible to the consumer until published. This design particularly benefits applications that naturally process data in batches, such as network packet processing, where batch boundaries are well-defined. \cite{MaffioneCacheAware}
 
 \begin{algorithm}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Batched Lamport Queue Operations \cite{MaffioneCacheAware}}
+   \caption{\acl{BLQ} Operations \cite{MaffioneCacheAware}}
    \label{alg:blq}
    \scriptsize
    \begin{algorithmic}[1]
@@ -145,16 +145,46 @@ Extends LLQ with explicit cache batching to further reduce synchronization costs
    \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{\ac{FFQ}}
-Synchronization by embedding control information directly within the data slots, eliminating separate shared indices. Instead of checking head or tail variables, the producer writes data to slots and marks them as full, while the consumer reads data and marks slots as empty using a \enquote*{NULL} value. This coupling of control and data means each operation touches only one shared cache line instead of three. The producer maintains a private \enquote*{write} index tracking the next slot to fill, checking if it contains \enquote*{NULL} before writing. The consumer keeps a private \enquote*{read} index, checking if slots contain valid data before reading and clearing them. While this eliminates memory barriers and reduces cache misses from 3 to at most 2 per item, it still has a problem. When producer and consumer work on the same cache line, the cache line moves back and forth between CPU cores worsening execution times. \cite{ffq}
+\subsubsection{\acl{FFQ}}
+Synchronization by embedding control information directly within the data slots, eliminating separate shared indices shown in \cref{alg:ffq}. Unlike Lamport's queue which requires checking both \texttt{head} and \texttt{tail} indices, \acsp{FFQ} producer simply examines if the next slot contains \texttt{NULL} before writing. When the slot is empty (\texttt{NULL}), the producer writes the data directly and advances its private \texttt{head} index. The consumer follows a similar pattern by reading from the current slot position, and if data is present (non-\texttt{NULL}), it retrieves the value, writes \texttt{NULL} to mark the slot empty, and advances its private \texttt{tail} index. This design couples control and data, reducing shared memory accesses from three (\texttt{head}, \texttt{tail}, \texttt{buffer}) to just one (\texttt{buffer} slot). Each thread maintains its own private index that never needs synchronization. The producer tracks where to write next through \texttt{head}, while the consumer tracks where to read next through \texttt{tail}. The \texttt{NULL} value serves dual purpose as both an empty indicator and the synchronization mechanism. While this approach reduces memory barriers and cache misses significantly, it still has the ping-pong effect when the queue has few elements, causing the producer and consumer to operate on the same cache line. \cite{ffq} 
 
-\subsubsection{\acf{IFFQ}}
-Prevents cache conflicts through spatial separation using a look-ahead mechanism shown in \cref{alg:iffq}. The producer checks if a slot $H$ positions ahead (typically 32) is empty before proceeding, ensuring it works far ahead of the consumer. This check happens only once every $H$ items when \texttt{write} reaches \texttt{limit}. The consumer delays clearing slots through \texttt{iffq\_dequeue\_publish}, maintaining separation between producer and consumer regions. With $2H$ permanently unused slots as a buffer zone, producer and consumer operate on different cache lines in steady state, reducing cache misses to nearly optimal levels. \cite{MaffioneCacheAware}
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{\acl{FFQ} Operations \cite{ffq}}
+    \label{alg:ffq}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{ffq\_enqueue}{$q$, $data$}
+            \If{$q.buffer[q.head] \neq \texttt{NULL}$}
+                \State \Return \texttt{EWOULDBLOCK}
+            \EndIf
+            \State $q.buffer[q.head] \gets data$
+            \State $q.head \gets \text{NEXT}(q.head)$
+            \State \Return $0$
+        \EndFunction
+        
+        \State
+        
+        \Function{ffq\_dequeue}{$q$}
+            \State $data \gets q.buffer[q.tail]$
+            \If{$data = \texttt{NULL}$}
+                \State \Return \texttt{EWOULDBLOCK}
+            \EndIf
+            \State $q.buffer[q.tail] \gets \texttt{NULL}$
+            \State $q.tail \gets \text{NEXT}(q.tail)$
+            \State \Return $data$
+        \EndFunction
+    \end{algorithmic}
+ \end{algorithm}
+
+\subsubsection{\acl{IFFQ}}
+Prevents cache conflicts through spatial separation using a look-ahead mechanism shown in \cref{alg:iffq}. The producer checks if a slot $H$ positions ahead (typically 32) is empty before proceeding, ensuring it works far ahead of the consumer. This check happens only once every $H$ items when \texttt{write} reaches \texttt{limit}. The consumer delays clearing slots through \texttt{iffq\_dequeue\_publish}, maintaining separation between producer and consumer regions. With $2H$ permanently unused slots as a buffer zone, producer and consumer operate on different cache lines, reducing cache misses even more. \cite{MaffioneCacheAware}
 
 \begin{algorithm}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Improved FastForward Queue Operations\cite{MaffioneCacheAware}}
+   \caption{\acl{IFFQ} Operations \cite{MaffioneCacheAware}}
    \label{alg:iffq}
    \scriptsize
    \begin{algorithmic}[1]
@@ -193,13 +223,13 @@ Prevents cache conflicts through spatial separation using a look-ahead mechanism
    \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{\acf{BIFFQ}}
-Addresses IFFQ's weakness when the queue is nearly empty by adding producer-side buffering, as shown in \cref{alg:biffq}. Items first accumulate in a thread-local buffer, then \newline \texttt{biffq\_enqueue\_publish} writes them to the queue in a rapid burst. This creates a beneficial race condition - if all writes complete before the consumer notices, the cache line stays with the producer, avoiding ping-pong effects. The consumer side remains unchanged from IFFQ. While theoretical worst-case behavior is similar to IFFQ, practical measurements show significant improvement when the queue operates near empty, making BIFFQ effective across all operating conditions. \cite{MaffioneCacheAware}
+\subsubsection{\acl{BIFFQ}}
+Addresses \acsp{IFFQ} weakness when the queue is nearly empty by adding producer-side buffering, as shown in \cref{alg:biffq}. Items first accumulate in a thread-local buffer, then \newline \texttt{biffq\_enqueue\_publish} writes them to the queue in a rapid burst. Also like in \ac{BLQ} the application using this queue must call this function explicitly to avoid deadlocks. This behavior creates an intended race condition, which is beneficial if all writes complete before the consumer notices. The cache line stays with the producer to avoid ping-pong effects. The consumer side remains unchanged from \ac{IFFQ}. While theoretical worst-case behavior is similar to \ac{IFFQ}, practical measurements show significant improvement when the queue operates near empty, making \ac{BIFFQ} effective across all operating conditions. \cite{MaffioneCacheAware}
 
 \begin{algorithm}[!ht]
    \centering
    \captionsetup{justification=centering}
-   \caption{Batched Improved FastForward Queue Operations \cite{MaffioneCacheAware}}
+   \caption{\acl{BIFFQ} Operations \cite{MaffioneCacheAware}}
    \label{alg:biffq}
    \scriptsize
    \begin{algorithmic}[1]
@@ -232,18 +262,206 @@ Addresses IFFQ's weakness when the queue is nearly empty by adding producer-side
 \end{algorithm}
 
 \subsubsection{B-Queue}
-Addresses cache thrashing through adaptive batching with a backtracking mechanism for deadlock prevention. The producer maintains local head and \enquote*{batch\_head} pointers, probing \enquote*{BATCH\_SIZE} slots ahead to reserve a block of empty slots when needed. Elements are written sequentially with an associated validity flag set via release ordering. The consumer uses tail and \enquote*{batch\_tail} pointers to extract elements in batches, clearing validity flags after reading. When insufficient elements are available for a full batch, the backtracking algorithm performs binary search by repeatedly halving the batch size to find available data, preventing deadlock without auxiliary threads or timers. This approach maintains producer-consumer separation across cache lines while gracefully handling varying production rates. \cite{Wang2013BQueue}
+Addresses the deadlock issues inherent in batching approaches through a self-adaptive backtracking mechanism that dynamically adjusts to production rates shown in \cref{alg:bqueue}. The producer maintains local \texttt{head} and \texttt{batch\_head} pointers, probing \texttt{BATCH\_SIZE} positions ahead when needed. The consumer's adaptive backtracking algorithm (lines 27 - 41) maintains a \texttt{batch\_history} variable that records successful batch sizes from previous operations. When searching for data, it starts from this historical value rather than always beginning at \texttt{BATCH\_SIZE}, significantly reducing latency when the producer operates slowly. If the recorded size is below \texttt{BATCH\_MAX}, the algorithm optimistically increments by \texttt{INCREMENT} (typically one cache line) to probe for higher throughput when the producer accelerates. The binary search then proceeds from this adaptive starting point, halving the batch size until finding available data or reaching zero. This eliminates the need for manual parameter adjustment or manual calling of a publish function while maintaining cache line separation and preventing deadlocks. \cite{Wang2013BQueue}
 
-\subsubsection{\ac{uSPSC}}
-Combines bounded SPSC buffers into a queue using a pool of circular buffers linked as a list. The producer writes to the current buffer until full, then requests a new buffer from the pool via the \enquote*{next\_w()} method, updates the write pointer, and continues. The consumer reads from its current buffer, and when empty, checks if more buffers exist by comparing the read and write pointers. If buffers differ, it switches to the next buffer obtained via \enquote*{next\_r()} and releases the empty one back to the pool for recycling. A write memory barrier ensures all data writes complete before buffer transitions, preventing data loss on weakly ordered memory models. \cite{torquati2010singleproducersingleconsumerqueuessharedcache,Aldinucci2012EfficientSync}
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{B-Queue with Self-Adaptive Backtracking\cite{Wang2013BQueue}}
+    \label{alg:bqueue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{bqueue\_enqueue}{$q$, $e$}
+            \If{$q.head = q.batch\_head$} \Comment{No empty slots}
+                \If{$q.buffer[(q.head + \text{BATCH\_SIZE}) \bmod q.size] \neq \texttt{NULL}$}
+                    \State \Return $-1$ \Comment{Queue full}
+                \EndIf
+                \State $q.batch\_head \gets q.head + \text{BATCH\_SIZE}$
+            \EndIf
+            \State $q.buffer[q.head \bmod q.size] \gets e$
+            \State $q.head \gets q.head + 1$
+            \State \Return $0$
+        \EndFunction
+        
+        \State
+        
+        \Function{bqueue\_dequeue}{$q$}
+            \If{$q.tail = q.batch\_tail$} \Comment{No filled slots}
+                \State $batch\_tail \gets$ \Call{adaptive\_backtrack}{$q$}
+                \If{$batch\_tail = -1$}
+                    \State \Return \texttt{NULL}
+                \EndIf
+                \State $q.batch\_tail \gets batch\_tail$
+            \EndIf
+            \State $e \gets q.buffer[q.tail \bmod q.size]$
+            \State $q.buffer[q.tail \bmod q.size] \gets \texttt{NULL}$
+            \State $q.tail \gets q.tail + 1$
+            \State \Return $e$
+        \EndFunction
+        
+        \State
+        
+        \Function{adaptive\_backtrack}{$q$}
+            \State $batch\_size \gets q.batch\_history$ \Comment{Start from historical value}
+            \If{$batch\_size < \text{BATCH\_MAX}$}
+                \State $batch\_size \gets batch\_size + \text{INCREMENT}$ \Comment{Try larger batch}
+            \EndIf
+            \While{$batch\_size > 0$}
+                \State $batch\_tail \gets q.tail + batch\_size$
+                \If{$q.buffer[(batch\_tail - 1) \bmod q.size] \neq \texttt{NULL}$}
+                    \State $q.batch\_history \gets batch\_size$ \Comment{Remember successful size}
+                    \State \Return $batch\_tail$
+                \EndIf
+                \State $batch\_size \gets batch\_size / 2$ \Comment{Binary search}
+            \EndWhile
+            \State \Return $-1$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
-\subsubsection{\ac{dSPSC}}
-Implements a queue through a linked list where each node contains data and a next pointer. The producer obtains nodes from a pool, fills them with data, inserts a write memory barrier to ensure data visibility, then updates the tail pointer to link the node. The consumer reads from the head node, extracts data, advances the head pointer, and returns the consumed node to the pool. To minimize overhead, freed nodes are cached in a bounded SPSC queue that acts as a return path from consumer to producer, enabling efficient node reuse. \cite{torquati2010singleproducersingleconsumerqueuessharedcache,Aldinucci2012EfficientSync}
 
-\subsubsection{\ac{mSPSC}}
+
+
+\subsubsection{\acf{dSPSC}}
+Uses a linked list of dynamically allocated nodes for unbounded capacity shown in \cref{alg:dspsc-detailed}. The producer first attempts to obtain a node from the cache by calling \texttt{cache.pop()}, which uses a bounded SPSC circular buffer (buffer from Lamport queue) to recycle previously used nodes. If the cache is empty, it falls back to malloc to allocate a new node. After obtaining a node, the producer writes the data value, sets the next pointer to NULL, then executes a write memory barrier (WMB) to ensure data visibility on weakly ordered memory models like PowerPC where write-to-write relaxation allows stores to execute out of program order. The producer then updates \texttt{tail->next} to link the new node and advances the tail pointer. The consumer checks if \texttt{head->next} is non-NULL to determine if data is available, saves the current head node reference, extracts data from \texttt{(head->next)->data}, then advances the head pointer to make the data node become the new dummy head. Before returning, the consumer attempts to push the old dummy node to the cache for reuse, only calling free() if the cache is full. The dummy head node technique ensures head and tail pointers never point to the same active data node, keeping them in separate cache lines. According to Torquati's measurements, this approach is approximately 6 times slower than bounded SPSC queues when producer and consumer run on different cores, degrading from 11-15ns to 60-120ns per operation due to poor cache locality from pointer chasing and dynamic memory management overhead, even with node caching reducing malloc/free calls \cite{torquati2010singleproducersingleconsumerqueuessharedcache}.
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Dynamic List-based SPSC Queue (dSPSC) Operations \cite{torquati2010singleproducersingleconsumerqueuessharedcache}}
+    \label{alg:dspsc-detailed}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \State \textbf{struct} Node \{ void* data; Node* next; \}
+        \State Node* head; \Comment{Points to dummy node}
+        \State Node* tail; \Comment{Points to last data node}
+        \State SPSC\_Buffer cache; \Comment{Bounded cache for node recycling}
+        
+        \State
+        
+        \Function{allocnode}{}
+            \State Node* $n \gets$ NULL
+            \If{cache.pop(\&$n$)} \Comment{Try cache first}
+                \State \Return $n$
+            \EndIf
+            \State $n \gets$ (Node*)malloc(sizeof(Node))
+            \State \Return $n$
+        \EndFunction
+        
+        \State
+        
+        \Function{push}{void* data}
+            \State Node* $n \gets$ allocnode() \Comment{Get node from cache or malloc}
+            \State $n$->data $\gets$ data
+            \State $n$->next $\gets$ NULL
+            \State WMB() \Comment{Write Memory Barrier}
+            \State tail->next $\gets$ $n$ \Comment{Link new node}
+            \State tail $\gets$ $n$ \Comment{Update tail pointer}
+            \State \Return true
+        \EndFunction
+        
+        \State
+        
+        \Function{pop}{void** data}
+            \If{head->next $\neq$ NULL} \Comment{Check if data available}
+                \State Node* $n \gets$ head \Comment{Save current dummy}
+                \State *data $\gets$ (head->next)->data \Comment{Extract data}
+                \State head $\gets$ head->next \Comment{Advance to next node}
+                \If{!cache.push($n$)} \Comment{Try to recycle old dummy}
+                    \State free($n$) \Comment{Free if cache full}
+                \EndIf
+                \State \Return true
+            \EndIf
+            \State \Return false \Comment{Queue empty}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{\acl{uSPSC}}
+Combines bounded SPSC buffers into a queue using a pool of circular buffers linked as a list. The producer writes to the current buffer until full, then requests a new buffer from the pool via the \enquote*{next\_w()} method, updates the write pointer, and continues. The consumer reads from its current buffer, and when empty, checks if more buffers exist by comparing the read and write pointers. If buffers differ, it switches to the next buffer obtained via \enquote*{next\_r()} and releases the empty one back to the pool for recycling. A write memory barrier ensures all data writes complete before buffer transitions, preventing data loss on weakly ordered memory models. \cite{Aldinucci2012EfficientSync}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{\acl{uSPSC} Operations\cite{Aldinucci2012EfficientSync}}
+    \label{alg:uspsc}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{uspsc\_push}{$q$, $data$}
+            \If{$q.buf\_w.full()$} \Comment{Current buffer full}
+                \State $q.buf\_w \gets q.pool.next\_w()$ \Comment{Get new buffer}
+            \EndIf
+            \State $q.buf\_w.push(data)$
+            \State \Return \texttt{true}
+        \EndFunction
+        
+        \State
+        
+        \Function{uspsc\_pop}{$q$, $data$}
+            \If{$q.buf\_r.empty()$}
+                \If{$q.buf\_r = q.buf\_w$} \Comment{Same buffer?}
+                    \State \Return \texttt{false} \Comment{Queue truly empty}
+                \EndIf
+                \If{$q.buf\_r.empty()$} \Comment{Recheck after comparison}
+                    \State $tmp \gets q.pool.next\_r()$
+                    \State $q.pool.release(q.buf\_r)$ \Comment{Recycle buffer}
+                    \State $q.buf\_r \gets tmp$
+                \EndIf
+            \EndIf
+            \State \Return $q.buf\_r.pop(data)$
+        \EndFunction
+    \end{algorithmic}
+ \end{algorithm}
+
+\subsubsection{\acl{mSPSC}}
 Reduces cache-line thrashing in Lamport's circular buffer by batching multiple elements before insertion. The producer accumulates items in a thread-local array, then writes them to the SPSC buffer in reverse order using the multipush method when the batch fills or flush is called. This backward insertion maintains distance between read and write pointers across cache lines, preventing false sharing. While adding an extra copy per element, the improved cache utilization from reduced coherence traffic more than compensates for this overhead, achieving better performance then standard push operations. \cite{torquati2010singleproducersingleconsumerqueuessharedcache}
 
-\subsection{Multiple Producer and Single Consumer}\label{subsec:multiple-producer-and-single-consumer}
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{\acl{mSPSC} Operations\cite{torquati2010singleproducersingleconsumerqueuessharedcache}}
+    \label{alg:mspsc}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{mspsc\_push}{$q$, $data$}
+            \State $q.batch[q.count] \gets data$
+            \State $q.count \gets q.count + 1$
+            \If{$q.count = $ \texttt{BATCH\_SIZE}}
+                \State \Return \Call{multipush}{$q$, $q.batch$, $q.count$}
+            \EndIf
+            \State \Return \texttt{true}
+        \EndFunction
+        
+        \State
+        
+        \Function{multipush}{$q$, $batch$, $len$}
+            \State $last \gets q.write + len - 1$ \Comment{Calculate end position}
+            \If{$q.slots[last \bmod q.size] \neq$ \texttt{NULL}}
+                \State \Return \texttt{false} \Comment{Not enough space}
+            \EndIf
+            \For{$i \gets len - 1$ \textbf{downto} $0$} \Comment{Reverse order}
+                \State $q.slots[(q.write + i) \bmod q.size] \gets batch[i]$
+            \EndFor
+            \State \textbf{WMB}() \Comment{Ensure all writes visible}
+            \State $q.write \gets (last + 1) \bmod q.size$
+            \State $q.count \gets 0$ \Comment{Reset batch counter}
+            \State \Return \texttt{true}
+        \EndFunction
+        
+        \State
+        
+        \Function{flush}{$q$}
+            \If{$q.count > 0$}
+                \State \Return \Call{multipush}{$q$, $q.batch$, $q.count$}
+            \EndIf
+            \State \Return \texttt{true}
+        \EndFunction
+    \end{algorithmic}
+ \end{algorithm}
+
+\subsubsection{Jayantis \ac{SPSC} Queue}
+
+\subsection{\acf{MPSC}}\label{subsec:multiple-producer-and-single-consumer}
 This is a bit more complex to implement than the \ac{SPSC} case. Multiple producers can enqueue items at the same time while a single consumer dequeues items. Also here multiple approaches are available from different papers. These are the algorithms that found for this case: 
 \begin{itemize}
    \item Jayanti Queue: Distributes the global queue across n local queues per producer. Producers obtain timestamps via atomic counter reads, insert [element, timestamp] pairs into their local queues, then propagate front elements up a binary tree of minimum values (propagating means updating values level by level from leaves toward the root). The consumer reads the root to find the earliest timestamp, dequeues from that local queue, and propagates changes back up the tree. Internal nodes maintain minimum timestamps of their subtrees, enabling O(log n) operations using \ac{LL/SC} (Since the hardware used for this work was accomplished on x86, \ac{LL/SC} was substituted with \ac{CAS} linked with version numbers to avoid ABA). \cite{JayantiLog}
@@ -252,13 +470,13 @@ This is a bit more complex to implement than the \ac{SPSC} case. Multiple produc
    \item DQueue: Buffers enqueue requests in thread-local arrays before batch writing to shared segments. Producers obtain indices via \ac{FAA}, accumulate requests locally, then flush to shared memory when buffers fill, exploiting spatial locality. The consumer helps suspended producers by scanning all local buffers when finding empty cells. Key optimizations include eliminating \ac{CAS} operations to avoid write buffer drains and helping all producers indiscriminately. \cite{WangCacheCoherent}
 \end{itemize}
 
-\subsection{Single Producer and Multiple Consumer}\label{subsec:single-producer-and-multiple-consumer}
+\subsection{\acf{SPMC}}\label{subsec:single-producer-and-multiple-consumer}
 This case is trickier to implement, since multiple consumers have to be synchronized to not get any double read or loosing an item. Multiple producers was simpler, since making producers write specific data each is not so hard. In this case every consumer has to be synchronized so that when one item is consumed by a consumer, it cannot be consumed again from another. That is most probably also the reason only one algorithm for this contention category was found. No benchmark will be performed for this category, since there is no other algorithm to compete with in this category. The algorithm is the following:
 \begin{itemize}
-   \item David Queue: Uses a 2D array ITEMS where each cell is a Swap object, a 1D array HEAD where each element is an \ac{FAA} object, and a shared ROW register. The producer writes to consecutive cells in the current row of ITEMS and when the producer detects it gets overtaken by a consumer (reads a value indicating the cell was read), it jumps to the next row. Consumers read the active row from ROW, use \ac{FAA} on HEAD[row] to get a unique index, then swap the value, indicating the cell was read, into ITEMS[row, index] to retrieve the element. The algorithm achieves O(1) time complexity with 3-bounded wait-free operations. Row migration ensures linearizability by preventing consumers from accessing future write locations. (David assumes threads rather than processes like in the context of this work, requiring additional synchronization steps to avoid data loss (A recovery mechanism \cite{githubMA}).  Also instead of items, pointers were stored into the cells.). \cite{Mateíspmc}
+   \item David Queue: Uses a 2D array ITEMS where each cell is a Swap object, a 1D array HEAD where each element is an \ac{FAA} object, and a shared ROW register. The producer writes to consecutive cells in the current row of ITEMS and when the producer detects it gets overtaken by a consumer (reads a value indicating the cell was read), it jumps to the next row. Consumers read the active row from ROW, use \ac{FAA} on HEAD[row] to get a unique index, then swap the value, indicating the cell was read, into ITEMS[row, index] to retrieve the element. The algorithm achieves O(1) time complexity with 3-bounded wait-free operations. Row migration ensures linearizability by preventing consumers from accessing future write locations. \cite{Mateíspmc}
 \end{itemize}
 
-\subsection{Multiple Producer and Multiple Consumer}\label{subsec:multiple-producer-and-multiple-consumer}
+\subsection{\acf{MPMC}}\label{subsec:multiple-producer-and-multiple-consumer}
 Finally a look into the \ac{MPMC} case can be made. Synchronizing \ac{MPMC} is a bit simpler then synchronizing \ac{SPMC}, because here each consumer consumes the items of one other producer instead of sharing the same pool of data that has to be consumed. These are the algorithms that were found:
 \begin{itemize}
    \item  Kogan and Petranks queue: Uses a priority-based helping mechanism built on the Michael-Scott lock-free queue. Threads obtain phase numbers by calculating the maximum phase across all threads in a shared state array and adding one. Each thread records its operation details (phase, pending flag, operation type, node reference) in the state array at its thread ID index. During execution, threads traverse the state array and help all operations with phase numbers less than or equal to their own. Producers append nodes to the tail using \ac{CAS} then update the pending flag to false in the state array and then advance the tail pointer. Consumers write their ID into the deqTid field of the head node then update their state entry and then advance head. Empty queues are handled by checking if head equals tail with a null next pointer. The algorithm ensures each operation completes within O(n²) steps through systematic helping, where threads can only bypass each other a bounded number of times. Linearization occurs at the \ac{CAS} operations that modify the queue structure. \cite{Kogan2011WaitFreeQueues}
