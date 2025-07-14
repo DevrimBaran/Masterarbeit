@@ -2179,8 +2179,8 @@
       \strng{authorbibnamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
       \strng{authornamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
       \strng{authorfullhash}{b6ead4f1892fb58b4155b44188cbd9d5}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{The consensus number of a synchronization primitive is the maximum number of processes for which the primitive can solve consensus. This has been the traditional measure of power of a synchronization primitive. Thus, the compare-and-swap primitive, which has infinite consensus number, is considered most powerful and has been the primitive of choice for implementing concurrent data structures. In this work, we show that the synchronization primitives with low consensus numbers can also be potentially powerful by using them along with the compare-and-swap primitive to design an O (√n) time wait-free and linearizable concurrent queue. The best known time bound for a wait-free and linearizable concurrent queue using only the compare-and-swap primitive is O(n). Here, n is the total number of processes that can access the queue.The queue object maintains a sequence of elements and supports the operations enqueue(x) and dequeue(). The wait-free property implies that every call to enqueue(x) and dequeue() finishes in a bounded number of steps irrespective of the schedule of other n --1 processes. The linearizable property implies that the enqueue(x) and dequeue() calls appear to be instantaneously applied within the duration of respective calls. We design a wait-free and a linearizable concurrent queue using shared memory registers that support the compare-and-swap primitive and two other primitives of consensus number one and two respectively. The enqueue(x) and dequeue() operations take O (√n) steps each. The total number of registers required are O(nm) of O (max{log n, log m }) bits each, where m is a bound on the total number of enqueue(x) operations.}
@@ -2366,6 +2366,32 @@
       \verb https://doi.org/10.1145/3583668.3594565
       \endverb
       \keyw{wait-free queues,concurrent data structures}
+    \endentry
+    \entry{drepper2007every}{article}{}
+      \name{author}{1}{}{%
+        {{hash=bdb9c3658f483c939f0f649e51d31f2a}{%
+           family={Drepper},
+           familyi={D\bibinitperiod},
+           given={Ulrich},
+           giveni={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{fullhash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{bibnamehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{authorbibnamehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{authornamehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{authorfullhash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Red Hat, Inc}
+      \field{number}{2007}
+      \field{title}{What every programmer should know about memory}
+      \field{volume}{11}
+      \field{year}{2007}
+      \field{pages}{2007}
+      \range{pages}{1}
     \endentry
   \enddatalist
 \endrefsection

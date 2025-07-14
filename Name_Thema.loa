@@ -19,6 +19,13 @@
 \contentsline {algorithm}{\numberline {9}{\ignorespaces Dynamic List-based SPSC Queue (dSPSC) Operations \blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{26}{algorithm.9}%
 \contentsline {algorithm}{\numberline {10}{\ignorespaces \acl {uSPSC} Operations\blx@tocontentsinit {0}\cite {Aldinucci2012EfficientSync}}}{27}{algorithm.10}%
 \contentsline {algorithm}{\numberline {11}{\ignorespaces \acl {mSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{28}{algorithm.11}%
+\contentsline {algorithm}{\numberline {12}{\ignorespaces Jayanti's \ac {SPSC} Queue Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{29}{algorithm.12}%
+\contentsline {algorithm}{\numberline {13}{\ignorespaces Jayanti's \ac {MPSC} Queue Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{30}{algorithm.13}%
+\contentsline {algorithm}{\numberline {14}{\ignorespaces Drescher's Wait-Free \ac {MPSC} Queue Operations}}{31}{algorithm.14}%
+\contentsline {algorithm}{\numberline {15}{\ignorespaces Jiffy \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{32}{algorithm.15}%
+\contentsline {algorithm}{\numberline {16}{\ignorespaces Jiffy \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{33}{algorithm.16}%
+\contentsline {algorithm}{\numberline {17}{\ignorespaces DQueue \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{34}{algorithm.17}%
+\contentsline {algorithm}{\numberline {18}{\ignorespaces DQueue \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{35}{algorithm.18}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
