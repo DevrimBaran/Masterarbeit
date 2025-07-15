@@ -379,12 +379,12 @@ A dynamically space allocating queue using a linked list with node caching to re
 \end{algorithm}
 
 \subsubsection{\acl{uSPSC}}
-An unbounded queue that links multiple Lamport Queues to combine the cache efficiency of Lamports circular buffer queues with unlimited capacity, as shown in \cref{alg:uspsc}. Unlike dSPSC which uses scattered linked list nodes, uSPSC maintains spatial locality by keeping data in contiguous circular buffers while only linking the buffers themselves. The implementation uses two pointers \texttt{buf\_w} pointing to the producer's current write buffer and \texttt{buf\_r} pointing to the consumer's current read buffer. When pushing, the producer checks if the current buffer is full in line 2, and if so, requests a new buffer from the pool via \texttt{next\_w()} in line 3 before writing the data to \texttt{buf\_w}. The consumer first checks if its current buffer is empty in line 10. If empty, it determines whether the queue is truly empty by comparing read and write buffer pointers in line 11. If they point to the same buffer, no more data exists. Otherwise, after rechecking emptiness to prevent race conditions in line 14, the consumer obtains the next buffer via \texttt{next\_r()} and releases the empty buffer back to the pool for recycling in lines 15-17. This double-check prevents data loss when the producer writes to the current buffer between the initial emptiness check and the buffer comparison. By reusing entire buffers rather than individual nodes, uSPSC matches bounded \ac{SPSC} queues cache behavior while providing unbounded capacity. \cite{Aldinucci2012EfficientSync}
+An unbounded queue that links multiple Lamport Queues to combine the cache efficiency of Lamports circular buffer queues with unlimited capacity, as shown in \cref{alg:uspsc}. Unlike dSPSC which uses scattered linked list nodes, uSPSC maintains spatial locality by keeping data in contiguous circular buffers while only linking the buffers themselves. The implementation uses two pointers \texttt{buf\_w} pointing to the producer's current write buffer and \texttt{buf\_r} pointing to the consumer's current read buffer. When pushing, the producer checks if the current buffer is full in line 2, and if so, requests a new buffer from the pool via \texttt{next\_w()} in line 3 before writing the data to \texttt{buf\_w}. The consumer first checks if its current buffer is empty in line 10. If empty, it determines whether the queue is truly empty by comparing read and write buffer pointers in line 11. If they point to the same buffer, no more data exists. Otherwise, after rechecking emptiness to prevent race conditions in line 14, the consumer obtains the next buffer via \texttt{next\_r()} and releases the empty buffer back to the pool for recycling in lines 15-17. This double-check prevents data loss when the producer writes to the current buffer between the initial emptiness check and the buffer comparison. By reusing entire buffers rather than individual nodes, uSPSC matches bounded \ac{SPSC} queues cache behavior while providing unbounded capacity. \cite{torquati2010singleproducersingleconsumerqueuessharedcache}
 
 \begin{algorithm}[!ht]
     \centering
     \captionsetup{justification=centering}
-    \caption{\acl{uSPSC} Operations\cite{Aldinucci2012EfficientSync}}
+    \caption{\acl{uSPSC} Operations\cite{torquati2010singleproducersingleconsumerqueuessharedcache}}
     \label{alg:uspsc}
     \scriptsize
     \begin{algorithmic}[1]
@@ -530,7 +530,7 @@ A queue specifically for composability in larger \ac{MPSC} structures, as shown 
 This is a bit more complex to implement than the \ac{SPSC} case. Multiple producers can enqueue items at the same time while a single consumer dequeues items. This includes implementing other strategies then just adding some memory barriers, such as helping and atomic primitives to maintain wait-freedom and consistency between the producers. There are multiple approaches that are available from different papers to achieve this:
 
 \subsubsection{Jayantis \ac{MPSC} Queue}\label{subsub:jayanti-mpsc-queue}
-Achieves logarithmic time complexity by distributing the global queue across $n$ local \ac{SPSC} queues implemented like in \cref{subsub:jayanti-spsc-queue} and organized under a binary tree, as shown in \cref{alg:jayanti-mpsc}. Each producer owns a dedicated local queue, eliminating producer-producer contention. When enqueueing, a producer obtains a global timestamp via \ac{LL/SC} on a shared counter in lines 2-3, creating a unique ordering even if the SC fails, since some other producer must have incremented it. If \ac{LL/SC} not supported on system architecture it can be replaced with versioned \ac{CAS}. The producer then inserts a timestamped pair into its local queue in line 4 and propagates this timestamp up the tree in line 5. The tree maintains the invariant that each internal node holds the minimum timestamp of its subtree. The \texttt{propagate} function in lines 18 - 26 walks from leaf to root, calling \texttt{refresh} at each node. The double \texttt{refresh} pattern in lines 22 - 24 ensures correctness. if the first refresh fails, another process updated the node. if the second refresh also fails, that process must have read the updated children values and installed the correct minimum. The \texttt{refresh} function uses \ac{LL/SC} in lines 28 - 33 to atomically update a node with the minimum of its children's timestamps. The consumer reads the root to find the producer with the earliest element in line 9 and then dequeues from that local queue in line 13 and propagates any changes in line 14. This design transforms the $O(n)$ scan of all queues into $O(\log n)$ tree traversals, while the space complexity remains $O(n + m)$ where $m$ is the number of queued items. \cite{JayantiLog}
+Achieves logarithmic time complexity by distributing the global queue across $n$ local \ac{SPSC} queues implemented like in \cref{subsub:jayanti-spsc-queue} and organized under a binary tree, as shown in \cref{alg:jayanti-mpsc}. Each producer owns a dedicated local queue, eliminating producer-producer contention. When enqueueing, a producer obtains a global timestamp via \ac{LL/SC} on a shared counter in lines 2-3, creating a unique ordering even if the \ac{SC} fails, since some other producer must have incremented it. If \ac{LL/SC} not supported on system architecture it can be replaced with versioned \ac{CAS}. The producer then inserts a timestamped pair into its local queue in line 4 and propagates this timestamp up the tree in line 5. The tree maintains the invariant that each internal node holds the minimum timestamp of its subtree. The \texttt{propagate} function in lines 18 - 26 walks from leaf to root, calling \texttt{refresh} at each node. The double \texttt{refresh} pattern in lines 22 - 24 ensures correctness. if the first refresh fails, another process updated the node. if the second refresh also fails, that process must have read the updated children values and installed the correct minimum. The \texttt{refresh} function uses \ac{LL/SC} in lines 28 - 33 to atomically update a node with the minimum of its children's timestamps. The consumer reads the root to find the producer with the earliest element in line 9 and then dequeues from that local queue in line 13 and propagates any changes in line 14. This design transforms the $O(n)$ scan of all queues into $O(\log n)$ tree traversals, while the space complexity remains $O(n + m)$ where $m$ is the number of queued items. \cite{JayantiLog}
 
 \begin{algorithm}[!ht]
     \centering
@@ -823,28 +823,821 @@ Combines local buffering with a segmented shared queue to minimize synchronizati
 \end{algorithm}
 
 \subsection{\acf{SPMC}}\label{subsec:single-producer-and-multiple-consumer}
-This case is trickier to implement, since now multiple reading workers have to be synchronized to read consistently without any unwanted behavior. Multiple producers was simpler, since making producers write specific data each is not so hard. In this case every consumer has to be synchronized so that when one item is consumed by a consumer, it cannot be consumed again from another. That is most probably also the reason only one algorithm for this contention category was found. The approach to achieve this in a wait-free manner is the following:
+This case is trickier to implement, since now multiple reading workers have to be synchronized to read consistently without any unwanted behavior. Multiple producers was simpler, since making producers write specific data each is not so hard. In this case every consumer has to be synchronized so that when one item is consumed by a consumer, it cannot be consumed again from another and also the ordering has to be kept. That is most probably also the reason only one algorithm for this contention category was found. The approach to achieve this in a wait-free manner is the following:
 
 \subsubsection{David Queue} 
-Uses a 2D array ITEMS where each cell is a Swap object, a 1D array HEAD where each element is an \ac{FAA} object, and a shared ROW register. The producer writes to consecutive cells in the current row of ITEMS and when the producer detects it gets overtaken by a consumer (reads a value indicating the cell was read), it jumps to the next row. Consumers read the active row from ROW, use \ac{FAA} on HEAD[row] to get a unique index, then swap the value, indicating the cell was read, into ITEMS[row, index] to retrieve the element. The algorithm achieves O(1) time complexity with 3-bounded wait-free operations. Row migration ensures linearizability by preventing consumers from accessing future write locations. \cite{Mateíspmc}
+Uses a two-dimensional array of Swap objects to handle the race condition where consumers overtake the producer, as shown in \cref{alg:david-queue}. David's queue allows the producer to detect when it has been overtaken and adapt by jumping to a fresh row. The prodcer maintains two persistent local variables, a \texttt{enq\_row} (current row) and \texttt{tail} (next column to write) variable. During enqueue, the producer swaps the value into \texttt{ITEMS[enq\_row, tail]} in line 10 and checks if the retrieved value is $\top$, indicating a consumer already accessed this cell. If so, the producer jumps to the next row in lines 12 - 15, writing the value to the new row and updating the shared \texttt{ROW} register. This jump mechanism ensures that enqueued values are never lost. Consumers read the active row from \texttt{ROW} in line 22 of \texttt{dequeue}, then increment using Fetch and Increment (Like \ac{FAA}, but incrementing) on \texttt{HEAD[deq\_row]} in line 23 to reserve a unique column index. They swap $\top$ into the reserved cell in line 24, retrieving either the enqueued value or $\bot$ (empty). The use of swap instead of plain registers is important, because it allows the producer to detect consumer interference (by finding $\top$) and consumers to mark cells as processed. Each cell in \texttt{ITEMS} is accessed at most once by an enqueue and once by a dequeue operation. The algorithm achieves 3-bounded wait-freedom with constant time operations. The producer completes in at most 3 steps (regular enqueue: 1 step, jump enqueue: 3 steps), while consumers always complete in exactly 3 steps. \cite{Mateíspmc}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{David's Queue Operations \cite{Mateíspmc}}
+    \label{alg:david-queue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \State \textbf{Shared variables:}
+        \State $HEAD$: array of Fetch\&Increment objects, initially 0
+        \State $ITEMS$: 2D array of Swap objects, initially $\bot$
+        \State $ROW$: Register, initially 0
+        \State
+        \State \textbf{Enqueuer's persistent local variables:}
+        \State $enq\_row \gets 0$, $tail \gets 0$
+        
+        \State
+        
+        \Procedure{Enqueue}{$x$} \Comment{For enqueuer E only}
+            \State $val \gets$ Swap($ITEMS[enq\_row, tail]$, $x$) \Comment{Try to enqueue}
+            \If{$val = \top$} \Comment{Dequeuer overtook us?}
+                \State $enq\_row \gets enq\_row + 1$ \Comment{Jump to next row}
+                \State $tail \gets 0$
+                \State Swap($ITEMS[enq\_row, tail]$, $x$) \Comment{Write to new row}
+                \State Write($ROW$, $enq\_row$) \Comment{Publish new row}
+            \EndIf
+            \State $tail \gets tail + 1$
+            \State \Return OK
+        \EndProcedure
+        
+        \State
+        
+        \Function{Dequeue}{} \Comment{For dequeuers $D_1, \ldots, D_n$}
+            \State $deq\_row \gets$ Read($ROW$) \Comment{Get active row}
+            \State $head \gets$ Fetch\&Increment($HEAD[deq\_row]$) \Comment{Reserve column}
+            \State $val \gets$ Swap($ITEMS[deq\_row, head]$, $\top$) \Comment{Get value}
+            \If{$val = \bot$} \Comment{Empty cell?}
+                \State \Return $\varepsilon$ \Comment{Queue was empty}
+            \Else
+                \State \Return $val$ \Comment{Return dequeued value}
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 \subsection{\acf{MPMC}}\label{subsec:multiple-producer-and-multiple-consumer}
-Finally a look into the \ac{MPMC} case can be made. Synchronizing \ac{MPMC} is a bit simpler then synchronizing \ac{SPMC}, because here each consumer consumes the items of one other producer instead of sharing the same pool of data that has to be consumed. These are the algorithms that were found:
+Finally a look into the \ac{MPMC} case can be made. Here we need to think about synchronize producer-producer contention, consumer-consumer contention and producer consumer contention. This includes helping methods for the producer and consumer and different atomic primitives. Multiple approaches are available to achieve this:
 
 \subsubsection{Kogan and Petranks queue} 
-Uses a priority-based helping mechanism built on the Michael-Scott lock-free queue. Threads obtain phase numbers by calculating the maximum phase across all threads in a shared state array and adding one. Each thread records its operation details (phase, pending flag, operation type, node reference) in the state array at its thread ID index. During execution, threads traverse the state array and help all operations with phase numbers less than or equal to their own. Producers append nodes to the tail using \ac{CAS} then update the pending flag to false in the state array and then advance the tail pointer. Consumers write their ID into the deqTid field of the head node then update their state entry and then advance head. Empty queues are handled by checking if head equals tail with a null next pointer. The algorithm ensures each operation completes within O(n²) steps through systematic helping, where threads can only bypass each other a bounded number of times. Linearization occurs at the \ac{CAS} operations that modify the queue structure. \cite{Kogan2011WaitFreeQueues}
+Uses a priority-based helping scheme with Michael and Scott's lock-free queue from \cref{alg:michael-scott} as the foundation to achieve wait-freedom, as shown in \cref{alg:kogan-petrank-enqueue}, \cref{alg:kogan-petrank-dequeue} and \cref{alg:kogan-petrank-dequeue-help}. Threads complete operations in bounded steps by helping slower peers. Each thread chooses a monotonically increasing phase number in line 2 of \texttt{ENQUEUE} in \cref{alg:kogan-petrank-enqueue} and line 2 of \texttt{DEQUEUE} of \cref{alg:kogan-petrank-dequeue}, then records operation details in a shared \texttt{state} array in line 3. The helping mechanism in \texttt{HELP} from lines 15 - 26 in \cref{alg:kogan-petrank-dequeue-help} ensures all operations with phases $\leq$ the current phase complete. Threads traverse the state array and invoke \texttt{HELP\_ENQ} or \texttt{HELP\_DEQ} based on pending operations in lines 19 - 23 of \cref{alg:kogan-petrank-dequeue-help}. For enqueue, threads utilize the tail update like in Michael and Scott by first appending the node via \ac{CAS} in line 15 of \texttt{HELP\_ENQ} in \cref{alg:kogan-petrank-enqueue}, then finally helping by updating the tail in line 36 of \texttt{HELP\_FINISH\_ENQ}. The three-step scheme ensures exactly-once execution by first appending a node to list in line 15 then clear the pending flag in line 35 of \texttt{HELP\_FINISH\_ENQ}, and finally update the tail pointer in line 36. For dequeue, threads write their ID to the \texttt{deqTid} field of the head node in line 41 of \texttt{HELP\_DEQ} in \cref{alg:kogan-petrank-dequeue} to "lock" it logically. The consumer then updates the pending flag in line 9 of \texttt{HELP\_FINISH\_DEQ} in \cref{alg:kogan-petrank-dequeue-help} and advances head in line 10. Special handling for empty queues occurs in lines 20 - 25 of \texttt{HELP\_DEQ} of \cref{alg:kogan-petrank-dequeue}, where threads update state with null to indicate emptiness. The phase selection using \texttt{MAXPHASE} in lines 41-50 in \cref{alg:kogan-petrank-enqueue} ensures threads help all concurrent operations before returning, preventing starvation. This achieves wait-free progress with $O(n)$ steps per operation where $n$ is the number of threads. \cite{Kogan2011WaitFreeQueues}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Kogan and Petrank's Queue Enqueue Operation \cite{Kogan2011WaitFreeQueues}}
+    \label{alg:kogan-petrank-enqueue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Enqueue}{$value$}
+            \State $phase \gets$ \Call{MaxPhase}{} $+ 1$ \Comment{Choose phase}
+            \State $state[tid] \gets$ \texttt{OpDesc}$(phase, true, true,$ \texttt{Node}$(value, tid))$
+            \State \Call{Help}{$phase$} \Comment{Help all ops $\leq$ phase}
+            \State \Call{Help\_Finish\_Enq}{} \Comment{Ensure tail updated}
+        \EndFunction
+        
+        \State
+        
+        \Procedure{Help\_Enq}{$tid, phase$}
+            \While{\Call{IsStillPending}{$tid, phase$}}
+                \State $last \gets tail$
+                \State $next \gets last.next$
+                \If{$last = tail$} \Comment{Validate read}
+                    \If{$next = $ null} \Comment{Can append?}
+                        \If{\Call{IsStillPending}{$tid, phase$}}
+                            \If{\texttt{CAS}$(last.next,$ null$, state[tid].node)$}
+                                \State \Call{Help\_Finish\_Enq}{}
+                                \State \Return
+                            \EndIf
+                        \EndIf
+                    \Else \Comment{Help pending enqueue}
+                        \State \Call{Help\_Finish\_Enq}{}
+                    \EndIf
+                \EndIf
+            \EndWhile
+        \EndProcedure
+        
+        \State
+        
+        \Procedure{Help\_Finish\_Enq}{}
+            \State $last \gets tail$
+            \State $next \gets last.next$
+            \If{$next \neq $ null}
+                \State $tid \gets next.enqTid$ \Comment{Thread that owns node}
+                \State $desc \gets state[tid]$
+                \If{$last = tail$ \textbf{and} $state[tid].node = next$}
+                    \State $newDesc \gets$ \texttt{OpDesc}$(state[tid].phase,$ false$,$ true$, next)$
+                    \State \texttt{CAS}$(state[tid], desc, newDesc)$ \Comment{Clear pending}
+                    \State \texttt{CAS}$(tail, last, next)$ \Comment{Update tail}
+                \EndIf
+            \EndIf
+        \EndProcedure
+        
+        \State
+        
+        \Function{MaxPhase}{}
+            \State $max \gets -1$
+            \For{$i \gets 0$ \textbf{to} $NUM\_THREADS - 1$}
+                \State $phase \gets state[i].phase$
+                \If{$phase > max$}
+                    \State $max \gets phase$
+                \EndIf
+            \EndFor
+            \State \Return $max$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Kogan and Petrank's Queue Dequeue Operation \cite{Kogan2011WaitFreeQueues}}
+    \label{alg:kogan-petrank-dequeue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Dequeue}{}
+            \State $phase \gets$ \Call{MaxPhase}{} $+ 1$
+            \State $state[tid] \gets$ \texttt{OpDesc}$(phase,$ true$,$ false$,$ null$)$
+            \State \Call{Help}{$phase$}
+            \State \Call{Help\_Finish\_Deq}{}
+            \State $node \gets state[tid].node$
+            \If{$node = $ null}
+                \State \textbf{throw} \texttt{EmptyException}
+            \EndIf
+            \State \Return $node.next.value$
+        \EndFunction
+        
+        \State
+        
+        \Procedure{Help\_Deq}{$tid, phase$}
+            \While{\Call{IsStillPending}{$tid, phase$}}
+                \State $first \gets head$
+                \State $last \gets tail$
+                \State $next \gets first.next$
+                \If{$first = head$} \Comment{Validate read}
+                    \If{$first = last$} \Comment{Queue might be empty}
+                        \If{$next = $ null} \Comment{Confirmed empty}
+                            \State $desc \gets state[tid]$
+                            \If{$last = tail$ \textbf{and} \Call{IsStillPending}{$tid, phase$}}
+                                \State $newDesc \gets$ \texttt{OpDesc}$(state[tid].phase,$ false$,$ false$,$ null$)$
+                                \State \texttt{CAS}$(state[tid], desc, newDesc)$
+                            \EndIf
+                        \Else
+                            \State \Call{Help\_Finish\_Enq}{} \Comment{Help enqueue}
+                        \EndIf
+                    \Else \Comment{Queue not empty}
+                        \State $desc \gets state[tid]$
+                        \State $node \gets desc.node$
+                        \If{\textbf{not} \Call{IsStillPending}{$tid, phase$}}
+                            \State \textbf{break}
+                        \EndIf
+                        \If{$first = head$ \textbf{and} $node \neq first$}
+                            \State $newDesc \gets$ \texttt{OpDesc}$(state[tid].phase,$ true$,$ false$, first)$
+                            \If{\textbf{not} \texttt{CAS}$(state[tid], desc, newDesc)$}
+                                \State \textbf{continue}
+                            \EndIf
+                        \EndIf
+                        \State \texttt{CAS}$(first.deqTid, -1, tid)$ \Comment{Lock node}
+                        \State \Call{Help\_Finish\_Deq}{}
+                    \EndIf
+                \EndIf
+            \EndWhile
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Kogan and Petrank's Queue Dequeue Helping Operations \cite{Kogan2011WaitFreeQueues}}
+    \label{alg:kogan-petrank-dequeue-help}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Procedure{Help\_Finish\_Deq}{}
+            \State $first \gets head$
+            \State $next \gets first.next$
+            \State $tid \gets first.deqTid$ \Comment{Thread that locked node}
+            \If{$tid \neq -1$}
+                \State $desc \gets state[tid]$
+                \If{$first = head$ \textbf{and} $next \neq $ null}
+                    \State $newDesc \gets$ \texttt{OpDesc}$(state[tid].phase,$ false$,$ false$, state[tid].node)$
+                    \State \texttt{CAS}$(state[tid], desc, newDesc)$ \Comment{Clear pending}
+                    \State \texttt{CAS}$(head, first, next)$ \Comment{Advance head}
+                \EndIf
+            \EndIf
+        \EndProcedure
+        
+        \State
+        
+        \Procedure{Help}{$phase$}
+            \For{$i \gets 0$ \textbf{to} $NUM\_THREADS - 1$}
+                \State $desc \gets state[i]$
+                \If{$desc.pending$ \textbf{and} $desc.phase \leq phase$}
+                    \If{$desc.enqueue$}
+                        \State \Call{Help\_Enq}{$i, phase$}
+                    \Else
+                        \State \Call{Help\_Deq}{$i, phase$}
+                    \EndIf
+                \EndIf
+            \EndFor
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Turn Queue} 
-Uses a circular turn-based consensus mechanism. Producers publish nodes in \enquote*{enqueuers[tid]} array then the next turn is determined by tail's \enquote*{enqTid}, with all threads helping the first non-null request to the right (modulo the array size), guaranteeing completion within \enquote*{MAX\_THREADS} iterations. Consumers use dual arrays (\enquote*{deqself} and \enquote*{deqhelp}) where \enquote*{deqself[tid]} = \enquote*{deqhelp[tid]} opens a request. Threads assign nodes via \ac{CAS} on \enquote*{node.deqTid} and publish results in \enquote*{deqhelp[tid]} to close requests. Empty queues trigger the \enquote*{giveUp()} to rollback while preserving concurrent assignments. Linearization occurs at tail and head advances. \cite{RamalheteQueue}
+Uses a novel turn-based consensus mechanism to achieve wait-freedom without requiring \ac{FAA} instructions. As shown in \cref{alg:turn-enqueue}, \cref{alg:turn-dequeue} and \cref{alg:turn-dequeue-help}, the queue maintains two arrays: \texttt{enqueuers} for enqueue requests and \texttt{deqself}/\texttt{deqhelp} for dequeue operations. Each thread has a unique index used as its thread ID (\texttt{enqTid} or \texttt{deqTid}). For the producers in \cref{alg:turn-enqueue}, threads publish their intent by storing a node pointer in \texttt{enqueuers[myIdx]} in line 6 of the function \texttt{ENQUEUE}. The consensus mechanism uses the \texttt{enqTid} of the tail node to determine whose turn is next. Threads scan the \texttt{enqueuers} array starting from position \texttt{(tail->enqTid + 1) \% maxThreads} in line 20, helping the first non-null request they find. This creates a circular turn order ensuring fairness. The algorithm guarantees that after publishing a request, at most \texttt{maxThreads-1} other nodes will be enqueued first, achieving wait-free bounded progress. The enqueue operation protects the tail pointer using hazard pointers in line 12 of the \texttt{ENQUEUE} function, then clears any completed request from the tail's position in lines 15 - 18. It searches for the next request to help in lines 19 - 26, attempting to append the found node via \ac{CAS} in line 23. Finally, it advances the tail pointer if a node was successfully appended in line 29. The operation completes when the thread's own request has been processed (detected by checking if \texttt{enqueuers[myIdx]} is null in line 8). For conmsumers in \cref{alg:turn-dequeue}, the algorithm uses a dual-array approach with \texttt{deqself} and \texttt{deqhelp} to avoid excessive hazard pointer usage. Threads open a request by making \texttt{deqself[myIdx]} equal to \texttt{deqhelp[myIdx]} in lines 4 and 5 of the \texttt{DEQUEUE} function. The turn order follows the \texttt{deqTid} of the head node. When assigning nodes, threads use \ac{CAS} to set the next node's \texttt{deqTid} field in line 8 of \texttt{SEARCHNEXT} in \cref{alg:turn-dequeue-help}. This assignment is permanent and indicates ownership. The dequeue handles empty queues through a "give-up" mechanism implemented in \texttt{GIVEUP} (lines 28-44 of \cref{alg:turn-dequeue-help}). When detecting an empty queue (head equals tail) in line 12 of \texttt{DEQUEUE} in \cref{alg:turn-dequeue}, threads rollback their request in line 13 but must ensure no concurrent thread assigned them a node. This involves re-checking the queue state and potentially self-assigning the first node if no other requests exist (line 41 of \texttt{GIVEUP}). The algorithm closes requests by updating \texttt{deqhelp[i]} in line 18 of \texttt{CASDEQANDHEAD} in \cref{alg:turn-dequeue-help}, making it differ from \texttt{deqself[i]}. Memory reclamation uses wait-free bounded hazard pointers integrated into the algorithm. Nodes are retired in line 35 of \texttt{DEQUEUE} in \cref{alg:turn-dequeue} only after ensuring they're no longer accessible through shared variables. The algorithm requires only one allocation per enqueued item (the node itself), achieving minimal memory overhead of $O(N_{threads})$ compared to the $O(N_{threads}^2)$ of other wait-free queues. \cite{RamalheteQueue}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Turn Queue Enqueue Operation \cite{RamalheteQueue}}
+    \label{alg:turn-enqueue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Enqueue}{$item$}
+            \If{$item = $ null} \textbf{throw} \texttt{InvalidArgument}
+            \EndIf
+            \State $myIdx \gets $ \Call{GetIndex}{}
+            \State $myNode \gets $ \textbf{new} \texttt{Node}$(item, myIdx)$
+            \State $enqueuers[myIdx] \gets myNode$
+            \For{$i \gets 0$ \textbf{to} $maxThreads - 1$}
+                \If{$enqueuers[myIdx] = $ null} \Comment{Request completed}
+                    \State $hp.$\Call{Clear}{}
+                    \State \Return
+                \EndIf
+                \State $ltail \gets hp.$\Call{ProtectPtr}{$kHpTail, tail$}
+                \If{$ltail \neq tail$} \textbf{continue}
+                \EndIf
+                \If{$enqueuers[ltail.enqTid] = ltail$} \Comment{Clear old request}
+                    \State $tmp \gets ltail$
+                    \State \texttt{CAS}$(enqueuers[ltail.enqTid], tmp,$ null$)$
+                \EndIf
+                \For{$j \gets 1$ \textbf{to} $maxThreads$} \Comment{Find next request}
+                    \State $nodeHelp \gets enqueuers[(j + ltail.enqTid) \bmod maxThreads]$
+                    \If{$nodeHelp \neq $ null}
+                        \State $nullnode \gets $ null
+                        \State \texttt{CAS}$(ltail.next, nullnode, nodeHelp)$ \Comment{Try append}
+                        \State \textbf{break}
+                    \EndIf
+                \EndFor
+                \State $lnext \gets ltail.next$
+                \If{$lnext \neq $ null} \Comment{Advance tail if needed}
+                    \State \texttt{CAS}$(tail, ltail, lnext)$
+                \EndIf
+            \EndFor
+            \State $enqueuers[myIdx] \gets $ null \Comment{Cleanup if not helped}
+            \State $hp.$\Call{Clear}{}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Turn Queue Dequeue Operation \cite{RamalheteQueue}}
+    \label{alg:turn-dequeue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Dequeue}{}
+            \State $myIdx \gets $ \Call{GetIndex}{}
+            \State $prReq \gets deqself[myIdx]$ \Comment{Save previous request}
+            \State $myReq \gets deqhelp[myIdx]$
+            \State $deqself[myIdx] \gets myReq$ \Comment{Open request}
+            \For{$i \gets 0$ \textbf{to} $maxThreads - 1$}
+                \If{$deqhelp[myIdx] \neq myReq$} \textbf{break} \Comment{Request satisfied}
+                \EndIf
+                \State $lhead \gets hp.$\Call{ProtectPtr}{$kHpHead, head$}
+                \If{$lhead \neq head$} \textbf{continue}
+                \EndIf
+                \If{$lhead = tail$} \Comment{Queue empty}
+                    \State $deqself[myIdx] \gets prReq$ \Comment{Rollback}
+                    \State \Call{GiveUp}{$myReq, myIdx$}
+                    \If{$deqhelp[myIdx] \neq myReq$} \Comment{Check if helped}
+                        \State $deqself[myIdx] \gets myReq$
+                        \State \textbf{break}
+                    \EndIf
+                    \State $hp.$\Call{Clear}{}
+                    \State \Return null
+                \EndIf
+                \State $lnext \gets hp.$\Call{ProtectPtr}{$kHpNext, lhead.next$}
+                \If{$lhead \neq head$} \textbf{continue}
+                \EndIf
+                \If{\Call{SearchNext}{$lhead, lnext$} $\neq NOIDX$}
+                    \State \Call{CasDeqAndHead}{$lhead, lnext, myIdx$}
+                \EndIf
+            \EndFor
+            \State $myNode \gets deqhelp[myIdx]$
+            \State $lhead \gets hp.$\Call{ProtectPtr}{$kHpHead, head$}
+            \If{$lhead = head$ \textbf{and} $myNode = lhead.next$}
+                \State \texttt{CAS}$(head, lhead, myNode)$ \Comment{Help advance head}
+            \EndIf
+            \State $hp.$\Call{Clear}{}
+            \State $hp.$\Call{Retire}{$prReq$} \Comment{Retire previous node}
+            \State \Return $myNode.item$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Turn Queue Dequeue Helper Functions \cite{RamalheteQueue}}
+    \label{alg:turn-dequeue-help}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{SearchNext}{$lhead, lnext$}
+            \State $turn \gets lhead.deqTid$
+            \For{$idx \gets turn + 1$ \textbf{to} $turn + maxThreads$}
+                \State $idDeq \gets idx \bmod maxThreads$
+                \If{$deqself[idDeq] \neq deqhelp[idDeq]$} \textbf{continue}
+                \EndIf
+                \If{$lnext.deqTid = NOIDX$}
+                    \State \texttt{CAS}$(lnext.deqTid, NOIDX, idDeq)$ \Comment{Assign node}
+                \EndIf
+                \State \textbf{break}
+            \EndFor
+            \State \Return $lnext.deqTid$
+        \EndFunction
+        
+        \State
+        
+        \Procedure{CasDeqAndHead}{$lhead, lnext, myIdx$}
+            \State $ldeqTid \gets lnext.deqTid$
+            \If{$ldeqTid = myIdx$} \Comment{My node}
+                \State $deqhelp[ldeqTid] \gets lnext$ \Comment{Close request}
+            \Else
+                \State $ldeqhelp \gets hp.$\Call{ProtectPtr}{$kHpDeq, deqhelp[ldeqTid]$}
+                \If{$ldeqhelp \neq lnext$ \textbf{and} $lhead = head$}
+                    \State \texttt{CAS}$(deqhelp[ldeqTid], ldeqhelp, lnext)$ \Comment{Help close}
+                \EndIf
+            \EndIf
+            \State \texttt{CAS}$(head, lhead, lnext)$ \Comment{Advance head}
+        \EndProcedure
+        
+        \State
+        
+        \Procedure{GiveUp}{$myReq, myIdx$}
+            \State $lhead \gets head$
+            \If{$deqhelp[myIdx] \neq myReq$} \Return \Comment{Already helped}
+            \EndIf
+            \If{$lhead = tail$} \Return \Comment{Still empty}
+            \EndIf
+            \State $hp.$\Call{ProtectPtr}{$kHpHead, lhead$}
+            \If{$lhead \neq head$} \Return
+            \EndIf
+            \State $lnext \gets hp.$\Call{ProtectPtr}{$kHpNext, lhead.next$}
+            \If{$lhead \neq head$} \Return
+            \EndIf
+            \If{\Call{SearchNext}{$lhead, lnext$} $= NOIDX$}
+                \State \texttt{CAS}$(lnext.deqTid, NOIDX, myIdx)$ \Comment{Self-assign}
+            \EndIf
+            \State \Call{CasDeqAndHead}{$lhead, lnext, myIdx$}
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
 
 \subsubsection{YMC queue} 
-Uses an unbounded array (emulated via linked list of segments) with \ac{FAA}-based indexing and fast-path/slow-path design. Producers obtain slots via \ac{FAA} on tail counter and attempt \ac{CAS} insertion. On failure, the producers publish requests (\enquote*{value}, \enquote*{pending}, \enquote*{cell\_id}) and enter slow path. Helpers use Dijkstra's protocol—after marking cells unusable with top or buttom markers and they check for pending enqueue requests. Helpers traverse a peer ring, advancing only after completing requests, guaranteeing progress within (n-1)² failures. Consumers \ac{FAA} the head counter and call \enquote*{help\_enq} to secure values. Slow-path dequeues announce candidate cells with monotonically increasing indices via \ac{CAS} on request state. Linearizability requires enqueued values have indices < T (tail) and dequeued values have indices < H (head), maintained by \enquote*{advance\_end\_for\_linearizability} calls. Failed operations advance the helper ring until all threads become helpers ensuring all threads finish. \cite{FastFetchAndAddWaitFreeQueue}
+Uses \ac{FAA} and \ac{CAS} combined with Kogan's and Petrank's fast-path slow-path methodology mentioned in \cref{ch:related-work} to use the advantage of lock-free algorithms if possible while still maintaining wait-freedom. As shown in \cref{alg:ymc-enqueue}, \cref{alg:ymc-enqueue-help}, \cref{alg:ymc-dequeue}, and \cref{alg:ymc-dequeue-help}, the queue represents cells as an infinite array emulated through linked segments. Each segment contains \texttt{N} cells and a pointer to the next segment. The queue maintains global indices \texttt{H} (head) and \texttt{T} (tail) that are accessed using \ac{FAA}, ensuring atomic increments without retry loops. For producers in \cref{alg:ymc-enqueue}, threads obtain a unique cell index via \ac{FAA} on \texttt{T} in line 11. They then locate the corresponding cell using \texttt{find\_cell} which traverses segments and allocates new ones if needed. The fast-path attempts a simple CAS to deposit the value in line 13. If this fails, due to concurrent dequeue marking the cell unusable, the thread switches to the slow-path starting at line 20. The slow-path employs a helping mechanism where threads publish enqueue requests in their handle structure (line 23). In \cref{alg:ymc-dequeue-help} consumers help pending enqueues through \texttt{help\_enq} in line 13 when they mark cells unusable. This creates a symbiotic relationship: producers get help depositing values, while consumers ensure values are available to dequeue. For consumers in \cref{alg:ymc-dequeue}, threads obtain cell indices via \ac{FAA} on \texttt{H} in line 18. The algorithm uses \texttt{help\_enq} to secure values, which may involve helping slow-path enqueues. If a value is found, the consumer claims it using \ac{CAS} on the cell's \texttt{deq} field (line 23). The slow-path (line 30) publishes dequeue requests that helpers can satisfy by finding unclaimed values or determining the queue is empty. The algorithm maintains linearizability through careful ordering. Enqueues linearize when \texttt{T} moves past their cell index, while dequeues linearize when \texttt{H} moves past theirs. The helping mechanism ensures that after at most $O(n^2)$ failed attempts, all threads become helpers for a pending operation, guaranteeing completion. \cite{FastFetchAndAddWaitFreeQueue}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{YMC Queue Enqueue Operation \cite{FastFetchAndAddWaitFreeQueue}}
+    \label{alg:ymc-enqueue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Enqueue}{$q, h, v$}
+            \For{$p \gets \texttt{PATIENCE}$ \textbf{downto} $0$} \Comment{Try fast-path first}
+                \If{\Call{Enq\_Fast}{$q, h, v, \&\mathit{cell\_id}$}}
+                    \State \Return
+                \EndIf
+            \EndFor
+            \State \Call{Enq\_Slow}{$q, h, v, \mathit{cell\_id}$} \Comment{Fall back to slow-path}
+        \EndFunction
+        
+        \State
+        
+        \Function{Enq\_Fast}{$q, h, v, \mathit{cid}$}
+            \State $i \gets \texttt{FAA}(\&q \rightarrow T, 1)$ \Comment{Get unique cell index}
+            \State $c \gets \Call{Find\_Cell}{\&h \rightarrow \mathit{tail}, i}$ \Comment{Locate cell, allocate segment if needed}
+            \If{\texttt{CAS}$(c.\mathit{val}, \bot, v)$} \Comment{Try to deposit value}
+                \State \Return \textbf{true}
+            \EndIf
+            \State $*\mathit{cid} \gets i$ \Comment{Return cell index for slow-path}
+            \State \Return \textbf{false}
+        \EndFunction
+        
+        \State
+        
+        \Function{Enq\_Slow}{$q, h, v, \mathit{cell\_id}$}
+            \State $r \gets \&h \rightarrow \mathit{enq}.\mathit{req}$
+            \State $r \rightarrow \mathit{val} \gets v$ \Comment{Publish value}
+            \State $r \rightarrow \mathit{state} \gets (1, \mathit{cell\_id})$ \Comment{Set pending=1, id=cell\_id}
+            \State $\mathit{tmp\_tail} \gets h \rightarrow \mathit{tail}$
+            \Repeat
+                \State $i \gets \texttt{FAA}(\&q \rightarrow T, 1)$
+                \State $c \gets \Call{Find\_Cell}{\&\mathit{tmp\_tail}, i}$
+                \If{\texttt{CAS}$(c \rightarrow \mathit{enq}, \bot_e, r)$ \textbf{and} $c.\mathit{val} = \bot$} \Comment{Reserve cell}
+                    \State \Call{Try\_To\_Claim\_Req}{$\&r \rightarrow \mathit{state}, \mathit{id}, i$} \Comment{Claim request for this cell}
+                    \State \textbf{break}
+                \EndIf
+            \Until{$\neg r \rightarrow \mathit{state}.\mathit{pending}$} \Comment{Until helped by dequeuer}
+            \State $\mathit{id} \gets r \rightarrow \mathit{state}.\mathit{id}$ \Comment{Get claimed cell index}
+            \State $c \gets \Call{Find\_Cell}{\&h \rightarrow \mathit{tail}, \mathit{id}}$
+            \State \Call{Enq\_Commit}{$q, c, v, \mathit{id}$} \Comment{Write value to claimed cell}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{YMC Queue Enqueue Help Operation \cite{FastFetchAndAddWaitFreeQueue}}
+    \label{alg:ymc-enqueue-help}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Help\_Enq}{$q, h, c, i$}
+        \If{$\neg$\texttt{CAS}$(c \rightarrow \mathit{val}, \bot, \top)$ \textbf{and} $c \rightarrow \mathit{val} \neq \top$} \Comment{Value already present}
+            \State \Return $c \rightarrow \mathit{val}$
+        \EndIf
+        \If{$c \rightarrow \mathit{enq} = \bot_e$} \Comment{No request yet, find one to help}
+            \Repeat
+                \State $p \gets h \rightarrow \mathit{enq}.\mathit{peer}$
+                \State $r \gets \&p \rightarrow \mathit{enq}.\mathit{req}$
+                \State $s \gets r \rightarrow \mathit{state}$
+                \If{$h \rightarrow \mathit{enq}.\mathit{id} = 0$ \textbf{or} $h \rightarrow \mathit{enq}.\mathit{id} = s.\mathit{id}$} \Comment{Haven't helped this request}
+                    \State \textbf{break}
+                \EndIf
+                \State $h \rightarrow \mathit{enq}.\mathit{id} \gets 0$
+                \State $h \rightarrow \mathit{enq}.\mathit{peer} \gets p \rightarrow \mathit{next}$ \Comment{Move to next peer}
+            \Until{\textbf{true}}
+            \If{$s.\mathit{pending}$ \textbf{and} $s.\mathit{id} \leq i$ \textbf{and} $\neg$\texttt{CAS}$(c \rightarrow \mathit{enq}, \bot_e, r)$} \Comment{Try to reserve cell for peer}
+                \State $h \rightarrow \mathit{enq}.\mathit{id} \gets s.\mathit{id}$ \Comment{Remember we tried to help}
+            \Else
+                \State $h \rightarrow \mathit{enq}.\mathit{peer} \gets p \rightarrow \mathit{next}$ \Comment{Peer doesn't need help}
+            \EndIf
+            \If{$c \rightarrow \mathit{enq} = \bot_e$}
+                \State \texttt{CAS}$(c \rightarrow \mathit{enq}, \bot_e, \top_e)$ \Comment{Mark no enqueue will use this cell}
+            \EndIf
+        \EndIf
+        \If{$c \rightarrow \mathit{enq} = \top_e$} \Comment{No enqueue will fill this cell}
+            \State \Return $(q \rightarrow T \leq i$ ? \texttt{EMPTY} : $\top)$ \Comment{Check if queue was empty}
+        \EndIf
+        \State $r \gets c \rightarrow \mathit{enq}$ \Comment{Cell has enqueue request}
+        \State $s \gets r \rightarrow \mathit{state}$
+        \State $v \gets r \rightarrow \mathit{val}$
+        \If{$s.\mathit{id} > i$} \Comment{Request unsuitable for this cell}
+            \If{$c \rightarrow \mathit{val} = \top$ \textbf{and} $q \rightarrow T \leq i$}
+                \State \Return \texttt{EMPTY}
+            \EndIf
+        \ElsIf{\Call{Try\_To\_Claim\_Req}{$\&r \rightarrow \mathit{state}, s.\mathit{id}, i$} \textbf{or} $(s = (0, i)$ \textbf{and} $c \rightarrow \mathit{val} = \top)$}
+            \State \Call{Enq\_Commit}{$q, c, v, i$} \Comment{Help commit the value}
+        \EndIf
+        \State \Return $c \rightarrow \mathit{val}$
+    \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{YMC Queue Dequeue Operation \cite{FastFetchAndAddWaitFreeQueue}}
+    \label{alg:ymc-dequeue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Dequeue}{$q, h$}
+            \For{$p \gets \texttt{PATIENCE}$ \textbf{downto} $0$} \Comment{Try fast-path first}
+                \State $v \gets \Call{Deq\_Fast}{q, h, \&\mathit{cell\_id}}$
+                \If{$v \neq \top$} \textbf{break}
+                \EndIf
+            \EndFor
+            \If{$v = \top$} \Comment{Fast-path failed}
+                \State $v \gets \Call{Deq\_Slow}{q, h, \mathit{cell\_id}}$ \Comment{Use slow-path}
+            \EndIf
+            \If{$v \neq \texttt{EMPTY}$} \Comment{Got value, help peer dequeue}
+                \State \Call{Help\_Deq}{$q, h, h \rightarrow \mathit{deq}.\mathit{peer}$}
+                \State $h \rightarrow \mathit{deq}.\mathit{peer} \gets h \rightarrow \mathit{deq}.\mathit{peer} \rightarrow \mathit{next}$
+            \EndIf
+            \State \Return $v$
+        \EndFunction
+        
+        \State
+        
+        \Function{Deq\_Fast}{$q, h, \mathit{id}$}
+            \State $i \gets \texttt{FAA}(\&q \rightarrow H, 1)$ \Comment{Get unique cell index}
+            \State $c \gets \Call{Find\_Cell}{\&h \rightarrow \mathit{head}, i}$
+            \State $v \gets \Call{Help\_Enq}{q, h, c, i}$ \Comment{Try to get/help produce value}
+            \If{$v = \texttt{EMPTY}$} \Return \texttt{EMPTY}
+            \EndIf
+            \If{$v \neq \top$ \textbf{and} \texttt{CAS}$(c \rightarrow \mathit{deq}, \bot_d, \top_d)$} \Comment{Claim the value}
+                \State \Return $v$
+            \EndIf
+            \State $*\mathit{id} \gets i$ \Comment{Return cell index for slow-path}
+            \State \Return $\top$
+        \EndFunction
+        
+        \State
+        
+        \Function{Deq\_Slow}{$q, h, \mathit{cid}$}
+            \State $r \gets \&h \rightarrow \mathit{deq}.\mathit{req}$
+            \State $r \rightarrow \mathit{id} \gets \mathit{cid}$ \Comment{Set request ID}
+            \State $r \rightarrow \mathit{state} \gets (1, \mathit{cid})$ \Comment{Publish pending request}
+            \State \Call{Help\_Deq}{$q, h, h$} \Comment{Help complete own request}
+            \State $i \gets r \rightarrow \mathit{state}.\mathit{idx}$ \Comment{Get index where value found}
+            \State $c \gets \Call{Find\_Cell}{\&h \rightarrow \mathit{head}, i}$
+            \State $v \gets c \rightarrow \mathit{val}$
+            \State \Call{Advance\_End\_For\_Linearizability}{$\&q \rightarrow H, i + 1$} \Comment{Ensure linearizability}
+            \State \Return $(v = \top$ ? \texttt{EMPTY} : $v)$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{YMC Queue Dequeue Help Operation \cite{FastFetchAndAddWaitFreeQueue}}
+    \label{alg:ymc-dequeue-help}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Help\_Deq}{$q, h, \mathit{helpee}$}
+        \State $r \gets \mathit{helpee} \rightarrow \mathit{deq}.\mathit{req}$
+        \State $s \gets r \rightarrow \mathit{state}$
+        \State $\mathit{id} \gets r \rightarrow \mathit{id}$
+        \If{$\neg s.\mathit{pending}$ \textbf{or} $s.\mathit{idx} < \mathit{id}$} \Return \Comment{Request complete or invalid}
+        \EndIf
+        \State $\mathit{ha} \gets \mathit{helpee} \rightarrow \mathit{head}$ \Comment{Segment pointer for announced cells}
+        \State $s \gets r \rightarrow \mathit{state}$ \Comment{Re-read after getting head}
+        \State $\mathit{prior} \gets \mathit{id}$; $i \gets \mathit{id}$; $\mathit{cand} \gets 0$
+        \While{\textbf{true}}
+            \For{$\mathit{hc} \gets \mathit{ha}$; $\neg\mathit{cand}$ \textbf{and} $s.\mathit{idx} = \mathit{prior}$;} \Comment{Find candidate}
+                \State $c \gets \Call{Find\_Cell}{\&\mathit{hc}, ++i}$
+                \State $v \gets \Call{Help\_Enq}{q, \mathit{hc}, c, i}$
+                \If{$v = \texttt{EMPTY}$ \textbf{or} $(v \neq \top$ \textbf{and} $c \rightarrow \mathit{deq} = \bot_d)$} \Comment{Found candidate}
+                    \State $\mathit{cand} \gets i$
+                \Else
+                    \State $s \gets r \rightarrow \mathit{state}$ \Comment{Check if announced}
+                \EndIf
+            \EndFor
+            \If{$\mathit{cand}$}
+                \State \texttt{CAS}$(\&r \rightarrow \mathit{state}, (1, \mathit{prior}), (1, \mathit{cand}))$ \Comment{Try announce candidate}
+                \State $s \gets r \rightarrow \mathit{state}$
+            \EndIf
+            \If{$\neg s.\mathit{pending}$ \textbf{or} $r \rightarrow \mathit{id} \neq \mathit{id}$} \Return \Comment{Request completed}
+            \EndIf
+            \State $c \gets \Call{Find\_Cell}{\&\mathit{ha}, s.\mathit{idx}}$ \Comment{Get announced cell}
+            \If{$c \rightarrow \mathit{val} = \top$ \textbf{or} \texttt{CAS}$(c \rightarrow \mathit{deq}, \bot_d, r)$ \textbf{or} $c \rightarrow \mathit{deq} = r$}
+                \State \texttt{CAS}$(\&r \rightarrow \mathit{state}, s, (0, s.\mathit{idx}))$ \Comment{Complete request}
+                \State \Return
+            \EndIf
+            \State $\mathit{prior} \gets s.\mathit{idx}$
+            \If{$s.\mathit{idx} \geq i$} \Comment{Announced cell is ahead}
+                \State $\mathit{cand} \gets 0$; $i \gets s.\mathit{idx}$ \Comment{Jump forward}
+            \EndIf
+        \EndWhile
+    \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Feldman-Dechev Queue} 
-Uses a ring buffer with sequence number distribution for contention management. Producers obtain a unique position via \ac{FAA} on the tail counter, receiving a sequence ID (\enquote*{seqid}) that determines their slot (\enquote*{seqid} modulo the capacity). They attempt to replace an \enquote*{EmptyNode} (containing only a \enquote*{seqid}) with a \enquote*{ValueNode} (containing both \enquote*{seqid} and data) via \ac{CAS}, retrying while temporarily pausing and rechecking if the slot's \enquote*{seqid} indicates a delayed operation. Consumers similarly use \ac{FAA} on the head counter and replace \enquote*{ValueNodes} with \enquote*{EmptyNodes} containing \enquote*{seqid} + \enquote*{capacity}. Both operations employ bitmarking to handle out-of-order completions meaning when encountering a delayed element, threads mark it with a delay bit to signal correction is needed. After exceeding \enquote*{MAX\_FAILS} attempts, operations switch to a slow path using an announcement table where threads publish operation descriptors. All threads periodically check this table (every \enquote*{CHECK\_DELAY} operations) and help announced operations, guaranteeing completion within \enquote*{MAX\_FAILS} + \enquote*{NUM\_THREADS²} steps. The sequence numbers additionally prevent ABA problems and enable progress despite random delays. \cite{FeldmanDechev2015WaitFreeRingBuffer,FeldmanDechevV2,FeldmanDechevV3}
+Uses a sequence number-based mechanism with bitmarking to achieve bounded completion. As shown in \cref{alg:rb-enqueue}, \cref{alg:rb-dequeue}, and \cref{alg:rb-helper}, the ring buffer maintains two atomic counters accessed via \texttt{NextTailSeq} in line 7 of \cref{alg:rb-enqueue} and \texttt{NextHeadSeq} in line 7 of \cref{alg:rb-dequeue}. Each position in the buffer array stores either an \texttt{ElemNode} containing an element and sequence ID, or an \texttt{EmptyNode} containing only a sequence ID. For producers in \cref{alg:rb-enqueue}, threads acquire a sequence ID via \ac{FAA} on the tail counter in line 7. The position is determined as \texttt{seqid mod capacity} in line 8. In the common case, threads replace an \texttt{EmptyNode} with matching or lower sequence ID with their prepared \texttt{ElemNode} via \ac{CAS} in line 32. The algorithm handles thread delays through backoff and retry mechanisms. If a position contains an \texttt{ElemNode} or has a higher sequence ID than assigned, the thread breaks from the inner loop in line 36 to acquire a new sequence ID in the outer loop and attempt insertion at a new position. Bitmarking, setting a flag on a node, is used to indicate positions needing correction by delayed threads in line 20. For consumers in \cref{alg:rb-dequeue}, threads similarly acquire a sequence ID via \ac{FAA} on the head counter in line 7. They prepare an \texttt{EmptyNode} with sequence ID incremented by the buffer capacity in line 9. The dequeue succeeds when replacing an \texttt{ElemNode} with matching sequence ID in line 42 via \ac{CAS}. If encountering an \texttt{EmptyNode} or lower sequence ID, threads use backoff and may bitmark \texttt{ElemNodes} to maintain FIFO ordering in line 32. The algorithm achieves bounded completion through a progress assurance scheme. After \texttt{MAX\_FAILS} attempts in line 11, threads post their operation to an announcement table and execute a wait-free slow path in lines 12-14. The helping mechanism works as follows: \texttt{TryHelpAnother} in lines 33-45 of \cref{alg:rb-helper} checks one entry in the announcement table per call, cycling through all threads. When an announced operation is found, helpers attempt to complete it using the Associate functions. These functions either claim and complete the operation via \ac{CAS} or clean up failed attempts by replacing nodes. This ensures every operation completes within $O(N_{threads}^2)$ steps, as all threads will eventually help any announced operation. \cite{FeldmanDechevV2}
 
-\subsubsection{wCQ} 
-Uses a circular array with fast and slow paths. Producers claim slots via \ac{FAA} on a tail counter, then attempt \ac{CAS} to insert if the slot's cycle number indicates availability. After exceeding a patience threshold, producers record their operation in per-thread descriptors and enter a slow path where helpers execute the same operation on behalf of a stuck thread. The slow path replaces uses a modified non-atomic \ac{FAA}, which is a distributed protocol that coordinates helpers through \enquote*{INC} (increment pending) and \enquote*{FIN} (finalized) bits in thread-local counters, ensuring all helpers converge to the same counter value and exactly one successfully increments the global counter. Consumers similarly use \ac{FAA} on the head counter and mark consumed entries with a special bottom value. Both operations use a two-step protocol meaning enqueuers initially insert with \enquote*{Enq=false}, then set \enquote*{Enq=true} after finalizing their request, allowing concurrent dequeuers to help finalize pending operations. The queue maintains 2n slots for n threads with note fields storing cycle numbers to prevent helpers from incorrectly modifying entries from previous cycles. \cite{wCQWaitFreeQueue}
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Feldman-Dechev Queue's Enqueue Operation \cite{FeldmanDechevV2}}
+    \label{alg:rb-enqueue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Enqueue}{$val$}
+            \State \Call{TryHelpAnother}{}
+            \State $fails \gets 0$
+            \While{true}
+                \If{\Call{IsFull}{}} \Return false
+                \EndIf
+                \State $seqid \gets $ \Call{NextTailSeq}{} \Comment{FAA on tail}
+                \State $pos \gets seqid \bmod capacity$
+                \State $n\_node \gets $ \textbf{new} \texttt{ElemNode}$(seqid, val)$
+                \While{true}
+                    \If{$fails$++ $= MAX\_FAILS$}
+                        \State $op \gets $ \textbf{new} \texttt{EnqueueOp}$(val)$
+                        \State \Call{MakeAnnouncement}{$op$}
+                        \State \Return $op.$\Call{Result}{}
+                    \EndIf
+                    \State $node \gets buffer[pos].$\Call{Load}{}
+                    \If{$node.op \neq $ null} \Comment{Operation record}
+                        \State $node.op.$\Call{Associate}{$node, \&buffer[pos]$}
+                        \State \textbf{continue}
+                    \ElsIf{\Call{IsSkipped}{$node$}} \Comment{Bitmarked}
+                        \State \textbf{break} \Comment{Get new seqid}
+                    \ElsIf{$node.seqid < seqid$}
+                        \State \Call{Backoff}{}
+                        \If{$node = buffer[pos].$\Call{Load}{}}
+                            \If{\Call{IsEmptyNode}{$node$}}
+                                \If{$buffer[pos].$\Call{CAS}{$node, n\_node$}}
+                                    \State \Return true
+                                \EndIf
+                            \EndIf
+                        \EndIf
+                    \ElsIf{$node.seqid \leq seqid$ \textbf{and} \Call{IsEmptyNode}{$node$}}
+                        \If{$buffer[pos].$\Call{CAS}{$node, n\_node$}}
+                            \State \Return true
+                        \EndIf
+                    \Else \Comment{$node.seqid > seqid$ or ElemNode}
+                        \State \textbf{break} \Comment{Get new seqid}
+                    \EndIf
+                \EndWhile
+            \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
-\subsubsection{Verma Queue} 
-Uses an helper that runs on a dedicated core and mediates all queue operations through a shared state array. Producers submit enqueue requests by writing [operation, element]tuples to their designated position in the state array indexed by a thread ID, then spin until the \enquote*{isCompleted} flag is set. The helper continuously traverses the state array in round-robin (a traversal algorithm not deeper explained in this work) order, processing pending requests by appending nodes to the tail of an underlying linked list for enqueues or removing from the head for dequeues. The traversal time is bounded (at most n iterations for n threads) so that every thread finishes in a bounded time, while contention is eliminated by serializing all queue changes through the single helper thread. The helper thread includes volatile variables to ensure cache coherence and padding to avoid false sharing between state array entries. \cite{Verma2013Scalable}
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Feldman-Dechev Queue's Dequeue Operation \cite{FeldmanDechevV2}}
+    \label{alg:rb-dequeue}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Dequeue}{$\&result$}
+            \State \Call{TryHelpAnother}{}
+            \State $fails \gets 0$
+            \While{true}
+                \If{\Call{IsEmpty}{}} \Return false
+                \EndIf
+                \State $seqid \gets $ \Call{NextHeadSeq}{} \Comment{FAA on head}
+                \State $pos \gets seqid \bmod capacity$
+                \State $n\_node \gets $ \textbf{new} \texttt{EmptyNode}$(seqid + capacity)$
+                \While{true}
+                    \If{$fails$++ $= MAX\_FAILS$}
+                        \State $op \gets $ \textbf{new} \texttt{DequeueOp}{}
+                        \State \Call{MakeAnnouncement}{$op$}
+                        \State \Return $op.$\Call{Result}{$result$}
+                    \EndIf
+                    \State $node \gets buffer[pos].$\Call{Load}{}
+                    \If{$node.op \neq $ null}
+                        \State $node.op.$\Call{Associate}{$node, \&buffer[pos]$}
+                        \State \textbf{continue}
+                    \ElsIf{\Call{IsSkipped}{$node$} \textbf{and} \Call{IsEmptyNode}{$node$}}
+                        \If{$buffer[pos].$\Call{CAS}{$node, n\_node$}}
+                            \State \textbf{break}
+                        \EndIf
+                    \ElsIf{$seqid > node.seqid$} \Comment{Delayed element}
+                        \State \Call{Backoff}{}
+                        \If{$node = buffer[pos].$\Call{Load}{}}
+                            \If{\Call{IsEmptyNode}{$node$}}
+                                \If{$buffer[pos].$\Call{CAS}{$node, n\_node$}}
+                                    \State \textbf{break}
+                                \EndIf
+                            \Else
+                                \State \Call{SetSkipped}{$\&buffer[pos]$} \Comment{Bitmark}
+                            \EndIf
+                        \EndIf
+                    \ElsIf{$seqid < node.seqid$}
+                        \State \textbf{break} \Comment{Get new seqid}
+                    \Else \Comment{$seqid = node.seqid$}
+                        \If{\Call{IsElemNode}{$node$}}
+                            \If{\Call{IsSkipped}{$node$}}
+                                \State $n\_node \gets $ \Call{SetSkipped}{$n\_node$}
+                            \EndIf
+                            \If{$buffer[pos].$\Call{CAS}{$node, n\_node$}}
+                                \State $result \gets node.value$
+                                \State \Return true
+                            \EndIf
+                        \Else \Comment{EmptyNode with matching seqid}
+                            \State \Call{Backoff}{}
+                            \If{$node = buffer[pos].$\Call{Load}{}}
+                                \If{$buffer[pos].$\Call{CAS}{$node, n\_node$}}
+                                    \State \textbf{break}
+                                \EndIf
+                            \EndIf
+                        \EndIf
+                    \EndIf
+                \EndWhile
+            \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Feldman-Dechev Queue's Helper Functions \cite{FeldmanDechevV2}}
+    \label{alg:rb-helper}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{EnqueueOp::Associate}{$node, address$}
+            \State $success \gets helper.$\Call{CAS}{null, $node$}
+            \If{$success$ \textbf{or} $helper.$\Call{Load}{} $= node$}
+                \State $node.op.$\Call{Store}{null} \Comment{Remove op reference}
+            \Else
+                \State $n\_node \gets $ \textbf{new} \texttt{EmptyNode}$(node.seqid)$
+                \If{\textbf{not} $address.$\Call{CAS}{$node, n\_node$}}
+                    \State $node \gets $ \Call{SetSkipped}{$node$}
+                    \If{$address.$\Call{Load}{} $= node$}
+                        \State $n\_node \gets $ \Call{SetSkipped}{$n\_node$}
+                        \State $address.$\Call{CAS}{$node, n\_node$}
+                    \EndIf
+                \EndIf
+            \EndIf
+        \EndFunction
+        
+        \State
+        
+        \Function{DequeueOp::Associate}{$node, address$}
+            \State $success \gets helper.$\Call{CAS}{null, $node$}
+            \If{$success$ \textbf{or} $helper.$\Call{Load}{} $= node$}
+                \State $n\_node \gets $ \textbf{new} \texttt{EmptyNode}$(node.seqid + capacity)$
+                \If{\textbf{not} $address.$\Call{CAS}{$node, n\_node$}}
+                    \State $node \gets $ \Call{SetSkipped}{$node$}
+                    \If{$address.$\Call{Load}{} $= node$}
+                        \State $n\_node \gets $ \Call{SetSkipped}{$n\_node$}
+                        \State $address.$\Call{CAS}{$node, n\_node$}
+                    \EndIf
+                \EndIf
+            \Else
+                \State $node.op.$\Call{Store}{null}
+            \EndIf
+        \EndFunction
+        
+        \State
+        
+        \Function{TryHelpAnother}{}
+            \State \Comment{Check announcement table and help one operation}
+            \State $helpIdx \gets $ thread-local helping index
+            \State $op \gets announcementTable[helpIdx]$
+            \If{$op \neq $ null \textbf{and} $op.$\Call{InProgress}{}}
+                \If{$op$ is \texttt{EnqueueOp}}
+                    \State \Call{WaitFreeEnqueue}{$op$}
+                \Else
+                    \State \Call{WaitFreeDequeue}{$op$}
+                \EndIf
+            \EndIf
+            \State $helpIdx \gets (helpIdx + 1) \bmod MAX\_THREADS$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Verma's Queue} 
+Uses an external helper thread that works on a dedicated core to help other processes to finish their work in a finite number of steps. As shown in \cref{alg:verma-ops}, the queue maintains a state array where each worker has a dedicated slot for operation requests. The queue uses a linked list with head and tail pointers managed exclusively by the helper thread. For producers in \cref{alg:verma-ops}, threads create a request object containing the operation type and element in line 14, then place it in their designated position in the state array via direct assignment in line 15. They wait until the helper marks the operation as completed in line 16. The algorithm achieves simplicity by delegating all queue modifications to a single helper thread, eliminating the need for complex synchronization. For consumers in \cref{alg:verma-ops}, threads similarly create a dequeue request in line 3 and place it in their state array slot in line 4. They wait for completion in line 5, after which the dequeued element is available in the request object in line 9. The helper thread in \cref{alg:verma-ops} continuously traverses the state array in round-robin fashion in lines 24-52. When encountering an enqueue request, it creates a new node in line 29, appends it to the tail in line 30, and updates the tail reference in line 31. For dequeue requests, the helper checks if the queue is empty in line 35 and removes the head element in lines 39 and 40. The helper then updates the request with the dequeued value in line 44. This achieves bounded completion of every process as each operation completes within $O(N)$ steps, where $N$ is the number of workers, since the helper visits each state array position in fixed order. \cite{Verma2013Scalable}
+
+\begin{algorithm}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Verma's Queue Operations \cite{Verma2013Scalable}}
+    \label{alg:verma-ops}
+    \scriptsize
+    \begin{algorithmic}[1]
+        \Function{Dequeue}{}
+            \State $id \gets $ \Call{GetThreadId}{} \Comment{Get worker's unique ID}
+            \State $req \gets $ \Call{CreateRequest}{null, DEQUEUE} \Comment{Create dequeue request}
+            \State $stateArr[id] \gets req$ \Comment{Place request in dedicated slot}
+            \While{$\neg req.isCompleted$} \Comment{Wait for helper to process}
+                \State \textbf{wait}
+            \EndWhile
+            \State $stateArr[id] \gets $ null \Comment{Clear request from state array}
+            \State \Return $req.e$ \Comment{Return dequeued element}
+        \EndFunction
+
+        \State
+
+        \Function{Enqueue}{$e$}
+            \State $id \gets $ \Call{GetThreadId}{} \Comment{Get worker's unique ID}
+            \State $req \gets $ \Call{CreateRequest}{$e$, ENQUEUE} \Comment{Create enqueue request with element}
+            \State $stateArr[id] \gets req$ \Comment{Place request in dedicated slot}
+            \While{$\neg req.isCompleted$} \Comment{Wait for helper to process}
+                \State \textbf{wait}
+            \EndWhile
+            \State $stateArr[id] \gets $ null \Comment{Clear request from state array}
+            \State \Return true
+        \EndFunction
+
+        \State
+
+        \Function{Helper}{}
+            \State $id \gets 0$ \Comment{Start at first worker slot}
+            \While{true} \Comment{Continuous helper loop}
+                \State $req \gets stateArr[id]$ \Comment{Check current slot for request}
+                \If{$req \neq $ null $\land \neg req.isCompleted$} \Comment{Found pending request}
+                    \If{$req.operation = $ ENQUEUE}
+                        \State $n \gets $ \textbf{new} Node$(req.e)$ \Comment{Create new node}
+                        \State $tail.next \gets n$ \Comment{Append to tail}
+                        \State $tail \gets n$ \Comment{Update tail reference}
+                        \State $size \gets size + 1$
+                        \State $req.isCompleted \gets $ true \Comment{Mark request complete}
+                    \ElsIf{$req.operation = $ DEQUEUE}
+                        \If{$head.next = $ null} \Comment{Queue is empty}
+                            \State $req.e \gets $ null
+                            \State $req.isCompleted \gets $ true
+                        \Else
+                            \State $n \gets head.next$ \Comment{Get first element}
+                            \State $head.next \gets n.next$ \Comment{Remove from queue}
+                            \If{$n.next = $ null} \Comment{Queue now empty}
+                                \State $tail \gets head$ \Comment{Reset tail}
+                            \EndIf
+                            \State $req.e \gets n.e$ \Comment{Store dequeued value}
+                            \State $size \gets size - 1$
+                            \State $req.isCompleted \gets $ true
+                        \EndIf
+                    \EndIf
+                \EndIf
+                \State $id \gets (id + 1) \bmod workers$ \Comment{Round-robin to next slot}
+            \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}

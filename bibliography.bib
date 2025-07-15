@@ -384,6 +384,24 @@ year = {2019}
 	year = {2016},
 }
 
+@inproceedings{Atomics,
+author = {Hoseini, Fazeleh and Atalar, Aras and Tsigas, Philippas},
+title = {Modeling the Performance of Atomic Primitives on Modern Architectures},
+year = {2019},
+isbn = {9781450362955},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3337821.3337901},
+doi = {10.1145/3337821.3337901},
+abstract = {Utilizing the atomic primitives of a processor to access a memory location atomically is key to the correctness and feasibility of parallel software systems. The performance of atomics plays a significant role in the scalability and overall performance of parallel software systems.In this work, we study the performance -in terms of latency, throughput, fairness, energy consumption- of atomic primitives in the context of the two common software execution settings that result in high and low contention access on shared memory. We perform and present an exhaustive study of the performance of atomics in these two application contexts and propose a performance model that captures their behavior. We consider two state-of-the-art architectures: Intel Xeon E5, Xeon Phi (KNL). We propose a model that is centered around the bouncing of cache lines between threads that execute atomic primitives on these shared cache lines. The model is very simple to be used in practice and captures the behavior of atomics accurately under these execution scenarios and facilitate algorithmic design decisions in multi-threaded programming.},
+booktitle = {Proceedings of the 48th International Conference on Parallel Processing},
+articleno = {28},
+numpages = {11},
+keywords = {Synchronization, Performance, Parallel Computing, Modeling, Concurrency, Atomic Primitives},
+location = {Kyoto, Japan},
+series = {ICPP '19}
+}
+
 @article{drepper2007every,
   title={What every programmer should know about memory},
   author={Drepper, Ulrich},
@@ -471,6 +489,25 @@ year = {2019}
 	isbn="978-3-031-28701-5",
 	doi="10.1007/978-3-031-28701-5_5",
 	url="https://doi.org/10.1007/978-3-031-28701-5_5"
+}
+
+@article{sharedmem,
+author = {Mellor-Crummey, John M. and Scott, Michael L.},
+title = {Algorithms for scalable synchronization on shared-memory multiprocessors},
+year = {1991},
+issue_date = {Feb. 1991},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {9},
+number = {1},
+issn = {0734-2071},
+url = {https://doi.org/10.1145/103727.103729},
+doi = {10.1145/103727.103729},
+abstract = {Busy-wait techniques are heavily used for mutual exclusion and barrier synchronization in shared-memory parallel programs. Unfortunately, typical implementations of busy-waiting tend to produce large amounts of memory and interconnect contention, introducing performance bottlenecks that become markedly more pronounced as applications scale. We argue that this problem is not fundamental, and that one can in fact construct busy-wait synchronization algorithms that induce no memory or interconnect contention. The key to these algorithms is for every processor to spin on separate locally-accessible flag variables, and for some other processor to terminate the spin with a single remote write operation at an appropriate time. Flag variables may be locally-accessible as a result of coherent caching, or by virtue of allocation in the local portion of physically distributed shared memory.We present a new scalable algorithm for spin locks that generates 0(1) remote references per lock acquisition, independent of the number of processors attempting to acquire the lock. Our algorithm provides reasonable latency in the absence of contention, requires only a constant amount of space per lock, and requires no hardware support other than a swap-with-memory instruction. We also present a new scalable barrier algorithm that generates 0(1) remote references per processor reaching the barrier, and observe that two previously-known barriers can likewise be cast in a form that spins only on locally-accessible flag variables. None of these barrier algorithms requires hardware support beyond the usual atomicity of memory reads and writes.We compare the performance of our scalable algorithms with other software approaches to busy-wait synchronization on both a Sequent Symmetry and a BBN Butterfly. Our principal conclusion is that contention due to synchronization need not be a problem in large-scale shared-memory multiprocessors. The existence of scalable algorithms greatly weakens the case for costly special-purpose hardware support for synchronization, and provides a case against so-called “dance hall” architectures, in which shared memory locations are equally far from all processors. —From the Authors' Abstract},
+journal = {ACM Trans. Comput. Syst.},
+month = feb,
+pages = {21–65},
+numpages = {45}
 }
 
 @article{SharedMemoryMessagePassing,

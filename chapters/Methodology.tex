@@ -15,9 +15,9 @@ In google scholar a whitespace is considered as an AND. The rest is interpreted 
 \end{itemize}
 In the end 17 papers were included from the 325 papers and 3 more paper were included by backward and forward search of the papers that were included. The papers were then split into 4 contention categories:
 \begin{itemize}
-   \item \ac{MPMC} queues \cite{Kogan2011WaitFreeQueues,FeldmanDechev2015WaitFreeRingBuffer,kogan2012methodology,FeldmanDechevV2,FeldmanDechevV3,RamalheteQueue,wCQWaitFreeQueue,Verma2013Scalable,FastFetchAndAddWaitFreeQueue}
-   \item \ac{MPSC} queues \cite{WangCacheCoherent,adampsc,jiffy,JayantiLog,Drescher2015GuardedSections}
+   \item \ac{MPMC} queues \cite{Kogan2011WaitFreeQueues,FeldmanDechevV2,RamalheteQueue,Verma2013Scalable,FastFetchAndAddWaitFreeQueue}
+   \item \ac{MPSC} queues \cite{WangCacheCoherent,jiffy,JayantiLog,Drescher2015GuardedSections}
    \item \ac{SPMC} queues \cite{Mateíspmc}
-   \item \ac{SPSC} queues \cite{Lamport1983SPSCCircularBuffer,torquati2010singleproducersingleconsumerqueuessharedcache,Aldinucci2012EfficientSync,Wang2013BQueue,MaffioneCacheAware,ffq}
+   \item \ac{SPSC} queues \cite{Lamport1983SPSCCircularBuffer,torquati2010singleproducersingleconsumerqueuessharedcache,Wang2013BQueue,MaffioneCacheAware,ffq}
 \end{itemize}
-Now the wait-free fifo queues had to be compared performance wise. Some papers were just improvements of other papers so only the improved version was used for the comparison. Some other papers showed multiple ways of implementing a wait-free fifo datastructure. In the end 6 \ac{MPMC} queues, 4 \ac{MPSC} queues, 1 \ac{SPMC} queue and 11 \ac{SPSC} queues were included into this work.
+Now the wait-free fifo queues had to be compared performance wise. Some papers were just improvements of other papers so only the improved version was used for the comparison. Some other papers showed multiple ways of implementing a wait-free fifo datastructure. In the end 5 \ac{MPMC} queues, 4 \ac{MPSC} queues, 1 \ac{SPMC} queue and 11 \ac{SPSC} queues were included into this work.

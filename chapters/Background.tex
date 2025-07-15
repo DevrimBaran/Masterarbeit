@@ -14,17 +14,15 @@ Since the workfield of this thesis is within \ac{HRTS}, the term \ac{RTS} will b
 
 \section{Inter-Process Communication}\label{sec:ipc}
 
-Now the processes used in a \ac{RTS} also have to share information with each other so the system can function. So some kind of \ac{IPC} is needed. \ac{IPC} allows processes to share information with each other using different kind of methods like a shared memory region, which will be the method used and explained later in this thesis. In general \ac{IPC} is needed in all computing systems, because processes often need to work together (e.g. a producer process passes data to a consumer process). Lets take the brake-by-wire technology as example. Brake-by-wire is a technology for driverless cars where some mechanical and hydraulic components from the braking systems are replaced by wires to transmit braking signals, since there is no driver anymore to press on the braking pedal \cite{BrakeByWire}. This of course requires different processes to share information together. In the context of this thesis this kind of communication requires strict timing constraints as stated as before, since any kind of delay or blockage would lead to fatal consequences. \cite{IPC,IPCMechanisms}
+Processes used in a \ac{RTS} also have to share information with each other so the system can function. So some kind of \ac{IPC} is needed. \ac{IPC} allows processes to share information with each other using different kind of methods like a shared memory region, which will be the method used and explained later in this thesis. In general, \ac{IPC} is needed in all computing systems, because processes often need to work together (e.g. a producer process passes data to a consumer process). Lets take the brake-by-wire technology as example. Brake-by-wire is a technology for driverless cars where some mechanical and hydraulic components from the braking systems are replaced by wires to transmit braking signals, since there is no driver anymore to press on the braking pedal \cite{BrakeByWire}. This of course requires different processes to share information together. In the context of this thesis this kind of communication requires strict timing constraints as stated as before, since any kind of delay or blockage would lead to fatal consequences. \cite{IPC,IPCMechanisms}
 
 \subsection{Shared Memory}\label{subsec:shared-memory}
 
-To achieve any kind of information sharing between processes, these processes will need to have access to the same data regularly. With a shared memory segment, multiple processes can have access to the same memory location. So all processes which are part of the \ac{IPC} can read and write to this common memory space avoiding unnecessary data copys. With that processes exchange information by directly manipulating memory. This kind of \ac{IPC} is particular useful for real-time applications, which handle large volumes of data or are required to quickly transfer data between sensors and control tasks. What is also important to know is that the section of the code, that programs these data accesses by different processes is called critical section. \cite{IPCMechanisms,SharedMemory,SharedMemoryMessagePassing,criticalSectionMutex}
-
-The problem with this is that the system somehow has to manage how the processes access the shared memory segment. This is mostly done by using different kind of synchronization techniques. Without any synchronization mechanism race conditions or inconsistent data can occur. \cite{IPCMechanisms, SharedMemory}
+To achieve any kind of information sharing between processes, these processes will need to have access to the same data regularly. With a shared memory segment, multiple processes can have access to the same memory location. So all processes which are part of the \ac{IPC} can read and write to this common memory space avoiding unnecessary data copys. With that, processes exchange information by directly manipulating memory. This kind of \ac{IPC} is particular useful for real-time applications, which handle large volumes of data or are required to quickly transfer data between sensors and control tasks. What is also important to know is that the section of the code, that programs these data accesses by different processes is called critical section. The problem with this is that the system somehow has to manage how the processes access the shared memory segment. This is mostly done by using different kind of synchronization techniques. Without any synchronization mechanism race conditions or inconsistent data can occur. \cite{sharedmem}
 
 \section{Synchronization}\label{sec:synchronization}
 
-As observed, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especially when processes communicate via shared memory. Communication through shared memory always has a risk of race conditions (when multiple processes acces the same data and cause unexpected behaviour) and data inconsistency if the processes are not properly synchronized. Tratitional synchronization techniques ensure mutual exclusion (only one process at a time uses shared resource) thus avoiding race conditions and ensuring data consistency. Race conditions happen when for example two processes write to the same resource. Lets take a single counter instance with value 17 as a shared resource in a shared memory region. If one has process p1 and one process p2 increments that number, the end result should be 19. But what could happen is that p1 could read the value 17 before p2 increments it and then before p1 increments that value p2 could also read the value 17. Now internally both processes increment that number to 18 and both processes would write 18 to that shared resource. To understand this example more in detail \cref{fig:race-condition} visualizes a race condition with threads. 
+As observed, synchronization is a crucial part of \ac{IPC} in \ac{RTS}, especially when processes communicate via shared memory. Communication through shared memory always has a risk of race conditions and data inconsistency if the processes are not properly synchronized. Tratitional synchronization techniques ensure mutual exclusion (only one process at a time uses shared resource) thus avoiding race conditions and ensuring data consistency. Race conditions happen when for example two processes write to the same resource. Lets take a single counter instance with value 17 as a shared resource in a shared memory region. If one has process p1 and one process p2 increments that number, the end result should be 19. But what could happen is that p1 could read the value 17 before p2 increments it and then before p1 increments that value p2 could also read the value 17. Now internally both processes increment that number to 18 and both processes would write 18 to that shared resource. To understand this example more in detail \cref{fig:race-condition} visualizes a race condition with threads. 
 
 The difference between processes and threads is just, that threads are part of a process which can perform multiple tasks via threads simultaneously within that process. Another difference that will later be important in this thesis is that processes have their own private memory space, while threads share the memory space of the process they are part of. So naturally a process can not access the memory of another process. Regardless the following concept in \cref{fig:race-condition} can be used for processes too. \cite{processesVSthreads}
 
@@ -193,22 +191,24 @@ Initialization starts at line 1 in \cref{alg:michael-scott}, which is just used 
     \cite{MichaelScottQueue}
 \end{algorithm} 
 
-While Michael and Scott's algorithm relies on \ac{CAS} primitives, other atomic primitives provide alternative approaches that other algorithms shown later in this thesis use. A overview on the atomic primitives that are used in this thesis context is given in the following subsections.
+While Michael and Scott's algorithm relies on the \ac{CAS} primitive, other atomic primitives provide alternative approaches that other algorithms shown later in this thesis use. A overview on the atomic primitives that are used in this thesis context is given in the following section.
 
 \subsection{Atomic Primitives}\label{subsec:atomic-primitives}
+Atomic primitives are hardware instructions that conduct a set of steps atomically, meaning with no interruption from other processes \cite{Atomics}. This will be important in the algorithms analyzed later in this thesis, since these primitives are used to implement wait-free synchronization. There are different kind of atomic primitives: 
+
 \subsubsection{\ac{LL/SC}}\label{subsubsec:llsc}
-An operation available on ARM, MIPS and Alpha architecutures usually implied with a validate-link (VL) instruction.
+Abbreviation of the instructions \ac{LL} and \ac{SC}, which is an operation available on ARM, MIPS and Alpha architecutures usually implied with a \ac{VL} instruction.
 \begin{itemize}
-    \item LL (R) returns value of register r
-    \item \enquote{textSC (R, v) changes the value in register R to v and returns true, if and only if no other process performed a successful SC since the most recent call of LL of the current process. So SC fails if the value of the register has changed since it has been read} \cite{Fuchs2014EvaluationOT}
-    \item \enquote{VL (R) returns true if no other process performed a successful SC on register R, which allows to test a register value without changing it} \cite{Fuchs2014EvaluationOT}
+    \item \ac{LL}(R) returns value of register r
+    \item \enquote{\ac{SC}(R, v) changes the value in register R to v and returns true, if and only if no other process performed a successful SC since the most recent call of LL of the current process. So SC fails if the value of the register has changed since it has been read} \cite{Fuchs2014EvaluationOT}
+    \item \enquote{\ac{VL}(R) returns true if no other process performed a successful SC on register R, which allows to test a register value without changing it} \cite{Fuchs2014EvaluationOT}
 \end{itemize}
 \cite{Fuchs2014EvaluationOT}
 
 \subsubsection{\acf{CAS}}\label{subsubsec:compare-and-swap}
 It is already explained how \ac{CAS} works in \cref{subsec:michael-scott}. Furthermore to the explanation in \cref{subsec:michael-scott} \ac{CAS} is an atomic primitive that is supported on \enquote{intel x386, x64 and most general purpose architectures with operands that are restricted to pointer size} \cite{Fuchs2014EvaluationOT}.
 \begin{itemize}
-    \item \enquote{CAS(R,e,n) returns true and sets the value of R to n if the value in R is e. Otherwise, it returns false.} \cite{Fuchs2014EvaluationOT}
+    \item \enquote{\ac{CAS}(R,e,n) returns true and sets the value of R to n if the value in R is e. Otherwise, it returns false.} \cite{Fuchs2014EvaluationOT}
 \end{itemize}
 The problem with \ac{CAS} furthermore than the issue explained earlier in \cref{subsec:michael-scott} is that it can lead to the ABA problem, which can also occur in wait-free algorithms:
 \begin{itemize}
@@ -217,6 +217,9 @@ The problem with \ac{CAS} furthermore than the issue explained earlier in \cref{
     \item Process 1's \ac{CAS} operation succeeds, because it compares the value A it read earlier with the current value A, even though the value was changed in between.
 \end{itemize}
 This is a fundemental limitation of \ac{CAS}. One solution would be to replace \ac{CAS} with \ac{LL/SC}, but that is not possible on x86 processors. So other solutions are needed that are discussed in \cref{ch:implementation}. \cite{Fuchs2014EvaluationOT}
+
+\subsubsection{Swap}\label{subsubsec:swap}
+Swap is an atomic read-modify-write operation that unconditionally exchanges a value in memory with a new value and returns the old value. Swap(R, v) atomically stores value v into location R and returns the previous value that was in R. This operation always succeeds. \cite{Mateíspmc}.
 
 \subsubsection{\ac{FAA}}\label{subsubsec:fetch-and-add}
 This primitive is used to increment \enquote{the value of a variable by a given offset and [return] the result. This instruction always succeeds.} \cite{Fuchs2014EvaluationOT}
