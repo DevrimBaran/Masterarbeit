@@ -71,65 +71,24 @@
 
 % for code listings, you can e.g. use the "listings" package (http://texdoc.net/texmf-dist/doc/latex/listings/listings.pdf):
 \usepackage{listings} 
-\usepackage{scrhack} % if you load listings together with scrbook etc., then load this fixing package as well
-
-\renewcommand{\lstlistingname}{Algorithm}
-\renewcommand{\lstlistlistingname}{List of Algorithms}
+\usepackage{listings-rust}
+% \usepackage{scrhack} % if you load listings together with scrbook etc., then load this fixing package as well
 
 \lstset{
-  % ... (your existing basicstyle, frame, captionpos, etc.) ...
-  basicstyle=\scriptsize\ttfamily,
-  frame=single,
   captionpos=b,
-  extendedchars=true,             % Allow extended characters
-  inputencoding=utf8,             % Tell listings the input is UTF-8
-  language=Python,
-  keywordstyle=\color{UStuttDarkBlue}\bfseries,
-  commentstyle=\itshape\color{UStuttDarkGreen},
-  stringstyle=\color{UStuttDarkOrange}, % Example color
-  identifierstyle=\color{black},
-  breaklines=true,
-  breakatwhitespace=true,
-  numbers=left,
-  numberstyle=\tiny\color{gray},
-  stepnumber=1,
-  numbersep=5pt,
-  tabsize=2,
-  showstringspaces=false,
+  breaklines=true,                    % Enable automatic line breaking
+  breakatwhitespace=true,             % Break only at whitespace
+  breakindent=20pt,                   % Indentation for broken lines
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, % Arrow for continuation
+  commentstyle=\color{UStuttDarkGreen},
+  frame=single,	                   % adds a frame around the code
   keepspaces=true,
-  xleftmargin=1.5em,
-  framexleftmargin=1.5em,
-  breaklines=true,
-  breakatwhitespace=true,
-  columns=fullflexible,
-  postbreak=\mbox{\(\hookrightarrow\)\space},
-  literate={^^a6}{{?}}1,
-  % --- Crucial for problematic UTF-8 characters ---
-  literate=
-    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
-    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
-    {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-    {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
-    {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
-    {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
-    {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
-    {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
-    {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
-    {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {Ø}{{\O}}1 {å}{{\aa}}1 {Å}{{\AA}}1
-    {€}{{\EUR}}1 % Euro sign
-    {£}{{\pounds}}1 % Pound sign
-    {“}{{"}}1 {”}{{"}}1 % Smart double quotes to straight
-    {‘}{{'}}1 {’}{{'}}1 % Smart single quotes to straight
-    {–}{-}1 {—}{-}1     % En-dash and Em-dash to hyphen
-    % Add any other specific characters you find problematic:
-    % {<offending_char>}{{<LaTeX_replacement_command_or_char>}}<width_in_chars>
-    % For example, if you find a non-breaking space (byte 0xA0 in Latin-1)
-    % that became a bad UTF-8 char, you might need to find and replace it
-    % or handle it via literate if it's consistently one specific problem char.
-    {\ \ }{{\ }}1 % This is a hack if you have literal tabs causing issues; normally tabsize handles it.
-    % The byte values 80, 99, A6 suggest characters that are not directly mappable
-    % with simple literate replacements above if they are mangled UTF-8.
-    % The primary fix is to find and remove/replace them in the Python source.
+  %keywordstyle=\color{UStuttDarkBlue},
+  showspaces=false,
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,
+  stringstyle=\color{UStuttDarkBlue},
+  tabsize=2
 }
 
 

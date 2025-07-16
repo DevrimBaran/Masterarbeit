@@ -608,153 +608,54 @@
       \verb https://api.semanticscholar.org/CorpusID:6899525
       \endverb
     \endentry
-    \entry{SharedMemory}{inbook}{}
-      \name{author}{1}{}{%
-        {{hash=a4dfa4a15dd530d8dc5c104e8fb2337d}{%
-           family={Wang},
-           familyi={W\bibinitperiod},
-           given={K.\bibnamedelimi C.},
-           giveni={K\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+    \entry{sharedmem}{article}{}
+      \name{author}{2}{}{%
+        {{hash=5431efc7ce32c5610563f25e82353a2f}{%
+           family={Mellor-Crummey},
+           familyi={M\bibinithyphendelim C\bibinitperiod},
+           given={John\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=e15993060a5335650b18aea778baab54}{%
+           family={Scott},
+           familyi={S\bibinitperiod},
+           given={Michael\bibnamedelima L.},
+           giveni={M\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
       }
       \list{location}{1}{%
-        {Cham}%
-      }
-      \list{publisher}{1}{%
-        {Springer International Publishing}%
-      }
-      \strng{namehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
-      \strng{fullhash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
-      \strng{bibnamehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
-      \strng{authorbibnamehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
-      \strng{authornamehash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
-      \strng{authorfullhash}{a4dfa4a15dd530d8dc5c104e8fb2337d}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{abstract}{This chapter covers process management. It introduces the concept of processes and demonstrates the basic technique of multitasking by context switching. It shows how to create processes dynamically and discusses the goals, policy, and algorithms of process scheduling. It covers process synchronization and shows how to implement the various kinds of process synchronization mechanisms, which include sleep/wakeup, mutexes, and semaphores. It shows how to use the process synchronization mechanisms to implement event-driven embedded systems. It discusses interprocess communication (IPC) schemes, which include shared memory, pipes, and message passing. It shows how to integrate these concepts to implement a uniprocessor (UP) kernel for process management, and it shows the programming techniques for both non-preemptive and preemptive process scheduling. The UP kernel serves as the foundation for developing complete operating systems (OS) in later chapters.}
-      \field{booktitle}{Embedded and Real-Time Operating Systems}
-      \field{isbn}{978-3-031-28701-5}
-      \field{title}{Process Management in Embedded Systems}
-      \field{year}{2023}
-      \field{pages}{115\bibrangedash 168}
-      \range{pages}{54}
-      \verb{doi}
-      \verb 10.1007/978-3-031-28701-5_5
-      \endverb
-      \verb{urlraw}
-      \verb https://doi.org/10.1007/978-3-031-28701-5_5
-      \endverb
-      \verb{url}
-      \verb https://doi.org/10.1007/978-3-031-28701-5_5
-      \endverb
-    \endentry
-    \entry{SharedMemoryMessagePassing}{article}{}
-      \name{author}{6}{}{%
-        {{hash=9456b7ccea841fa3f8894a658f46813e}{%
-           family={Mogare},
-           familyi={M\bibinitperiod},
-           given={Sarvesh},
-           giveni={S\bibinitperiod}}}%
-        {{hash=44191d48f06462d060743c2eef2a5078}{%
-           family={Mahamune},
-           familyi={M\bibinitperiod},
-           given={Abhijeet},
-           giveni={A\bibinitperiod}}}%
-        {{hash=8fb46dee6dcfe590c72875cfaa55784c}{%
-           family={Sathe},
-           familyi={S\bibinitperiod},
-           given={Dipak},
-           giveni={D\bibinitperiod}}}%
-        {{hash=14f258dccc259eed4a5e62af6d8d6120}{%
-           family={Bhangare},
-           familyi={B\bibinitperiod},
-           given={Harshal},
-           giveni={H\bibinitperiod}}}%
-        {{hash=ffef5248435a58f5a5a45e519b60cb7c}{%
-           family={Deshmukh},
-           familyi={D\bibinitperiod},
-           given={Minal},
-           giveni={M\bibinitperiod}}}%
-        {{hash=224cbc20dd3a116719200ff5dffb3cbb}{%
-           family={Ingale},
-           familyi={I\bibinitperiod},
-           given={Anup},
-           giveni={A\bibinitperiod}}}%
-      }
-      \strng{namehash}{dd85982a7efd52d9c7de77f68d6811fe}
-      \strng{fullhash}{34c16716cc6e7c74d4ee8945a2b0e307}
-      \strng{bibnamehash}{34c16716cc6e7c74d4ee8945a2b0e307}
-      \strng{authorbibnamehash}{34c16716cc6e7c74d4ee8945a2b0e307}
-      \strng{authornamehash}{dd85982a7efd52d9c7de77f68d6811fe}
-      \strng{authorfullhash}{34c16716cc6e7c74d4ee8945a2b0e307}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{International Research Journal of Modernization in Engineering Technology and Science (IRJMETS)}
-      \field{month}{11}
-      \field{title}{Message Passing VS Shared Memory-a Survey Of Trade Off In IPC}
-      \field{volume}{06}
-      \field{year}{2024}
-    \endentry
-    \entry{criticalSectionMutex}{inproceedings}{}
-      \name{author}{4}{}{%
-        {{hash=54280ee5d6c291b696b69461f4ced244}{%
-           family={Suleman},
-           familyi={S\bibinitperiod},
-           given={M.\bibnamedelimi Aater},
-           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
-        {{hash=5c37647ea7ea3d969c75fa814163e18f}{%
-           family={Mutlu},
-           familyi={M\bibinitperiod},
-           given={Onur},
-           giveni={O\bibinitperiod}}}%
-        {{hash=dfdef60a424243feb8bd3e8293c4306f}{%
-           family={Qureshi},
-           familyi={Q\bibinitperiod},
-           given={Moinuddin\bibnamedelima K.},
-           giveni={M\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
-        {{hash=8fcb98f713d8a5893c333afc73f5e16b}{%
-           family={Patt},
-           familyi={P\bibinitperiod},
-           given={Yale\bibnamedelima N.},
-           giveni={Y\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Washington, DC, USA}%
+        {New York, NY, USA}%
       }
       \list{publisher}{1}{%
         {Association for Computing Machinery}%
       }
-      \strng{namehash}{00c43079dae7459654cc15c5b2854ec3}
-      \strng{fullhash}{b5bdfed2125cff6f217db347faf9a651}
-      \strng{bibnamehash}{b5bdfed2125cff6f217db347faf9a651}
-      \strng{authorbibnamehash}{b5bdfed2125cff6f217db347faf9a651}
-      \strng{authornamehash}{00c43079dae7459654cc15c5b2854ec3}
-      \strng{authorfullhash}{b5bdfed2125cff6f217db347faf9a651}
+      \strng{namehash}{2e3211db4605bcd9f236bd6068ec5ba7}
+      \strng{fullhash}{2e3211db4605bcd9f236bd6068ec5ba7}
+      \strng{bibnamehash}{2e3211db4605bcd9f236bd6068ec5ba7}
+      \strng{authorbibnamehash}{2e3211db4605bcd9f236bd6068ec5ba7}
+      \strng{authornamehash}{2e3211db4605bcd9f236bd6068ec5ba7}
+      \strng{authorfullhash}{2e3211db4605bcd9f236bd6068ec5ba7}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{abstract}{To improve the performance of a single application on Chip Multiprocessors (CMPs), the application must be split into threads which execute concurrently on multiple cores. In multi-threaded applications, critical sections are used to ensure that only one thread accesses shared data at any given time. Critical sections can serialize the execution of threads, which significantly reduces performance and scalability.This paper proposes Accelerated Critical Sections (ACS), a technique that leverages the high-performance core(s) of an Asymmetric Chip Multiprocessor (ACMP) to accelerate the execution of critical sections. In ACS, selected critical sections are executed by a high-performance core, which can execute the critical section faster than the other, smaller cores. As a result, ACS reduces serialization: it lowers the likelihood of threads waiting for a critical section to finish. Our evaluation on a set of 12 critical-section-intensive workloads shows that ACS reduces the average execution time by 34\% compared to an equal-area 32T-core symmetric CMP and by 23\% compared to an equal-area ACMP. Moreover, for 7 out of the 12 workloads, ACS improves scalability by increasing the number of threads at which performance saturates.}
-      \field{booktitle}{Proceedings of the 14th International Conference on Architectural Support for Programming Languages and Operating Systems}
-      \field{isbn}{9781605584065}
-      \field{series}{ASPLOS XIV}
-      \field{title}{Accelerating critical section execution with asymmetric multi-core architectures}
-      \field{year}{2009}
-      \field{pages}{253\bibrangedash 264}
-      \range{pages}{12}
+      \field{abstract}{Busy-wait techniques are heavily used for mutual exclusion and barrier synchronization in shared-memory parallel programs. Unfortunately, typical implementations of busy-waiting tend to produce large amounts of memory and interconnect contention, introducing performance bottlenecks that become markedly more pronounced as applications scale. We argue that this problem is not fundamental, and that one can in fact construct busy-wait synchronization algorithms that induce no memory or interconnect contention. The key to these algorithms is for every processor to spin on separate locally-accessible flag variables, and for some other processor to terminate the spin with a single remote write operation at an appropriate time. Flag variables may be locally-accessible as a result of coherent caching, or by virtue of allocation in the local portion of physically distributed shared memory.We present a new scalable algorithm for spin locks that generates 0(1) remote references per lock acquisition, independent of the number of processors attempting to acquire the lock. Our algorithm provides reasonable latency in the absence of contention, requires only a constant amount of space per lock, and requires no hardware support other than a swap-with-memory instruction. We also present a new scalable barrier algorithm that generates 0(1) remote references per processor reaching the barrier, and observe that two previously-known barriers can likewise be cast in a form that spins only on locally-accessible flag variables. None of these barrier algorithms requires hardware support beyond the usual atomicity of memory reads and writes.We compare the performance of our scalable algorithms with other software approaches to busy-wait synchronization on both a Sequent Symmetry and a BBN Butterfly. Our principal conclusion is that contention due to synchronization need not be a problem in large-scale shared-memory multiprocessors. The existence of scalable algorithms greatly weakens the case for costly special-purpose hardware support for synchronization, and provides a case against so-called “dance hall” architectures, in which shared memory locations are equally far from all processors. —From the Authors' Abstract}
+      \field{issn}{0734-2071}
+      \field{journaltitle}{ACM Trans. Comput. Syst.}
+      \field{month}{2}
+      \field{number}{1}
+      \field{title}{Algorithms for scalable synchronization on shared-memory multiprocessors}
+      \field{volume}{9}
+      \field{year}{1991}
+      \field{pages}{21\bibrangedash 65}
+      \range{pages}{45}
       \verb{doi}
-      \verb 10.1145/1508244.1508274
+      \verb 10.1145/103727.103729
       \endverb
       \verb{urlraw}
-      \verb https://doi.org/10.1145/1508244.1508274
+      \verb https://doi.org/10.1145/103727.103729
       \endverb
       \verb{url}
-      \verb https://doi.org/10.1145/1508244.1508274
+      \verb https://doi.org/10.1145/103727.103729
       \endverb
-      \keyw{cmp,critical sections,heterogeneous cores,locks,multi-core,parallel programming}
     \endentry
     \entry{processesVSthreads}{article}{}
       \name{author}{4}{}{%
@@ -991,8 +892,8 @@
       \strng{authornamehash}{6e843a47f7f3a29ffac089bdf61fc944}
       \strng{authorfullhash}{e2dc99b12632932c3949fed4adb01e1b}
       \field{extraname}{1}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{IEEE Transactions on Computers}
@@ -1039,6 +940,57 @@
       \verb 10.1145/248052.248106
       \endverb
     \endentry
+    \entry{Atomics}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=cd8c7d1455d724dfbc356a67704d4607}{%
+           family={Hoseini},
+           familyi={H\bibinitperiod},
+           given={Fazeleh},
+           giveni={F\bibinitperiod}}}%
+        {{hash=a95f64ee3248d5a582592dfb3341dfd7}{%
+           family={Atalar},
+           familyi={A\bibinitperiod},
+           given={Aras},
+           giveni={A\bibinitperiod}}}%
+        {{hash=599bc6ccb18ecae93613962500177c35}{%
+           family={Tsigas},
+           familyi={T\bibinitperiod},
+           given={Philippas},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Kyoto, Japan}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{adc291680a5370d191c36ef85b77c7a6}
+      \strng{fullhash}{71265b405c4293516113bab5b09bfb73}
+      \strng{bibnamehash}{71265b405c4293516113bab5b09bfb73}
+      \strng{authorbibnamehash}{71265b405c4293516113bab5b09bfb73}
+      \strng{authornamehash}{adc291680a5370d191c36ef85b77c7a6}
+      \strng{authorfullhash}{71265b405c4293516113bab5b09bfb73}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Utilizing the atomic primitives of a processor to access a memory location atomically is key to the correctness and feasibility of parallel software systems. The performance of atomics plays a significant role in the scalability and overall performance of parallel software systems.In this work, we study the performance -in terms of latency, throughput, fairness, energy consumption- of atomic primitives in the context of the two common software execution settings that result in high and low contention access on shared memory. We perform and present an exhaustive study of the performance of atomics in these two application contexts and propose a performance model that captures their behavior. We consider two state-of-the-art architectures: Intel Xeon E5, Xeon Phi (KNL). We propose a model that is centered around the bouncing of cache lines between threads that execute atomic primitives on these shared cache lines. The model is very simple to be used in practice and captures the behavior of atomics accurately under these execution scenarios and facilitate algorithmic design decisions in multi-threaded programming.}
+      \field{booktitle}{Proceedings of the 48th International Conference on Parallel Processing}
+      \field{isbn}{9781450362955}
+      \field{series}{ICPP '19}
+      \field{title}{Modeling the Performance of Atomic Primitives on Modern Architectures}
+      \field{year}{2019}
+      \verb{doi}
+      \verb 10.1145/3337821.3337901
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3337821.3337901
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3337821.3337901
+      \endverb
+      \keyw{Synchronization,Performance,Parallel Computing,Modeling,Concurrency,Atomic Primitives}
+    \endentry
     \entry{Fuchs2014EvaluationOT}{inproceedings}{}
       \name{author}{2}{}{%
         {{hash=9a517cd990ad766459eca655cf835490}{%
@@ -1070,6 +1022,48 @@
       \verb{url}
       \verb https://api.semanticscholar.org/CorpusID:218073330
       \endverb
+    \endentry
+    \entry{Mateíspmc}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=828988af31fb341df13626992abd5494}{%
+           family={David},
+           familyi={D\bibinitperiod},
+           given={Matei},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=6d84b5e8da24c645eb6bc438af7621c4}{%
+           family={Guerraoui},
+           familyi={G\bibinitperiod},
+           given={Rachid},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Berlin, Heidelberg}%
+      }
+      \list{publisher}{1}{%
+        {Springer Berlin Heidelberg}%
+      }
+      \strng{namehash}{828988af31fb341df13626992abd5494}
+      \strng{fullhash}{828988af31fb341df13626992abd5494}
+      \strng{bibnamehash}{828988af31fb341df13626992abd5494}
+      \strng{authorbibnamehash}{828988af31fb341df13626992abd5494}
+      \strng{authornamehash}{828988af31fb341df13626992abd5494}
+      \strng{authorfullhash}{828988af31fb341df13626992abd5494}
+      \strng{editorbibnamehash}{6d84b5e8da24c645eb6bc438af7621c4}
+      \strng{editornamehash}{6d84b5e8da24c645eb6bc438af7621c4}
+      \strng{editorfullhash}{6d84b5e8da24c645eb6bc438af7621c4}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We study wait-free linearizable Queue implementations in asynchronous shared-memory systems from other consensus number 2 objects, such as Fetch{\&}Add and Swap. The best previously known implementation allows at most two processes to perform Dequeue operations. We provide a new implementation, when only one process performs Enqueue operations and any number of processes perform Dequeue operations. A nice feature of this implementation is the fact that both Enqueue and Dequeue operations take constant time.}
+      \field{booktitle}{Distributed Computing}
+      \field{isbn}{978-3-540-30186-8}
+      \field{title}{A Single-Enqueuer Wait-Free Queue Implementation}
+      \field{year}{2004}
+      \field{pages}{132\bibrangedash 143}
+      \range{pages}{12}
     \endentry
     \entry{Drescher2015GuardedSections}{report}{}
       \name{author}{2}{}{%
@@ -1850,48 +1844,6 @@
       \field{pages}{408\bibrangedash 419}
       \range{pages}{12}
     \endentry
-    \entry{Mateíspmc}{inproceedings}{}
-      \name{author}{1}{}{%
-        {{hash=828988af31fb341df13626992abd5494}{%
-           family={David},
-           familyi={D\bibinitperiod},
-           given={Matei},
-           giveni={M\bibinitperiod}}}%
-      }
-      \name{editor}{1}{}{%
-        {{hash=6d84b5e8da24c645eb6bc438af7621c4}{%
-           family={Guerraoui},
-           familyi={G\bibinitperiod},
-           given={Rachid},
-           giveni={R\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Berlin, Heidelberg}%
-      }
-      \list{publisher}{1}{%
-        {Springer Berlin Heidelberg}%
-      }
-      \strng{namehash}{828988af31fb341df13626992abd5494}
-      \strng{fullhash}{828988af31fb341df13626992abd5494}
-      \strng{bibnamehash}{828988af31fb341df13626992abd5494}
-      \strng{authorbibnamehash}{828988af31fb341df13626992abd5494}
-      \strng{authornamehash}{828988af31fb341df13626992abd5494}
-      \strng{authorfullhash}{828988af31fb341df13626992abd5494}
-      \strng{editorbibnamehash}{6d84b5e8da24c645eb6bc438af7621c4}
-      \strng{editornamehash}{6d84b5e8da24c645eb6bc438af7621c4}
-      \strng{editorfullhash}{6d84b5e8da24c645eb6bc438af7621c4}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{abstract}{We study wait-free linearizable Queue implementations in asynchronous shared-memory systems from other consensus number 2 objects, such as Fetch{\&}Add and Swap. The best previously known implementation allows at most two processes to perform Dequeue operations. We provide a new implementation, when only one process performs Enqueue operations and any number of processes perform Dequeue operations. A nice feature of this implementation is the fact that both Enqueue and Dequeue operations take constant time.}
-      \field{booktitle}{Distributed Computing}
-      \field{isbn}{978-3-540-30186-8}
-      \field{title}{A Single-Enqueuer Wait-Free Queue Implementation}
-      \field{year}{2004}
-      \field{pages}{132\bibrangedash 143}
-      \range{pages}{12}
-    \endentry
     \entry{torquati2010singleproducersingleconsumerqueuessharedcache}{misc}{}
       \name{author}{1}{}{%
         {{hash=f37b393564e895df695e4e4a17df5158}{%
@@ -2149,10 +2101,36 @@
       \strng{authorbibnamehash}{211801f9679f2af4a58da2d17dd050bb}
       \strng{authornamehash}{211801f9679f2af4a58da2d17dd050bb}
       \strng{authorfullhash}{211801f9679f2af4a58da2d17dd050bb}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{howpublished}{\url{https://github.com/DevrimBaran/MA.git}}
+    \endentry
+    \entry{drepper2007every}{article}{}
+      \name{author}{1}{}{%
+        {{hash=bdb9c3658f483c939f0f649e51d31f2a}{%
+           family={Drepper},
+           familyi={D\bibinitperiod},
+           given={Ulrich},
+           giveni={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{fullhash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{bibnamehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{authorbibnamehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{authornamehash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \strng{authorfullhash}{bdb9c3658f483c939f0f649e51d31f2a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Red Hat, Inc}
+      \field{number}{2007}
+      \field{title}{What every programmer should know about memory}
+      \field{volume}{11}
+      \field{year}{2007}
+      \field{pages}{2007}
+      \range{pages}{1}
     \endentry
     \entry{halfincrementhalfmax}{inproceedings}{}
       \name{author}{2}{}{%
@@ -2179,8 +2157,8 @@
       \strng{authorbibnamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
       \strng{authornamehash}{b6ead4f1892fb58b4155b44188cbd9d5}
       \strng{authorfullhash}{b6ead4f1892fb58b4155b44188cbd9d5}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{The consensus number of a synchronization primitive is the maximum number of processes for which the primitive can solve consensus. This has been the traditional measure of power of a synchronization primitive. Thus, the compare-and-swap primitive, which has infinite consensus number, is considered most powerful and has been the primitive of choice for implementing concurrent data structures. In this work, we show that the synchronization primitives with low consensus numbers can also be potentially powerful by using them along with the compare-and-swap primitive to design an O (√n) time wait-free and linearizable concurrent queue. The best known time bound for a wait-free and linearizable concurrent queue using only the compare-and-swap primitive is O(n). Here, n is the total number of processes that can access the queue.The queue object maintains a sequence of elements and supports the operations enqueue(x) and dequeue(). The wait-free property implies that every call to enqueue(x) and dequeue() finishes in a bounded number of steps irrespective of the schedule of other n --1 processes. The linearizable property implies that the enqueue(x) and dequeue() calls appear to be instantaneously applied within the duration of respective calls. We design a wait-free and a linearizable concurrent queue using shared memory registers that support the compare-and-swap primitive and two other primitives of consensus number one and two respectively. The enqueue(x) and dequeue() operations take O (√n) steps each. The total number of registers required are O(nm) of O (max{log n, log m }) bits each, where m is a bound on the total number of enqueue(x) operations.}
@@ -2234,8 +2212,8 @@
       \strng{authorbibnamehash}{8c5c0e4fa8c31c3ce9f7b03b00f29cf3}
       \strng{authornamehash}{768c2db05e0ce52dfc817f766c34c700}
       \strng{authorfullhash}{8c5c0e4fa8c31c3ce9f7b03b00f29cf3}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{month}{03}
@@ -2243,80 +2221,6 @@
       \field{year}{2024}
       \verb{doi}
       \verb 10.21203/rs.3.rs-4125819/v1
-      \endverb
-    \endentry
-    \entry{johnen_et_al:LIPIcs.OPODIS.2022.4}{inproceedings}{}
-      \name{author}{3}{}{%
-        {{hash=dcae8774e0eb4cbbaa0b8a163873b0a6}{%
-           family={Johnen},
-           familyi={J\bibinitperiod},
-           given={Colette},
-           giveni={C\bibinitperiod}}}%
-        {{hash=fdfd4d3058e65dbada4554b3bfebafae}{%
-           family={Khattabi},
-           familyi={K\bibinitperiod},
-           given={Adnane},
-           giveni={A\bibinitperiod}}}%
-        {{hash=d09e088478fd53c7006ab2c8b2b22d6c}{%
-           family={Milani},
-           familyi={M\bibinitperiod},
-           given={Alessia},
-           giveni={A\bibinitperiod}}}%
-      }
-      \name{editor}{3}{}{%
-        {{hash=6165fb8bfe080e15d9bb38ba107ed550}{%
-           family={Hillel},
-           familyi={H\bibinitperiod},
-           given={Eshcar},
-           giveni={E\bibinitperiod}}}%
-        {{hash=3d54deb174178429bf452f349c826bc8}{%
-           family={Palmieri},
-           familyi={P\bibinitperiod},
-           given={Roberto},
-           giveni={R\bibinitperiod}}}%
-        {{hash=25d0ca7b5c8e12746e39ccbde8af79a3}{%
-           family={Rivière},
-           familyi={R\bibinitperiod},
-           given={Etienne},
-           giveni={E\bibinitperiod}}}%
-      }
-      \list{location}{1}{%
-        {Dagstuhl, Germany}%
-      }
-      \list{publisher}{1}{%
-        {Schloss Dagstuhl -- Leibniz-Zentrum für Informatik}%
-      }
-      \strng{namehash}{3288cd2209b0f32f9ea996cfc3257b9d}
-      \strng{fullhash}{c69b369287210d661b08ce4ac93dfb10}
-      \strng{bibnamehash}{c69b369287210d661b08ce4ac93dfb10}
-      \strng{authorbibnamehash}{c69b369287210d661b08ce4ac93dfb10}
-      \strng{authornamehash}{3288cd2209b0f32f9ea996cfc3257b9d}
-      \strng{authorfullhash}{c69b369287210d661b08ce4ac93dfb10}
-      \strng{editorbibnamehash}{24eca8d263a6e71f950c4278f9b9285a}
-      \strng{editornamehash}{01caf0a5cad0887e44566005275a479f}
-      \strng{editorfullhash}{24eca8d263a6e71f950c4278f9b9285a}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{annotation}{Keywords: Distributed computing, distributed algorithms, FIFO queue, shared memory, fault tolerance, concurrent data structures, relaxed specifications, complexity}
-      \field{booktitle}{26th International Conference on Principles of Distributed Systems (OPODIS 2022)}
-      \field{isbn}{978-3-95977-265-5}
-      \field{issn}{1868-8969}
-      \field{series}{Leibniz International Proceedings in Informatics (LIPIcs)}
-      \field{title}{{Efficient Wait-Free Queue Algorithms with Multiple Enqueuers and Multiple Dequeuers}}
-      \field{volume}{253}
-      \field{year}{2023}
-      \field{pages}{4:1\bibrangedash 4:19}
-      \range{pages}{-1}
-      \verb{doi}
-      \verb 10.4230/LIPIcs.OPODIS.2022.4
-      \endverb
-      \verb{urlraw}
-      \verb https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4
-      \endverb
-      \verb{url}
-      \verb https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.OPODIS.2022.4
       \endverb
     \endentry
     \entry{polylog}{inproceedings}{}
@@ -2344,8 +2248,8 @@
       \strng{authorbibnamehash}{57323409a5ceee0e64ca3e31e04f42a8}
       \strng{authornamehash}{57323409a5ceee0e64ca3e31e04f42a8}
       \strng{authorfullhash}{57323409a5ceee0e64ca3e31e04f42a8}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{We present a novel linearizable wait-free queue implementation using single-word CAS instructions. Previous lock-free queue implementations from CAS all have amortized step complexity of Ω(p) per operation in worst-case executions, where p is the number of processes that access the queue. Our new wait-free queue takes O(log p) steps per enqueue and O(log2 p + log q) steps per dequeue, where q is the size of the queue. A bounded-space version of the implementation has O(log p log(p + q)) amortized step complexity per operation.}
@@ -2366,32 +2270,6 @@
       \verb https://doi.org/10.1145/3583668.3594565
       \endverb
       \keyw{wait-free queues,concurrent data structures}
-    \endentry
-    \entry{drepper2007every}{article}{}
-      \name{author}{1}{}{%
-        {{hash=bdb9c3658f483c939f0f649e51d31f2a}{%
-           family={Drepper},
-           familyi={D\bibinitperiod},
-           given={Ulrich},
-           giveni={U\bibinitperiod}}}%
-      }
-      \strng{namehash}{bdb9c3658f483c939f0f649e51d31f2a}
-      \strng{fullhash}{bdb9c3658f483c939f0f649e51d31f2a}
-      \strng{bibnamehash}{bdb9c3658f483c939f0f649e51d31f2a}
-      \strng{authorbibnamehash}{bdb9c3658f483c939f0f649e51d31f2a}
-      \strng{authornamehash}{bdb9c3658f483c939f0f649e51d31f2a}
-      \strng{authorfullhash}{bdb9c3658f483c939f0f649e51d31f2a}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Red Hat, Inc}
-      \field{number}{2007}
-      \field{title}{What every programmer should know about memory}
-      \field{volume}{11}
-      \field{year}{2007}
-      \field{pages}{2007}
-      \range{pages}{1}
     \endentry
   \enddatalist
 \endrefsection

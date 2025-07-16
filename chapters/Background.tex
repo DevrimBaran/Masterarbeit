@@ -218,6 +218,12 @@ The problem with \ac{CAS} furthermore than the issue explained earlier in \cref{
 \end{itemize}
 This is a fundemental limitation of \ac{CAS}. One solution would be to replace \ac{CAS} with \ac{LL/SC}, but that is not possible on x86 processors. So other solutions are needed that are discussed in \cref{ch:implementation}. \cite{Fuchs2014EvaluationOT}
 
+\subsubsection{\ac{DWCAS}}\label{subsubsec:double-compare-and-swap}
+This is a \ac{CAS} on two neighboring memory locations. \cite{Fuchs2014EvaluationOT}
+
+\subsubsection{\ac{DCAS}}\label{subsubsec:double-with-compare-and-swap}
+Sometimes also called \ac{CAS}2, is a \ac{CAS} on two independent memory locations. \cite{Fuchs2014EvaluationOT}
+
 \subsubsection{Swap}\label{subsubsec:swap}
 Swap is an atomic read-modify-write operation that unconditionally exchanges a value in memory with a new value and returns the old value. Swap(R, v) atomically stores value v into location R and returns the previous value that was in R. This operation always succeeds. \cite{Mateíspmc}.
 
