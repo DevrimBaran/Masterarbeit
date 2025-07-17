@@ -4,24 +4,24 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {algorithm}{\numberline {2}{\ignorespaces Lamports Queue \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{20}{algorithm.2}%
+\contentsline {algorithm}{\numberline {2}{\ignorespaces Lamports Queue \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{21}{algorithm.2}%
 \contentsline {algorithm}{\numberline {3}{\ignorespaces \ac {LLQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{21}{algorithm.3}%
 \contentsline {algorithm}{\numberline {4}{\ignorespaces \ac {BLQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{22}{algorithm.4}%
 \contentsline {algorithm}{\numberline {5}{\ignorespaces \ac {FFQ} Operations \blx@tocontentsinit {0}\cite {ffq}}}{23}{algorithm.5}%
 \contentsline {algorithm}{\numberline {6}{\ignorespaces \ac {IFFQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{24}{algorithm.6}%
-\contentsline {algorithm}{\numberline {7}{\ignorespaces \ac {BIFFQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{24}{algorithm.7}%
+\contentsline {algorithm}{\numberline {7}{\ignorespaces \ac {BIFFQ} Operations \blx@tocontentsinit {0}\cite {MaffioneCacheAware}}}{25}{algorithm.7}%
 \contentsline {algorithm}{\numberline {8}{\ignorespaces B-Queue with Self-Adaptive Backtracking \blx@tocontentsinit {0}\cite {Wang2013BQueue}}}{26}{algorithm.8}%
 \contentsline {algorithm}{\numberline {9}{\ignorespaces \ac {dSPSC} Operations \blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{27}{algorithm.9}%
 \contentsline {algorithm}{\numberline {10}{\ignorespaces \ac {uSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{28}{algorithm.10}%
-\contentsline {algorithm}{\numberline {11}{\ignorespaces \ac {mSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{28}{algorithm.11}%
+\contentsline {algorithm}{\numberline {11}{\ignorespaces \ac {mSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{29}{algorithm.11}%
 \contentsline {algorithm}{\numberline {12}{\ignorespaces Jayanti's \ac {SPSC} Queue Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{30}{algorithm.12}%
 \contentsline {algorithm}{\numberline {13}{\ignorespaces Jayanti's \ac {MPSC} Queue Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{31}{algorithm.13}%
 \contentsline {algorithm}{\numberline {14}{\ignorespaces Drescher's Wait-Free \ac {MPSC} Queue Operations}}{32}{algorithm.14}%
 \contentsline {algorithm}{\numberline {15}{\ignorespaces Jiffy \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{33}{algorithm.15}%
 \contentsline {algorithm}{\numberline {16}{\ignorespaces Jiffy \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{34}{algorithm.16}%
-\contentsline {algorithm}{\numberline {17}{\ignorespaces DQueue \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{35}{algorithm.17}%
-\contentsline {algorithm}{\numberline {18}{\ignorespaces DQueue \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{36}{algorithm.18}%
-\contentsline {algorithm}{\numberline {19}{\ignorespaces David's Queue Operations \blx@tocontentsinit {0}\cite {Mateíspmc}}}{37}{algorithm.19}%
+\contentsline {algorithm}{\numberline {17}{\ignorespaces DQueue \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{36}{algorithm.17}%
+\contentsline {algorithm}{\numberline {18}{\ignorespaces DQueue \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{37}{algorithm.18}%
+\contentsline {algorithm}{\numberline {19}{\ignorespaces David's Queue Operations \blx@tocontentsinit {0}\cite {Mateíspmc}}}{38}{algorithm.19}%
 \contentsline {algorithm}{\numberline {20}{\ignorespaces Kogan and Petrank's Queue Enqueue Operation \blx@tocontentsinit {0}\cite {Kogan2011WaitFreeQueues}}}{39}{algorithm.20}%
 \contentsline {algorithm}{\numberline {21}{\ignorespaces Kogan and Petrank's Queue Dequeue Operation \blx@tocontentsinit {0}\cite {Kogan2011WaitFreeQueues}}}{40}{algorithm.21}%
 \contentsline {algorithm}{\numberline {22}{\ignorespaces Kogan and Petrank's Queue Dequeue Helping Operations \blx@tocontentsinit {0}\cite {Kogan2011WaitFreeQueues}}}{41}{algorithm.22}%
