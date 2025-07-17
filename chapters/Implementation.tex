@@ -1,14 +1,86 @@
-\chapter{Implementation}
+\chapter{Implementation and Benchmark}\label{ch:implementation}
 
-This chapter presents the implementation details of the concurrent queue algorithms in Rust, focusing on the adaptations necessary for inter-process communication (IPC) over shared memory. While the algorithmic logic of each queue has been discussed in the analysis chapter, this implementation required significant engineering to support IPC, ensure cache efficiency, and correctly implement various atomic primitives. The following sections examine how theoretical algorithms were transformed into practical, high-performance implementations suitable for shared memory environments.
+This chapter presents the implementation details of the concurrent queue algorithms in Rust and how to build a setting that calls these algorithms, focusing on the adaptations necessary for \ac{IPC} over shared memory. While the algorithmic logic of each queue has been discussed in \cref{ch:choosing-the-optimal-wait-free-data-structure}, the implementation in the accompanying GitHub repository \cite{githubMA} required slight deviations to support \ac{IPC} over shared memory. This includes ensuring correct cache allignment, correctly implementing various atomic primitives, and correctly implementing the logic for shared memory support based on short example snippets of the actual rust implementation from the GitHub repository or some general examples. This does not include showing again the same algorithmic logic just in a actual programming language instead of pseudocode, since that would be redundant.
 
-\section{Shared Memory Management for IPC}
+\section{Shared Memory Management for Inter-Process Communication}
 
-Inter-process communication through shared memory presents unique challenges compared to traditional heap-based implementations. The primary constraint is that shared memory regions may be mapped at different virtual addresses in different processes, requiring all data structures to be completely position-independent. Additionally, dynamic memory allocation is not possible within shared memory regions, necessitating pre-allocated memory pools for all dynamic data structures.
+\ac{IPC} through shared memory requires slightly different approaches compared to multi-threaded heap-based communication. The primary constraint is that shared memory regions may be mapped at different virtual addresses in different processes, requiring all data structures to be completely position-independent. Additionally, dynamic memory allocation is not possible within shared memory regions, necessitating buffer allocation from a pre-allocated memory pool for all dynamic data structures. Threads on the other hand can use the process-private heap for dynamic memory allocation, which' memory layout is shared between threads on the same process, but not processes.  
+
+\subsection{Shared Memory Size Calculation}
+
+Each queue provides a method to calculate the exact shared memory size required. This calculation determines how much memory to allocate from the operating system. The following examples from BQueue and \ac{wCQ} demonstrate both simple and complex size calculations as needed:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Shared memory size calculation methods}, label={lst:size-calculation}]
+// From BQueue - simple calculation
+pub const fn shared_size(capacity: usize) -> usize {
+    mem::size_of::<Self>()                              // Queue structure
+        + capacity * mem::size_of::<MaybeUninit<T>>()   // Data storage
+        + capacity * mem::size_of::<AtomicBool>()       // Validity flags
+}
+
+// From WCQueue - complex layout calculation
+fn layout(num_threads: usize, num_indices: usize) -> (Layout, [usize; 4]) {
+    let ring_size = num_indices.next_power_of_two();
+    let capacity = ring_size * 2;
+    
+    let root = Layout::new::<Self>();
+    let (l_aq_entries, o_aq_entries) = root
+        .extend(Layout::array::<EntryPair>(capacity).unwrap())
+        .unwrap();
+    let (l_fq_entries, o_fq_entries) = l_aq_entries
+        .extend(Layout::array::<EntryPair>(capacity).unwrap())
+        .unwrap();
+    let (l_records, o_records) = l_fq_entries
+        .extend(Layout::array::<ThreadRecord>(num_threads).unwrap())
+        .unwrap();
+    let (l_final, o_data) = l_records
+        .extend(Layout::array::<DataEntry<T>>(num_indices).unwrap())
+        .unwrap();
+    
+    (l_final.pad_to_align(), [o_aq_entries, o_fq_entries, o_records, o_data])
+}
+
+pub fn shared_size(num_threads: usize) -> usize {
+    let (_layout, _offsets) = Self::layout(num_threads, num_indices);
+    _layout.size()  // Total bytes needed for mmap
+}
+\end{lstlisting}
+
+The size calculation accounts for all components including alignment padding. Some queues like \ac{wCQ} use Rust's \texttt{Layout} API shown in lines 9 to 26 to ensure proper alignment and correctly calculated offsets. For simple queues like BQueue, manual calculation like in lines 2 to 6 suffices.
+
+\subsection{Shared Memory Allocation}
+
+Once the required size is calculated, the following functions in \cref{lst:map-shared} used in all benchmarks demonstrates how to allocate and deallocate the needed shared memory regions using \texttt{mmap}:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Shared memory allocation using mmap}, label={lst:map-shared}]
+unsafe fn map_shared(bytes: usize) -> *mut u8 {
+    let ptr = libc::mmap(
+        ptr::null_mut(),
+        bytes,                                    // Size from shared_size()
+        libc::PROT_READ | libc::PROT_WRITE,
+        libc::MAP_SHARED | libc::MAP_ANONYMOUS,   // Shared between processes
+        -1,
+        0,
+    );
+    if ptr == libc::MAP_FAILED {
+        panic!("mmap failed: {}", std::io::Error::last_os_error());
+    }
+    ptr.cast()
+}
+
+// Cleanup function
+unsafe fn unmap_shared(ptr: *mut u8, len: usize) {
+    if libc::munmap(ptr.cast(), len) == -1 {
+        panic!("munmap failed: {}", std::io::Error::last_os_error());
+    }
+}
+\end{lstlisting}
+
+The \texttt{MAP\_SHARED} flag ensures that modifications to the memory region are visible to all processes that map it. The \texttt{MAP\_ANONYMOUS} flag creates memory not backed by a file. The \texttt{bytes} parameter on line 4 comes directly from the \texttt{shared\_size()} calculation earlier.
 
 \subsection{Memory Layout and Initialization}
 
-All queue implementations follow a consistent pattern for shared memory initialization. The most complex example, the WCQueue, demonstrates how multiple components are laid out in shared memory with proper alignment:
+After allocating the shared memory region the components needed by the queue's implementations need to be initialized. All queue implementations follow a consistent pattern for shared memory initialization. The initialization function receives the pre-allocated memory pointer and organizes components within that memory region. The most complex example, the WCQueue from \cref{subsubsec:wcq}, demonstrates how multiple components are laid out in shared memory with proper alignment:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Memory layout initialization in WCQueue}, label={lst:wcqueue-init}]
 pub unsafe fn init_in_shared(mem: *mut u8, num_threads: usize) -> &'static mut Self {
@@ -27,12 +99,15 @@ pub unsafe fn init_in_shared(mem: *mut u8, num_threads: usize) -> &'static mut S
     // Initialize structures in-place
     ptr::write(q_ptr, Self {
         aq_entries_offset: current_offset,
+        base_ptr: mem,  // Store base pointer for offset calculations
         // Store offsets instead of pointers
     });
+    
+    &mut *q_ptr
 }
 \end{lstlisting}
 
-The alignment calculation \texttt{(current\_offset + align - 1) \& !(align - 1)} ensures that each component starts at a properly aligned address. This is crucial for atomic operations, which often require natural alignment. The queue structure stores offsets relative to the base pointer rather than absolute pointers, ensuring position independence. When accessing these components later, the offset is added to the base pointer:
+The alignment calculation in line 5 ensures that each component starts at a properly aligned address. This is crucial for atomic operations, which often require natural alignment. The queue structure stores offsets relative to the base pointer rather than absolute pointers in line 16, ensuring position independence. When accessing these components later, the offset is added to the base pointer, as demonstrated in \cref{lst:position-independent}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Position-independent component access}, label={lst:position-independent}]
 unsafe fn get_entry(&self, entries_offset: usize, idx: usize) -> &EntryPair {
@@ -41,9 +116,9 @@ unsafe fn get_entry(&self, entries_offset: usize, idx: usize) -> &EntryPair {
 }
 \end{lstlisting}
 
-\subsection{Pre-allocated Memory Pools}
+\subsection{Node Allocation from Pre-allocated Memory Pools}
 
-Dynamic memory allocation within shared memory is impossible because malloc/free operate on process-private heaps. Therefore, all queues that would normally allocate memory dynamically have been adapted to use pre-allocated pools. The JiffyQueue implementation showcases a sophisticated pool management system with free lists:
+Some queues as seen in \cref{ch:choosing-the-optimal-wait-free-data-structure} use dynamic memory allocation within the process-private heap. For the \ac{IPC} over shared memory use-case of this thesis that is not possible, because in shared memory dynamic memory allocations or deallocations with \texttt{malloc} or \texttt{free} are not possible, since that allocates from process-private heaps that are not available for other processes. Therefore, all queues that would normally allocate memory dynamically have been adapted to allocate from the initialized pre-allocated memory pool. As an example the Jiffy Queue algorithm from \cref{subsubsec:jiffy-mpsc-queue} shows a dynamic heap allocation method to allocate new buffers to insert them into the linked-list. This was adapted to \ac{IPC} over shared memory in rust by a pool allocation system with free lists that is similarly impülemented for all other queues needing dynamic memory allocation, as shown in \cref{lst:pool-allocation}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Lock-free memory pool allocation}, label={lst:pool-allocation}]
 unsafe fn alloc_node_array_slice(&self) -> *mut Node<T> {
@@ -82,15 +157,14 @@ unsafe fn alloc_node_array_slice(&self) -> *mut Node<T> {
 }
 \end{lstlisting}
 
-This implementation maintains a lock-free free list using compare-and-swap operations. When the free list is empty, it falls back to bump allocation from the pre-allocated pool. The \texttt{fetch\_add} operation atomically increments the allocation index, ensuring thread-safe allocation without locks. If the pool is exhausted, the operation fails gracefully by returning a null pointer.
+This implementation maintains a free list using \ac{CAS} operations in lines 12 to 16. When the free list is empty, it falls back to allocate from the pre-allocated pool seen in lines 23 and 24. The \texttt{fetch\_add} operation atomically increments the allocation index, ensuring process-safe allocation. If the pool is exhausted, the operation fails by returning a null pointer in line 30.
 
 \section{Cache Line Optimization}
-
-Modern processors transfer data between cores in cache line units (typically 64 bytes). When multiple threads access data in the same cache line, even to different variables, the cache coherence protocol causes the cache line to bounce between cores, significantly degrading performance. This phenomenon, known as false sharing, is particularly problematic in producer-consumer queues.
+Processors transfer data between cores in cache line units explained in \cref{subsubsec:lamport-circular-buffer-queue}. When multiple processes access data on the same cache line, even if different variables, the cache coherence protocol causes the cache line to bounce between cores, degrading execution times.
 
 \subsection{Explicit Cache Line Padding}
 
-The BlqQueue exemplifies how to eliminate false sharing through explicit cache line separation:
+In \cref{ch:choosing-the-optimal-wait-free-data-structure} multiple queues were shown that describe seperating the cache line. To show how this is done in rust the \ac{BLQ} explained in \cref{subsec:single-producer-and-single-consumer} will be taken to show how to explicitly seperate the cache lines, as shown in \cref{lst:cache-separation}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Cache line separation in BlqQueue}, label={lst:cache-separation}]
 const CACHE_LINE_SIZE: usize = 64;
@@ -115,61 +189,13 @@ struct ConsumerPrivate {
 }
 \end{lstlisting}
 
-The \texttt{\#[repr(C)]} attribute ensures C-compatible memory layout, while \texttt{\#[repr(align(64))]} forces the structure to start at a cache line boundary. Although \texttt{SharedIndices} contains only two \texttt{usize} values (16 bytes total), the alignment ensures they reside in separate cache lines. The producer updates \texttt{write} while the consumer updates \texttt{read}, preventing false sharing.
+The \texttt{\#[repr(C)]} attribute ensures C-compatible memory layout, while \newline \texttt{\#[repr(align(64))]} forces the structure to start at a cache line boundary shown in lines 4 and 10. Although \texttt{SharedIndices} contains only two \texttt{usize} values with 16 bytes total, the alignment ensures they reside in separate cache lines. The producer updates \texttt{write} while the consumer updates \texttt{read}, preventing false sharing. The shadow copies \texttt{read\_shadow} in line 12 and \texttt{write\_shadow} in line 18 ensures that producer and consumer work on different cache lines, preventing the cache lines to bounce between the producer process and consumer process.
 
-The shadow copies (\texttt{read\_shadow} and \texttt{write\_shadow}) further reduce cache line transfers. The producer maintains a local copy of the consumer's read position, checking the actual shared variable only when necessary:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Shadow variables to reduce cache line transfers}, label={lst:shadow-variables}]
-fn blq_enq_space(&self, needed: usize) -> usize {
-    let prod_priv = unsafe { &mut *self.prod_private.get() };
-    
-    let mut free_slots = (self.capacity - K_CACHE_LINE_SLOTS)
-        .wrapping_sub(prod_priv.write_priv.wrapping_sub(prod_priv.read_shadow));
-    
-    // Lazy load if not enough space
-    if free_slots < needed {
-        prod_priv.read_shadow = self.shared_indices.read.load(Ordering::Acquire);
-        free_slots = (self.capacity - K_CACHE_LINE_SLOTS)
-            .wrapping_sub(prod_priv.write_priv.wrapping_sub(prod_priv.read_shadow));
-    }
-    free_slots
-}
-\end{lstlisting}
-
-\subsection{Configurable Padding Strategy}
-
-The LamportQueue implements a more flexible approach using Rust's trait system, allowing compile-time selection of padding:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Trait-based configurable padding}, label={lst:configurable-padding}]
-pub trait PaddingMode: Send + Sync + 'static {
-    type Padding: Send + Sync + Default;
-}
-
-pub struct Unpadded;
-pub struct Padded;
-
-pub struct CachePadding {
-    _pad: [u8; 120],  // 128 bytes total - 8 for AtomicUsize
-}
-
-impl PaddingMode for Padded {
-    type Padding = CachePadding;
-}
-
-#[repr(C)]
-pub struct LamportQueue<T: Send, P: PaddingMode = Unpadded> {
-    pub head: AtomicUsize,
-    _padding1: P::Padding,  // Configurable cache line separation
-    pub tail: AtomicUsize,
-    _padding2: P::Padding,
-}
-\end{lstlisting}
-
-This design allows the same queue implementation to be used with or without padding. The benchmarks can test both configurations to measure the impact of false sharing. When instantiated as \texttt{LamportQueue<T, Padded>}, the structure expands to place head and tail in separate cache lines. With \texttt{LamportQueue<T, Unpadded>}, no padding is inserted, allowing measurement of false sharing effects.
+Similarly all queues that need this kind of cache line separation use this pattern to ensure that the producer and consumer do not share cache lines, preventing false sharing leading to cache lines bouncing between cores.
 
 \subsection{Manual Padding Arrays}
 
-For structures where alignment alone is insufficient, manual padding arrays provide precise control:
+For structures where alignment alone is insufficient, manual padding arrays provide a solution, as demonstrated in \cref{lst:manual-padding}. This is used in all queues needing manual padding. As an example the implementation of the David queue explained in \cref{subsubsec:david-queue} uses manual padding.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Manual padding for exact cache line control}, label={lst:manual-padding}]
 #[repr(C, align(64))]
@@ -186,20 +212,21 @@ struct Node<T> {
 }
 \end{lstlisting}
 
-The padding array size is calculated to fill the remainder of the cache line. For \texttt{FetchIncrement}, the \texttt{AtomicUsize} occupies 8 bytes, so 56 bytes of padding complete the 64-byte cache line. This ensures each \texttt{FetchIncrement} instance occupies exactly one cache line, preventing false sharing in arrays of such structures.
+The padding array size is calculated to fill the remainder of the cache line seen in lines 4 and 11. For \texttt{FetchIncrement}, the \texttt{AtomicUsize} occupies 8 bytes, so 56 bytes of padding complete the 64-byte cache line. This ensures each \texttt{FetchIncrement} instance occupies exactly one cache line, preventing false sharing in arrays of such structures, as required by the DavidQueue implementation from \cref{subsubsec:david-queue}.
 
 \section{Atomic Primitives Implementation}
 
-The correct implementation of atomic primitives is crucial for both correctness and performance. Rust provides a comprehensive set of atomic operations with explicit memory ordering semantics, allowing fine-grained control over synchronization.
+The algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure} all use different kind of atomic primitives. To implement them rust provides a set of atomic operations with explicit memory ordering semantics, allowing control over synchronization order. This section shows how in general the atomic operations from \cref{ch:choosing-the-optimal-wait-free-data-structure} are implemented in Rust across all queues, explained with specific examples. In rust atomic primitives can only be called on atomic types. Hence variables that are used in atomic operations must be defined as atomic types.
 
-\subsection{Fetch-and-Add (FAA)}
+\subsection{\acf{FAA}}
 
-Fetch-and-add atomically increments a value and returns the previous value. This operation is fundamental for maintaining counters and indices:
+The rust implementations of DQueue, BQueue and \ac{wCQ} explained in \cref{ch:choosing-the-optimal-wait-free-data-structure} are a good example, to understand how to implement \ac{FAA} called \texttt{fetch\_add(v, ordering)} in rust.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Fetch-and-add with different memory orderings}, label={lst:fetch-and-add}]
-// From DQueue - global tail counter with acquire-release ordering
-let item_global_location = self.global_tail_location
-    .fetch_add(1, Ordering::AcqRel);
+// From Jiffy - Allocate multiple nodes at once
+let start_node_idx = self
+    .node_arrays_next_free_node_idx
+    .fetch_add(nodes_needed, Ordering::AcqRel);
 
 // From BQueue - private counter with relaxed ordering
 let idx = self.next_item.fetch_add(1, Ordering::Relaxed);
@@ -208,14 +235,14 @@ let idx = self.next_item.fetch_add(1, Ordering::Relaxed);
 let seqid = self.tail.fetch_add(1, Ordering::SeqCst);
 \end{lstlisting}
 
-The memory ordering parameter determines synchronization guarantees. \texttt{Ordering::Relaxed} provides no synchronization, suitable for private counters. \texttt{Ordering::AcqRel} ensures acquire semantics for the read and release semantics for the write, establishing happens-before relationships. \texttt{Ordering::SeqCst} provides the strongest guarantees, ensuring a total order across all sequentially consistent operations.
+In rust \ac{FAA} is a method call on atomic types as seen in line 4. In \cref{lst:fetch-and-add} the memory ordering parameter added as the second argument after the value to add determines the synchronization order of \ac{FAA}. \texttt{Ordering::Relaxed} in line 6 provides no synchronization, suitable for private counters. \texttt{Ordering::AcqRel} in line 3 ensures acquire semantics for the read and release semantics for the write, establishing happens-before relationships as required by the DQueue algorithm. \texttt{Ordering::SeqCst} in line 9 provides the strongest guarantees, ensuring a total order across all sequentially consistent operations, necessary for the complex \ac{wCQ}. One simple solution would be to always use \texttt{Ordering::SeqCst} for all operations, but that would reduce the execution times of the algorithms in a significant way. Consequently it is important to analyze the algorithms from \cref{ch:choosing-the-optimal-wait-free-data-structure} to understand which memory ordering is needed for which operation.
 
-\subsection{Compare-and-Swap (CAS)}
+\subsection{\acf{CAS}}
 
-Compare-and-swap atomically updates a value only if it matches an expected value, returning whether the operation succeeded:
+The implementation of \ac{wCQ} shows how to implement \ac{CAS}, called \newline \texttt{compare\_exchange(old\_value, new\_value, ordering\_on\_success, \newline ordering\_on\_failure)} in rust, as shown in \cref{lst:compare-and-swap}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Compare-and-swap variants and usage patterns}, label={lst:compare-and-swap}]
-// Strong CAS with sequential consistency (from WCQueue)
+// Strong CAS with sequential consistency (from wcqueue)
 match entry.value.compare_exchange(
     packed,
     new_packed,
@@ -231,28 +258,35 @@ match entry.value.compare_exchange(
     }
 }
 
-// Weak CAS for performance (from multiple queues)
-entry.value.compare_exchange_weak(
+// Weak CAS for performance (general example)
+match entry.value.compare_exchange_weak(
     old_value,
     new_value,
     Ordering::AcqRel,
     Ordering::Acquire,
-)
+) {
+    Ok(_) => {
+        // do something on success
+    }
+    Err(current) => {
+        // do something on failure
+    }
+}
 \end{lstlisting}
 
-The weak variant (\texttt{compare\_exchange\_weak}) may fail spuriously even when the values match, but can be more efficient on some architectures. The strong variant guarantees success when values match. The two ordering parameters specify synchronization for success and failure cases respectively.
+The weak variant \texttt{compare\_exchange\_weak} in beginning at 17 may fail spuriously even when the values match, but can be more efficient on some architectures. The strong variant guarantees success when values match. The two ordering parameters in line 5 and 6 and 21 and 22 specify synchronization order for success and failure cases respectively at lines 8 and 12. This directly implements the CAS operations described in multiple algorithms.
 
 \subsection{Swap Operations}
 
-Swap unconditionally replaces a value and returns the previous value:
+Swap unconditionally replaces a value and returns the previous value, implemented as \texttt{swap(new\_value, ordering)}, as shown in \cref{lst:swap-operations}. As an example the David Queue and Drescher Queue is used.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Unconditional atomic swap operations}, label={lst:swap-operations}]
-// From DavidQueue - unconditional slot update
+// From David Queue - unconditional slot update
 unsafe fn swap(&self, new_val: usize) -> usize {
     self.value.swap(new_val, Ordering::AcqRel)
 }
 
-// From TurnQueue - atomic pointer swap
+// From Drescher Queue - atomic pointer swap
 let prev_tail = self.tail.swap(new_node_ptr, Ordering::AcqRel);
 
 // From DrescherQueue - simpler FAS primitive
@@ -260,17 +294,13 @@ let prev_tail_ptr = self.tail.swap(new_node_ptr, Ordering::AcqRel);
 (*prev_tail_ptr).next.store(new_node_ptr, Ordering::Release);
 \end{lstlisting}
 
-Swap operations are useful when the previous value is needed but the update is unconditional. The DrescherQueue uses swap to implement its simple enqueue operation, atomically updating the tail pointer and then linking the previous tail to the new node.
+Swap operations are useful when the previous value is needed but the update is unconditional. The DrescherQueue uses swap to implement its simple enqueue operation (line 10), atomically updating the tail pointer and then linking the previous tail to the new node, exactly as specified in the Drescher algorithm in \cref{subsubsec:drescher-mpsc-queue}.
 
 \subsection{Load and Store with Memory Ordering}
 
-Even simple loads and stores require careful consideration of memory ordering:
+Simple loads and stores also require consideration of memory ordering to ensure correct synchronization according to the algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure}, as demonstrated in the general example of \cref{lst:load-store}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Memory ordering for loads and stores}, label={lst:load-store}]
-// Relaxed ordering for private variables
-let head = self.head.load(Ordering::Relaxed);
-let batch_head = unsafe { *self.batch_head.get() };
-
 // Acquire ordering for reading shared state
 let tail = self.tail.load(Ordering::Acquire);
 if tail > head {
@@ -286,11 +316,11 @@ let val = entry.value.load(Ordering::SeqCst);
 entry.value.store(new_val, Ordering::SeqCst);
 \end{lstlisting}
 
-The acquire-release pattern is particularly important. A release store synchronizes with an acquire load of the same location, ensuring that all writes before the release store are visible to any thread that sees the acquire load. This pattern is fundamental to the producer-consumer relationship in queues.
+The acquire-release pattern is particularly important. A release store in line 9 synchronizes with an acquire load in line 2 of the same location, ensuring that all writes before the release store are visible to any thread that sees the acquire load. This pattern is used in all queues to ensure correct ordering to the producer-consumer relationship, implementing the memory barriers described in algorithms like Lamport Queue (\cref{subsubsec:lamport-circular-buffer-queue}) and others.
 
 \subsection{Memory Fences}
 
-Explicit memory barriers provide synchronization without associated memory operations:
+To still ensure correct data ordering without any memory operation rust provide memeory fencec seen in the \ac{wCQ} rust implementation, as shown in \cref{lst:memory-fences}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Explicit memory fence usage}, label={lst:memory-fences}]
 // From WCQueue - ensuring visibility across operations
@@ -312,21 +342,13 @@ if condition {
         }
     }
 }
-
-// From DynListQueue - write barrier pattern
-fence(Ordering::Release);  // WMB from paper
-let current_tail = self.tail.load(Ordering::Acquire);
-unsafe {
-    (*current_tail).next.store(new_node, Ordering::Release);
-}
-self.tail.store(new_node, Ordering::Release);
 \end{lstlisting}
 
-Fences ensure ordering between operations that might not otherwise synchronize. The WCQueue uses sequential consistency fences liberally to ensure correctness in its complex wait-free algorithm. The DynListQueue uses a release fence to implement the write memory barrier specified in the original paper.
+Fences ensure ordering between operations that might not otherwise synchronize. The \ac{wCQ} implementation uses sequential consistency fences (lines 2, 7, 16) to ensure correctness in its complex algorithm. These kind of fences are used in all queue implementations since for \ac{IPC} this was necessary for correrctness. 
 
-\subsection{Versioned CAS (Simulating LL/SC)}
+\subsection{Versioned \acf{CAS} (Simulating \acf{LL/SC})}
 
-Some algorithms assume Load-Linked/Store-Conditional (LL/SC) primitives, which x86-64 does not provide. The Jayanti-Petrovic queue simulates LL/SC using versioned CAS:
+Some algorithms assume \ac{LL/SC} primitives, which x86-64 does not provide. The Jayanti-Petrovic queue from \cref{subsub:jayanti-mpsc-queue} simulates \ac{LL/SC} using versioned \ac{CAS}, as shown in \cref{lst:versioned-cas}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Versioned CAS for LL/SC simulation}, label={lst:versioned-cas}]
 #[repr(C)]
@@ -363,229 +385,49 @@ unsafe fn cas_min_info(&self, old_compact: CompactMinInfo,
 }
 \end{lstlisting}
 
-The version counter prevents the ABA problem where a value changes from A to B and back to A between observations. By incrementing the version on every update, even if the logical value returns to a previous state, the version ensures the CAS will fail, simulating LL/SC semantics.
+The version counter in line 3 prevents the ABA problem where a value changes from A to B and back to A between observations. By incrementing the version on every update seen in line 23, even if the logical value returns to a previous state, the version ensures the \ac{CAS} will fail, simulating \ac{LL/SC} semantics as required by the Jayanti-Petrovic algorithm. This is done in every queue rust implementation that requires \ac{LL/SC} semantics.
 
-\subsection{Tagged Pointers}
+\subsection{Unsafe Blocks}
 
-Several queues use pointer tagging to store metadata in unused pointer bits:
+Rust's memory safety guarantees to prevent data races by ensuring that either multiple readers or a single writer can access data at any time. However, the wait-free algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure} require to bypass these restrictions. With the use of \texttt{unsafe} blocks the the Rust compiler gets indicated that the blocks memory safety is handled by the implementation itself. The \texttt{try\_enq\_inner} function of \acsp{wCQ} Rust implementation in \cref{lst:wcq-unsafe} demonstrates why \texttt{unsafe} blocks are necessary.
 
-\begin{lstlisting}[language=Rust, style=boxed, caption={Tagged pointer implementation}, label={lst:tagged-pointers}]
-#[repr(transparent)]
-struct Slot<T> {
-    ptr: AtomicPtr<T>,
-}
-
-impl<T> Slot<T> {
-    const FLAG_BIT: usize = 0x1;  // Lowest bit as flag
-    
-    fn store_data(&self, data_ptr: *mut T) {
-        // Set flag bit to indicate "full"
-        let tagged_ptr = ((data_ptr as usize) | Self::FLAG_BIT) as *mut T;
-        self.ptr.store(tagged_ptr, Ordering::Release);
-    }
-    
-    fn load_data(&self) -> *mut T {
-        let tagged_ptr = self.ptr.load(Ordering::Acquire);
-        // Clear flag bit to get real pointer
-        ((tagged_ptr as usize) & !Self::FLAG_BIT) as *mut T
-    }
-    
-    fn is_empty(&self) -> bool {
-        let ptr = self.ptr.load(Ordering::Acquire);
-        ptr.is_null() || (ptr as usize & Self::FLAG_BIT) == 0
-    }
-}
-\end{lstlisting}
-
-On 64-bit systems, pointers typically use only 48 bits, leaving the upper 16 bits available. Additionally, aligned pointers have zeros in their lower bits. The IFFQ queue uses the lowest bit to indicate whether a slot contains data, allowing atomic updates of both pointer and state. The flag bit is set when storing data and cleared when the slot is empty, eliminating the need for a separate state variable.
-
-\subsection{Atomic Flags for State Management}
-
-When pointer tagging is inappropriate, explicit atomic flags provide clear semantics:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Atomic boolean flags for state tracking}, label={lst:atomic-flags}]
-// From FFQ - using AtomicBool for slot state
-pub struct Slot<T> {
-    pub flag: AtomicBool,  // false = empty, true = full
-    _pad: [u8; 8 - std::mem::size_of::<AtomicBool>()],
-    data: UnsafeCell<MaybeUninit<T>>,
-}
-
-// Producer operation
-fn push(&self, item: T) -> Result<(), Self::PushError> {
-    let head = self.head.load(Ordering::Relaxed);
-    let slot = self.get_slot(head);
-    
-    // Check if slot is available
-    if slot.flag.load(Ordering::Acquire) {
-        return Err(FfqPushError(item));  // Slot is full
-    }
-    
-    // Write data
-    unsafe { (*slot.data.get()).write(item); }
-    
-    // Mark slot as full - linearization point
-    slot.flag.store(true, Ordering::Release);
-    
-    // Update head
-    self.head.store(head.wrapping_add(1), Ordering::Release);
-    Ok(())
-}
-\end{lstlisting}
-
-The FFQ queue demonstrates clear separation between data and metadata. The atomic flag indicates slot state, while the data itself is stored separately. This approach is clearer than pointer tagging and works with any data type, but requires additional memory for the flags.
-
-\section{Wait-Freedom Adaptations}
-
-Wait-free algorithms guarantee that every operation completes within a bounded number of steps, regardless of the behavior of other threads. In shared memory IPC, where process scheduling is unpredictable, wait-freedom is particularly valuable.
-
-\subsection{Bounded Retry Loops}
-
-All potentially unbounded loops must be limited to ensure wait-freedom:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Bounded helping mechanism for wait-freedom}, label={lst:bounded-helping}]
-unsafe fn help_enqueue(&self, op: *mut EnqueueOp, helper_thread_id: usize) {
-    // Bound based on number of threads (paper's requirement)
-    let max_help_attempts = MAX_FAILS + (self.num_threads * self.num_threads);
-    
-    for attempt in 0..max_help_attempts {
-        if (*op).is_complete() {
-            return;  // Operation completed
-        }
+\begin{lstlisting}[language=Rust, style=boxed, caption={Wait-free synchronization requiring unsafe}, label={lst:wcq-unsafe}]
+    // Multiple threads may execute this concurrently
+    unsafe fn try_enq_inner(&self, wq: &InnerWCQ, entries_offset: usize,
+                           index: usize) -> Result<(), u64> {
+        let tail = wq.tail.cnt.fetch_add(1, Ordering::AcqRel);
+        let j = Self::cache_remap(tail as usize, wq.capacity);
         
-        let node_val = self.get_node(pos).load(Ordering::Acquire);
-        let node = Node { value: node_val };
-        
-        if node.is_empty() && node.get_seqid() <= seqid {
-            // Try to help complete the operation
-            let new_node = Node::new_value(value_ptr, seqid);
+        let entry = self.get_entry(wq, entries_offset, j);
+        loop {
+            let packed = entry.value.load(Ordering::Acquire);
+            let e = EntryPair::unpack_entry(packed);
             
-            if self.get_node(pos).compare_exchange(
-                node_val,
-                new_node.value,
-                Ordering::AcqRel,
-                Ordering::Acquire,
-            ).is_ok() {
-                (*op).complete_success();
-                return;
+            // Check if slot is available
+            if e.cycle < Self::cycle(tail, wq.ring_size) &&
+               (e.is_safe || wq.head.cnt.load(Ordering::Acquire) <= tail) &&
+               (e.index == IDX_EMPTY || e.index == IDX_BOTTOM) {
+                
+                // Attempt to claim slot with CAS
+                match entry.value.compare_exchange_weak(
+                    packed,
+                    new_packed,
+                    Ordering::SeqCst,
+                    Ordering::SeqCst,
+                ) {
+                    Ok(_) => return Ok(()),
+                    Err(_) => continue,  // Retry
+                }
             }
         }
-        
-        // Periodic yielding for fairness
-        if attempt % 1000 == 0 {
-            std::thread::yield_now();
-        } else {
-            std::hint::spin_loop();
-        }
     }
     
-    // Bounded termination - mark operation as failed
-    (*op).complete_failure();
-}
-\end{lstlisting}
-
-The helping mechanism allows threads to complete operations on behalf of delayed threads. The bound ensures that even if a thread is repeatedly preempted, other threads can only spend a limited time trying to help before giving up. The periodic yielding improves fairness by giving other threads a chance to run.
-
-\subsection{Adaptive Backoff Strategies}
-
-Different contention scenarios require different backoff strategies:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Adaptive backoff strategies}, label={lst:adaptive-backoff}]
-// From WCQueue - progressive backoff with sleep
-if attempt < 5 {
-    std::hint::spin_loop();  // Busy wait for very short delays
-} else if attempt < 10 {
-    fence(Ordering::SeqCst);
-    std::thread::yield_now();  // Yield CPU to other threads
-} else {
-    fence(Ordering::SeqCst);
-    std::thread::sleep(Duration::from_micros(1));  // Sleep for longer delays
-}
-
-// From BQueue - exponential backoff
-let mut spins = 1;
-for i in 0..10 {
-    for _ in 0..spins.min(1024) {
-        std::hint::spin_loop();
+    // get_entry uses raw pointer arithmetic
+    unsafe fn get_entry(&self, _wq: &InnerWCQ, entries_offset: usize, 
+                       idx: usize) -> &EntryPair {
+        let entries = self.base_ptr.add(entries_offset) as *const EntryPair;
+        &*entries.add(idx)  // Dereference raw pointer
     }
-    spins *= 2;  // Double spin count each iteration
-    
-    let current = self.get_node(pos).load(Ordering::Acquire);
-    if current != expected {
-        return true;  // Value changed
-    }
-}
 \end{lstlisting}
 
-The backoff strategy significantly impacts performance. Short spin loops (\texttt{spin\_loop}) keep the CPU busy but allow immediate response to changes. Yielding (\texttt{yield\_now}) allows other threads to run but incurs context switch overhead. Sleeping reduces CPU usage but increases latency. The progressive strategy starts with spinning and escalates to sleeping only under high contention.
-
-\section{Memory Safety Considerations}
-
-Implementing lock-free data structures in Rust requires extensive use of unsafe code, as the borrow checker cannot verify the complex ownership patterns inherent in concurrent algorithms.
-
-\subsection{Shared Memory Size Calculation}
-
-Each queue provides a method to calculate the exact shared memory size required:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Shared memory size calculation methods}, label={lst:size-calculation}]
-// From BQueue - simple calculation
-pub const fn shared_size(capacity: usize) -> usize {
-    mem::size_of::<Self>()                              // Queue structure
-        + capacity * mem::size_of::<MaybeUninit<T>>()   // Data storage
-        + capacity * mem::size_of::<AtomicBool>()       // Validity flags
-}
-
-// From WCQueue - complex layout calculation
-fn layout(num_threads: usize, num_indices: usize) -> (Layout, [usize; 4]) {
-    let ring_size = num_indices.next_power_of_two();
-    let capacity = ring_size * 2;
-    
-    let root = Layout::new::<Self>();
-    let (l_aq_entries, o_aq_entries) = root
-        .extend(Layout::array::<EntryPair>(capacity).unwrap())
-        .unwrap();
-    let (l_fq_entries, o_fq_entries) = l_aq_entries
-        .extend(Layout::array::<EntryPair>(capacity).unwrap())
-        .unwrap();
-    let (l_records, o_records) = l_fq_entries
-        .extend(Layout::array::<ThreadRecord>(num_threads).unwrap())
-        .unwrap();
-    let (l_final, o_data) = l_records
-        .extend(Layout::array::<DataEntry<T>>(num_indices).unwrap())
-        .unwrap();
-    
-    (l_final.pad_to_align(), [o_aq_entries, o_fq_entries, o_records, o_data])
-}
-\end{lstlisting}
-
-The size calculation must account for all components including alignment padding. The \texttt{Layout} API ensures proper alignment and calculates offsets automatically. For simple queues, manual calculation suffices. Complex queues with multiple components benefit from the \texttt{Layout} API's automatic offset calculation.
-
-\subsection{Unsafe Code Patterns}
-
-The implementation follows strict patterns for unsafe code:
-
-\begin{lstlisting}[language=Rust, style=boxed, caption={Common unsafe code patterns}, label={lst:unsafe-patterns}]
-// In-place initialization pattern
-ptr::write(queue_ptr, Self { 
-    head: AtomicUsize::new(0),
-    tail: AtomicUsize::new(0),
-    /* other fields */
-});
-
-// Careful pointer arithmetic with bounds checking
-let slot_idx = current_write & self.mask;  // Ensure within bounds
-let slot_ptr = self.buffer.add(slot_idx);  // Safe offset
-
-// Manual memory management with explicit initialization
-let item = ptr::read(&(*node_ptr).data).assume_init();  // Read initialized data
-ptr::write(node_ptr, MaybeUninit::new(item));  // Write through MaybeUninit
-
-// Atomic pointer dereferencing pattern
-let node = self.head.load(Ordering::Acquire);
-if !node.is_null() {
-    let next = unsafe { (*node).next.load(Ordering::Acquire) };
-    // Use next...
-}
-\end{lstlisting}
-
-These patterns ensure memory safety despite the unsafe blocks. Pointer arithmetic uses masking to prevent out-of-bounds access. The \texttt{MaybeUninit} type explicitly tracks initialization state. Null checks prevent dereferencing invalid pointers. While the compiler cannot verify these patterns, consistent application reduces the likelihood of memory safety violations.
+One reason for an \texttt{unsafe} block is raw pointer dereferencing seen in lines 32 to 34. The \texttt{get\_entry} function performs pointer arithmetic on \texttt{base\_ptr} and dereferences the result which is needed for shared memory. The compiler cannot verify that the calculated address is valid or that no data races occur. The Rust compiler also does not allow concurrent access of multiple writer threads or processes. \texttt{try\_enq\_inner} beginning at line 2 is implementated so that multiple processes can simultaneously call it. Each process, atomically increments the tail to get a unique position in line 4, then accesses potentially the same entry due to cache remapping in lines 5 and 7, and finally attempts to modify the entry in line 18. The Rust compiler cannot verify that this access is safe, so the developer of this implementation has to indicate to the compiler that this is safe by using an \texttt{unsafe} block.
