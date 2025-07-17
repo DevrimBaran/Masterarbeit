@@ -433,4 +433,413 @@ Rust's memory safety guarantees to prevent data races by ensuring that either mu
 One reason for an \texttt{unsafe} block is raw pointer dereferencing seen in lines 32 to 34. The \texttt{get\_entry} function performs pointer arithmetic on \texttt{base\_ptr} and dereferences the result which is needed for shared memory. The compiler cannot verify that the calculated address is valid or that no data races occur. The Rust compiler also does not allow concurrent access of multiple writer threads or processes. \texttt{try\_enq\_inner} beginning at line 2 is implementated so that multiple processes can simultaneously call it. Each process, atomically increments the tail to get a unique position in line 4, then accesses potentially the same entry due to cache remapping in lines 5 and 7, and finally attempts to modify the entry in line 18. The Rust compiler cannot verify too that this access is safe, so the developer of this implementation has to indicate to the compiler that this is safe by using an \texttt{unsafe} block.
 
 \section{Validation}
-To ensure the correctness of the implemented algorithms, unit and miri tests were performed. The unit tests validate the basic functionality of each queue, ensuring that operations like enqueue and dequeue work as expected. Miri tests were used to check for undefined behavior in concurrent scenarios, ensuring that the algorithms behave correctly under extreme contention. This section will generally describe how the tests were implemented and what they validate, without going into the details of each test case.
+Part of the objective is also to ensure the correctness of the implemented algorithms, unit and miri tests were performed. The unit tests validate the basic functionality of each queue, ensuring that operations like enqueue and dequeue work as expected. Miri tests were used to check for undefined behavior in concurrent scenarios, ensuring that the algorithms behave correctly under extreme contention. This section will generally describe how the tests were implemented and what they validate, without going into the details of each test case.
+
+\subsection{Basic Operations}
+Every queue implementation was validated for fundamental operations including initialization, push, pop, and state queries (\texttt{is\_empty}, \texttt{is\_full}). For example, the basic operation test pattern was implemented as shown in \cref{lst:basic-test}:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Basic operation test pattern}, label={lst:basic-test}]
+// Test empty queue state
+assert!(queue.is_empty());
+assert!(queue.pop().is_err());
+
+// Test single element operations
+queue.push(42).unwrap();
+assert!(!queue.is_empty());
+assert_eq!(queue.pop().unwrap(), 42);
+assert!(queue.is_empty());
+
+// Test multiple elements
+for i in 0..10 {
+    queue.push(i).unwrap();
+}
+for i in 0..10 {
+    assert_eq!(queue.pop().unwrap(), i);
+}
+\end{lstlisting}
+
+\subsection{Capacity and Boundary Tests}
+All queues were tested to ensure they correctly handle capacity limits. Tests verified that queues reject push operations when full and properly handle edge cases near capacity boundaries. Special attention was given to queues with buffering mechanisms like \ac{BIFFQ} and MultiPush like queues, which required explicit flushing operations.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Capacity limit test pattern}, label={lst:capacity-test}]
+// Test pushing up to capacity
+let mut pushed = 0;
+for i in 0..capacity {
+    match queue.push(i) {
+        Ok(_) => pushed += 1,
+        Err(_) => break,
+    }
+}
+assert!(pushed > 0, "Should push at least one item");
+
+// Verify queue rejects items when full
+assert!(!queue.available() || queue.push(999).is_err());
+
+// Test space recovery after pop
+if pushed > 0 {
+    assert!(queue.pop().is_ok());
+    assert!(queue.available());
+    assert!(queue.push(888).is_ok());
+}
+\end{lstlisting}
+
+For queues with buffering mechanisms, additional flush operations were required:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Buffered queue capacity test}, label={lst:buffered-capacity-test}]
+// BiffQ requires explicit flushing
+for i in 0..BIFFQ_CAPACITY + 100 {
+    match queue.push(i) {
+        Ok(_) => pushed_total += 1,
+        Err(_) => {
+            // Attempt to flush buffer and retry
+            let _ = queue.flush_producer_buffer();
+            if queue.push(i).is_err() {
+                break;  // Queue truly full
+            } else {
+                pushed_total += 1;
+            }
+        }
+    }
+    
+    // Periodic flushing every 32 items
+    if i % 32 == 31 {
+        let _ = queue.flush_producer_buffer();
+    }
+}
+
+// Final flush to ensure all buffered items are visible
+let _ = queue.flush_producer_buffer();
+\end{lstlisting}
+
+\subsection{Memory Alignment Verification}
+Since the implementations target shared memory with specific alignment requirements, tests verified proper memory alignment for all queue structures:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Memory alignment verification test}, label={lst:alignment-test}]
+// Allocate memory with specific alignment
+let layout = Layout::from_size_align(size, alignment)
+    .expect("Invalid layout");
+let ptr = unsafe { alloc_zeroed(layout) };
+
+// Verify pointer alignment
+assert_eq!(
+    ptr as usize % alignment, 0,
+    "Memory not aligned to {} bytes", alignment
+);
+
+// Initialize queue with aligned memory
+let queue = unsafe { 
+    <$queue_type>::init_in_shared(ptr, capacity) 
+};
+
+// For YangCrummeyQueue requiring 128-byte alignment
+let queue_offset = sync_size;
+let queue_offset_aligned = (queue_offset + 127) & !127;
+let queue_ptr = unsafe { shm_ptr.add(queue_offset_aligned) };
+assert_eq!(
+    queue_ptr as usize % 128, 0,
+    "Queue not properly aligned to 128 bytes"
+);
+\end{lstlisting}
+
+Position-independent addressing was verified through shared memory tests:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Position-independent addressing test}, label={lst:position-independent-test}]
+// Map shared memory at arbitrary address
+let shm_ptr = unsafe { 
+    libc::mmap(
+        std::ptr::null_mut(),  // Let OS choose address
+        size,
+        libc::PROT_READ | libc::PROT_WRITE,
+        libc::MAP_SHARED | libc::MAP_ANONYMOUS,
+        -1,
+        0,
+    ) as *mut u8
+};
+
+// Initialize queue - must work at any address
+let queue = unsafe { 
+    Queue::init_in_shared(shm_ptr, capacity) 
+};
+
+// Verify queue operates correctly regardless of base address
+queue.push(42).unwrap();
+assert_eq!(queue.pop().unwrap(), 42);
+\end{lstlisting}
+
+\subsubsection{Memory Pool Management}
+The pre-allocated memory pools of the queues were testet too for correct allocation, correct recycling and correct pool exhaustion handling, as seen in the following:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Memory pool management test}, label={lst:pool-management-test}]
+// Test pool allocation and recycling
+unsafe {
+    // Allocate from pool
+    let seg1: *mut Segment<i32> = queue.new_segment(1);
+    assert!(!seg1.is_null());
+    assert_eq!((*seg1).id, 1);
+    
+    // Return to pool
+    queue.release_segment_to_pool(seg1);
+    
+    // Test pool exhaustion
+    let mut segments = vec![];
+    for i in 2..segment_pool_capacity as u64 {
+        let seg = queue.new_segment(i);
+        if !seg.is_null() {
+            segments.push(seg);
+        } else {
+            break;  // Pool exhausted
+        }
+    }
+    
+    // Return all to pool
+    for seg in segments {
+        queue.release_segment_to_pool(seg);
+    }
+}
+
+// Test free list reuse in Jiffy Queue
+let free_head = self.node_array_slice_free_list_head
+    .load(Ordering::Acquire);
+if !free_head.is_null() {
+    // Reuse from free list
+    let next_free = (*(free_head as *mut AtomicPtr<Node<T>>))
+        .load(Ordering::Acquire);
+        
+    if self.node_array_slice_free_list_head.compare_exchange(
+        free_head, 
+        next_free, 
+        Ordering::AcqRel, 
+        Ordering::Acquire
+    ).is_ok() {
+        return free_head;  // Successfully reused
+    }
+}
+\end{lstlisting}
+
+
+\subsection{Concurrent Operation Tests}
+Concurrent tests validated the correctness of queue operations under contention. These tests employed multiple patterns:
+
+\subsubsection{Producer-Consumer Patterns}
+Tests spawned separate threads for producers and consumers, using barriers for synchronization to ensure correct concurrency:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Concurrent test pattern}, label={lst:concurrent-test}]
+let barrier = Arc::new(Barrier::new(num_threads));
+let mut handles = vec![];
+
+// Spawn producer threads
+for tid in 0..num_producers {
+    let barrier_clone = barrier.clone();
+    let handle = thread::spawn(move || {
+        barrier_clone.wait(); // Synchronize start
+        for i in 0..items_per_thread {
+            queue.push(tid * items_per_thread + i, tid).unwrap();
+        }
+    });
+    handles.push(handle);
+}
+
+// Wait for all threads and verify results
+for handle in handles {
+    handle.join().unwrap();
+}
+\end{lstlisting}
+
+\subsubsection{Stress Tests}
+High-contention scenarios were tested with multiple producers and consumers operating simultaneously to test that even under high contention the queues maintain correctness. These stress tests look for if queues lose items, cannot remain \ac{FIFO} order and that the queue state remains sonsistent. The following example show how it is done:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={High-contention stress test}, label={lst:stress-test}]
+// Stress test with multiple concurrent producers and consumers
+let num_threads = 4;
+let items_per_thread = 1000;
+let produced = Arc::new(AtomicUsize::new(0));
+let consumed = Arc::new(AtomicUsize::new(0));
+let done = Arc::new(AtomicBool::new(false));
+
+// Spawn producer threads
+for tid in 0..num_threads / 2 {
+    let p = Arc::clone(&produced);
+    let handle = thread::spawn(move || {
+        for i in 0..items_per_thread {
+            let value = tid * items_per_thread + i;
+            let mut retries = 0;
+            while queue.push(value, tid).is_err() && retries < 1000 {
+                retries += 1;
+                thread::yield_now();
+            }
+            if retries < 1000 {
+                p.fetch_add(1, Ordering::Relaxed);
+            }
+        }
+    });
+    handles.push(handle);
+}
+
+// Spawn consumer threads
+for tid in num_threads / 2..num_threads {
+    let c = Arc::clone(&consumed);
+    let d = Arc::clone(&done);
+    let handle = thread::spawn(move || {
+        let mut consecutive_failures = 0;
+        loop {
+            if queue.pop(tid).is_ok() {
+                c.fetch_add(1, Ordering::Relaxed);
+                consecutive_failures = 0;
+            } else {
+                consecutive_failures += 1;
+                if d.load(Ordering::Relaxed) && 
+                    consecutive_failures > 100 {
+                    break;
+                }
+                thread::yield_now();
+            }
+        }
+    });
+    handles.push(handle);
+}
+
+// Let threads run under contention
+thread::sleep(Duration::from_millis(100));
+done.store(true, Ordering::Relaxed);
+
+// Verify no items lost
+let produced_count = produced.load(Ordering::Relaxed);
+let consumed_count = consumed.load(Ordering::Relaxed);
+assert!(
+    consumed_count >= produced_count * 9 / 10,
+    "Should consume at least 90% of produced items"
+);
+\end{lstlisting}
+
+For queues with FIFO guarantees, ordering verification was performed:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={FIFO ordering verification under stress}, label={lst:fifo-stress-test}]
+// Collect all dequeued items
+let mut items = Vec::new();
+while let Some(item) = queue.pop() {
+    items.push(item);
+}
+
+// Verify correct count
+assert_eq!(items.len(), NUM_PRODUCERS * ITEMS_PER_PRODUCER);
+
+// Sort and verify no duplicates or missing items
+items.sort();
+for (i, &item) in items.iter().enumerate() {
+    assert_eq!(item, i, "Missing or duplicate items detected");
+}
+
+// For strict FIFO queues, verify ordering per producer
+for producer_id in 0..num_producers {
+    let producer_items: Vec<_> = items.iter()
+        .filter(|&&x| x / 1000 == producer_id)
+        .collect();
+    
+    // Items from same producer must maintain order
+    for window in producer_items.windows(2) {
+        assert!(window[0] < window[1], 
+                "FIFO order violated for producer {}", producer_id);
+    }
+}
+\end{lstlisting}
+
+\subsection{Inter-Process Communication Tests}
+One important test is also if the queues' behavior in true \ac{IPC} scenarios stays correct using process forking. These tests show that under process contention the queues still operate correct, properly handles shared memory regions, that atomic operations are visible between processes. The \ac{IPC} tests followed a consistent pattern using \texttt{fork()} to create separate processes:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={IPC test structure}, label={lst:ipc-test}]
+match unsafe { fork() } {
+    Ok(ForkResult::Child) => {
+        // Producer process
+        for i in 0..NUM_ITEMS {
+            loop {
+                match queue.push(i) {
+                    Ok(_) => break,
+                    Err(_) => thread::yield_now(),
+                }
+            }
+        }
+        unsafe { libc::_exit(0) };
+    }
+    Ok(ForkResult::Parent { child }) => {
+        // Consumer process
+        let mut received = Vec::new();
+        while received.len() < NUM_ITEMS {
+            match queue.pop() {
+                Ok(item) => received.push(item),
+                Err(_) => thread::yield_now(),
+            }
+        }
+        // Verify all items received in order
+        waitpid(child, None).expect("waitpid failed");
+    }
+}
+\end{lstlisting}
+
+\subsection{Special Feature Validation}
+Algorithm-specific features required specific validation:
+
+\subsubsection{Buffering Mechanisms}
+Queues with local buffering like \ac{BIFFQ} and MultiPush were tested for correct flush operations and visibility of buffered items as seen in the following example:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Buffer mechanism test}, label={lst:buffer-test}]
+// Test BiffQ flush operations
+for i in 0..10 {
+    queue.push(i).unwrap();
+}
+
+// Verify items not visible before flush
+assert_eq!(queue.cons.shared_count.load(Ordering::Acquire), 0);
+
+// Flush and verify visibility
+let flushed = queue.flush_producer_buffer().unwrap();
+assert!(flushed > 0);
+
+// Now items should be visible to consumer
+for i in 0..10 {
+    assert_eq!(queue.pop().unwrap(), i);
+}
+
+// Test automatic flush on buffer overflow
+for i in 0..32 {  // Local buffer size
+    queue.push(i).unwrap();
+}
+// Should auto-flush when buffer full
+assert_eq!(queue.local_count.load(Ordering::Relaxed), 0);
+\end{lstlisting}
+
+\subsubsection{Helper Thread Coordination}
+The Verma queue with its helper thread required special tests to verify, that the helper thread correctly functions as expected:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Helper thread coordination test}, label={lst:helper-thread-test}]
+match unsafe { fork() } {
+    Ok(ForkResult::Child) => {
+        // Child runs helper thread
+        queue.run_helper();
+        std::process::exit(0);
+    }
+    Ok(ForkResult::Parent { child }) => {
+        thread::sleep(Duration::from_millis(20));
+        
+        // Test operations with helper
+        assert!(queue.push(42, 0).is_ok());
+        thread::sleep(Duration::from_millis(10));
+        
+        match queue.pop(0) {
+            Ok(val) => assert_eq!(val, 42),
+            Err(_) => panic!("Pop should succeed with helper"),
+        }
+        
+        // Stop helper and verify cleanup
+        queue.stop_helper();
+        waitpid(child, None).unwrap();
+    }
+}
+
+// Test without helper - queue should still be functional
+assert!(queue.is_empty(), "Queue operational without helper");
+\end{lstlisting}
+
+\subsection{Miri Validation}
+Miri tests provided validation of memory safety in concurrent scenarios. In the test folder of the repository there are miri test files additionally to the unit test files. While structurally similar to the regular unit tests, Miri tests had to use significantly reduced parameters and simplified concurrency patterns to accommodate Miri's execution overhead. The advantage of Miri tests are, that Miri simulates extreme contention leading to detect undefined behavior easier. Miri tests will fail if undefined behavior like data races happens.
+
+\subsection{Test Coverage}

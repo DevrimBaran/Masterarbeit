@@ -18,6 +18,18 @@
 \contentsline {lstlisting}{\numberline {6.12}{\ignorespaces Explicit memory fence usage}}{69}{lstlisting.6.12}%
 \contentsline {lstlisting}{\numberline {6.13}{\ignorespaces Versioned CAS for LL/SC simulation}}{69}{lstlisting.6.13}%
 \contentsline {lstlisting}{\numberline {6.14}{\ignorespaces Wait-free synchronization requiring unsafe}}{70}{lstlisting.6.14}%
+\contentsline {lstlisting}{\numberline {6.15}{\ignorespaces Basic operation test pattern}}{72}{lstlisting.6.15}%
+\contentsline {lstlisting}{\numberline {6.16}{\ignorespaces Capacity limit test pattern}}{72}{lstlisting.6.16}%
+\contentsline {lstlisting}{\numberline {6.17}{\ignorespaces Buffered queue capacity test}}{73}{lstlisting.6.17}%
+\contentsline {lstlisting}{\numberline {6.18}{\ignorespaces Memory alignment verification test}}{73}{lstlisting.6.18}%
+\contentsline {lstlisting}{\numberline {6.19}{\ignorespaces Position-independent addressing test}}{74}{lstlisting.6.19}%
+\contentsline {lstlisting}{\numberline {6.20}{\ignorespaces Memory pool management test}}{74}{lstlisting.6.20}%
+\contentsline {lstlisting}{\numberline {6.21}{\ignorespaces Concurrent test pattern}}{76}{lstlisting.6.21}%
+\contentsline {lstlisting}{\numberline {6.22}{\ignorespaces High-contention stress test}}{76}{lstlisting.6.22}%
+\contentsline {lstlisting}{\numberline {6.23}{\ignorespaces FIFO ordering verification under stress}}{77}{lstlisting.6.23}%
+\contentsline {lstlisting}{\numberline {6.24}{\ignorespaces IPC test structure}}{78}{lstlisting.6.24}%
+\contentsline {lstlisting}{\numberline {6.25}{\ignorespaces Buffer mechanism test}}{79}{lstlisting.6.25}%
+\contentsline {lstlisting}{\numberline {6.26}{\ignorespaces Helper thread coordination test}}{80}{lstlisting.6.26}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
