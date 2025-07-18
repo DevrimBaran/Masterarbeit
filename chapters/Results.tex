@@ -2,4 +2,343 @@
 To finish the objective of this thesis at last a setting needs to be build were these algorithms are used for \ac{IPC} over shared memory. This setting was also used to benchmark the performance of these algorithms to Identify the best performing wait-free algorithms that can be used. In the \cite{githubMA} the folder benches includes the setting and benchmark of these algorithms. As seen as before these algorithms were divided into 4 categories, \ac{MPMC}, \ac{MPSC}, \ac{SPMC} and \ac{SPSC}. Therefore 4 different \ac{IPC} over shared memory settings were build to analyze firstly if all algorithms work as intended and secondly to compare the performance of all algorithms. Eventhough \ac{SPMC} category only has one algorithm, the build setting was still interesting to check and validate if the algorithm works as intended. After identifying the best algorithm 3 more settings were build. One setting was to see if the \ac{SPMC} queue or the best performing queues of the other categories would be faster for the \ac{SPSC} category. The same was done for the \ac{MPSC} category by checking if the best \ac{MPMC} queue or the best \ac{MPSC} queue would perform better. Finally for the \ac{SPMC} category the same was done to check if the best \ac{MPMC} or  \ac{SPMC} queue would be better. The best \ac{SPSC} queue could not be testet for higher producer or consumer numbers, since the missing helping structures and missing atomic primitives would lead to deadloccks or inconsistent data. The benchmarks were done on a system with an Intel i7-12700H x86 processer with 14 cores. The benchmarks were implemented with the help of the \texttt{criterion} crate, which is a benchmarking library for Rust. This chapter will show in general how the benchmarks settings were impplemented to understand the results later.
 
 \section{Benchmark Structure}
-All benchmarks were build in the same way, so that the results can be compared with each other. 
+All benchmarks follow a consistent architecture to ensure fair comparison between queue implementations. The benchmarks measure the time taken for producers and consumers to exchange a fixed number of items through each queue implementation using \ac{IPC} over shared memory. This section explains the general benchmark structure using the \ac{MPMC} benchmark as a representative example, as the same patterns apply to all queue categories. Not every line will be explained, but the most important lines will be explained to understand the general structure of the benchmarks. 
+
+\subsection{Benchmark Interface Implementation}
+Each queue implementation must provide a uniform interface for benchmarking. This is achieved through a common trait that abstracts the queue-specific operations, as shown in \cref{lst:bench-trait}. The following pop and push traits implement the dequeue and enqueue operations respectively for the queues.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Benchmark trait for MPMC queues}, label={lst:bench-trait}]
+trait BenchMpmcQueue<T: Send + Clone>: Send + Sync + 'static {
+    fn bench_push(&self, item: T, process_id: usize) -> Result<(), ()>;
+    fn bench_pop(&self, process_id: usize) -> Result<T, ()>;
+    fn bench_is_empty(&self) -> bool;
+    fn bench_is_full(&self) -> bool;
+}
+
+// Example implementation for YangCrummeyQueue
+impl<T: Send + Clone + 'static> BenchMpmcQueue<T> for YangCrummeyQueue<T> {
+    fn bench_push(&self, item: T, process_id: usize) -> Result<(), ()> {
+        self.enqueue(process_id, item)
+    }
+
+    fn bench_pop(&self, process_id: usize) -> Result<T, ()> {
+        self.dequeue(process_id)
+    }
+
+    fn bench_is_empty(&self) -> bool {
+        self.is_empty()
+    }
+
+    fn bench_is_full(&self) -> bool {
+        false  // YangCrummeyQueue has unbounded capacity
+    }
+}
+\end{lstlisting}
+
+The trait in lines 1 to 6 defines a common interface that all \ac{MPMC} queues must implement. The \texttt{process\_id} parameter in lines 2 and 3 allows queues to distinguish between different processes, which is necessary for some algorithms. Lines 9 to 24 show how the \ac{YMC} queue maps its specific methods to the common interface. The \texttt{bench\_is\_full} method in line 23 returns false for queues with unbounded capacity. This mapping is done for all queues in the respective categories, so that the benchmarks can be run with all queues without changing the benchmark code to to compare fairly.
+
+\subsection{Process Synchronization Infrastructure}
+Benchmarking concurrent algorithms requires careful synchronization to ensure all processes start simultaneously and coordinate their completion for fair comparisons. Two synchronization structures manage this coordination, as shown in \cref{lst:sync-structures}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Process synchronization structures}, label={lst:sync-structures}]
+#[repr(C)]
+struct MpmcStartupSync {
+    producers_ready: AtomicU32,
+    consumers_ready: AtomicU32,
+    go_signal: AtomicBool,
+}
+
+impl MpmcStartupSync {
+    fn new_in_shm(mem_ptr: *mut u8) -> &'static Self {
+        let sync_ptr = mem_ptr as *mut Self;
+        unsafe {
+            ptr::write(
+                sync_ptr,
+                Self {
+                    producers_ready: AtomicU32::new(0),
+                    consumers_ready: AtomicU32::new(0),
+                    go_signal: AtomicBool::new(false),
+                },
+            );
+            &*sync_ptr
+        }
+    }
+
+    fn shared_size() -> usize {
+        std::mem::size_of::<Self>()
+    }
+}
+
+#[repr(C)]
+struct MpmcDoneSync {
+    producers_done: AtomicU32,
+    consumers_done: AtomicU32,
+    total_consumed: AtomicUsize,
+}
+\end{lstlisting}
+
+The \texttt{MpmcStartupSync} structure in lines 1 to 6 coordinates the startup phase. Producers increment \texttt{producers\_ready} in line 3 when ready, consumers increment \texttt{consumers\_ready} in line 4, and all processes wait for \texttt{go\_signal} in line 5 before starting. The \texttt{new\_in\_shm} method in lines 9 to 22 initializes the structure directly in shared memory using placement new. The \texttt{MpmcDoneSync} structure in lines 29 to 34 tracks completion, with \texttt{total\_consumed} in line 33 which is used to verify that no items were lost during the benchmark. 
+
+\subsection{Benchmark Execution Framework}
+
+The core benchmark logic is implemented in a generic function that handles process creation, execution, and measurement, as demonstrated in \cref{lst:fork-and-run}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Generic benchmark execution function}, label={lst:fork-and-run}]
+fn fork_and_run_mpmc_with_helper<Q, F>(
+    queue_init_fn: F,
+    num_producers: usize,
+    num_consumers: usize,
+    items_per_process: usize,
+    needs_helper: bool,
+) -> Duration
+where
+    Q: BenchMpmcQueue<usize> + 'static,
+    F: FnOnce() -> (&'static Q, *mut u8, usize),
+{
+    let total_items = num_producers * items_per_process;
+    
+    // Initialize queue in shared memory
+    let (q, q_shm_ptr, q_shm_size) = queue_init_fn();
+    
+    // Allocate synchronization structures
+    let startup_sync_size = MpmcStartupSync::shared_size();
+    let startup_sync_shm_ptr = unsafe { map_shared(startup_sync_size) };
+    let startup_sync = MpmcStartupSync::new_in_shm(startup_sync_shm_ptr);
+    
+    let mut producer_pids = Vec::with_capacity(num_producers);
+    let mut consumer_pids = Vec::with_capacity(num_consumers);
+    
+    // Fork producer processes
+    for producer_id in 0..num_producers {
+        match unsafe { fork() } {
+            Ok(ForkResult::Child) => {
+                // Signal ready and wait for go signal
+                startup_sync.producers_ready.fetch_add(1, Ordering::AcqRel);
+                while !startup_sync.go_signal.load(Ordering::Acquire) {
+                    std::hint::spin_loop();
+                }
+                
+                // Produce items
+                for i in 0..items_per_process {
+                    let item_value = producer_id * items_per_process + i;
+                    while q.bench_push(item_value, producer_id).is_err() {
+                        std::hint::spin_loop();
+                    }
+                }
+                
+                unsafe { libc::_exit(0) };
+            }
+            Ok(ForkResult::Parent { child }) => {
+                producer_pids.push(child);
+            }
+            Err(e) => panic!("Fork failed: {}", e),
+        }
+    }
+    
+    // Wait for all processes to be ready
+    while startup_sync.producers_ready.load(Ordering::Acquire) < num_producers as u32
+        || startup_sync.consumers_ready.load(Ordering::Acquire) < num_consumers as u32
+    {
+        std::hint::spin_loop();
+    }
+    
+    // Start timing and signal processes to begin
+    let start_time = std::time::Instant::now();
+    startup_sync.go_signal.store(true, Ordering::Release);
+    
+    // Wait for completion
+    for pid in producer_pids {
+        waitpid(pid, None).expect("waitpid failed");
+    }
+    
+    start_time.elapsed()
+}
+\end{lstlisting}
+
+The function signature in lines 1 to 10 accepts a queue initialization function and benchmark parameters. The \texttt{needs\_helper} parameter in line 6 supports queues like Verma's that require a helper thread. Line 15 initializes the queue using the provided function, which returns the queue reference and shared memory details. Lines 26 to 50 show the producer process creation where line 30 signals readiness, lines 31 to 33 implement ensures that every process waits for the go signal, and lines 36 to 41 produce items with retry logic. Lines 53 to 57 ensure all processes are ready before starting. Line 60 captures the start time immediately before signaling processes to begin in line 61. Lines 64 to 66 wait for all producer processes to complete before calculating the elapsed time in line 68.
+
+\subsection{Queue-Specific Benchmark Integration}
+
+Each queue type requires a specific benchmark function that integrates with the Criterion framework, as shown in \cref{lst:queue-benchmark}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Queue-specific benchmark function}, label={lst:queue-benchmark}]
+fn bench_yang_crummey(c: &mut Criterion) {
+    let mut group = c.benchmark_group("YangCrummeyMPMC_");
+
+    for &(num_prods, num_cons) in PROCESS_COUNTS_TO_TEST {
+        let items_per_process = ITEMS_PER_PROCESS_TARGET;
+        let total_processes = num_prods + num_cons;
+
+        group.bench_function(
+            format!("{}P_{}C", num_prods, num_cons),
+            |b: &mut Bencher| {
+                b.iter_custom(|_iters| {
+                    fork_and_run_mpmc_with_helper::<YangCrummeyQueue<usize>, _>(
+                        || {
+                            // Calculate required shared memory size
+                            let bytes = YangCrummeyQueue::<usize>::shared_size(total_processes);
+                            let shm_ptr = unsafe { map_shared(bytes) };
+                            
+                            // Initialize queue in shared memory
+                            let q = unsafe {
+                                YangCrummeyQueue::init_in_shared(shm_ptr, total_processes)
+                            };
+                            
+                            (q, shm_ptr, bytes)
+                        },
+                        num_prods,
+                        num_cons,
+                        items_per_process,
+                        false,  // YangCrummey doesn't need helper
+                    )
+                })
+            },
+        );
+    }
+
+    group.finish();
+}
+\end{lstlisting}
+
+Line 2 creates a benchmark group with a descriptive name. Line 4 iterates through different producer/consumer configurations from the constant array \texttt{PROCESS\_COUNTS\_TO\_TEST}. Line 9 formats the benchmark name to indicate the configuration. Lines 11 to 30 use Criterion's \texttt{iter\_custom} method to measure custom timing, as the benchmark itself measures process execution time. The closure in lines 13 to 23 initializes the queue where line 15 calculates the exact shared memory size needed and line 16 allocates the shared memory region. After that lines 19 to 21 initialize the queue at the allocated address. Line 28 indicates that \ac{YMC} doesn't require a helper thread.
+
+\subsection{Consumer Process Implementation}
+The consumer processes follow a similar pattern but with additional logic to handle termination and verify correctness, as shown in \cref{lst:consumer-process}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Consumer process implementation}, label={lst:consumer-process}]
+// Fork consumer processes
+for consumer_id in 0..num_consumers {
+    match unsafe { fork() } {
+        Ok(ForkResult::Child) => {
+            startup_sync.consumers_ready.fetch_add(1, Ordering::AcqRel);
+
+            while !startup_sync.go_signal.load(Ordering::Acquire) {
+                std::hint::spin_loop();
+            }
+
+            let mut consumed_count = 0;
+            let target_items = total_items / num_consumers;
+            let extra_items = if consumer_id < (total_items % num_consumers) {
+                1
+            } else {
+                0
+            };
+            let my_target = target_items + extra_items;
+
+            let mut consecutive_empty_checks = 0;
+            const MAX_CONSECUTIVE_EMPTY_CHECKS: usize = 40000;
+
+            while consumed_count < my_target {
+                match q.bench_pop(num_producers + consumer_id) {
+                    Ok(_item) => {
+                        consumed_count += 1;
+                        consecutive_empty_checks = 0;
+                    }
+                    Err(_) => {
+                        if done_sync.producers_done.load(Ordering::Acquire)
+                            == num_producers as u32
+                        {
+                            consecutive_empty_checks += 1;
+
+                            if consecutive_empty_checks > MAX_CONSECUTIVE_EMPTY_CHECKS {
+                                break;  // Queue likely empty
+                            }
+                        }
+                        
+                        // Backoff strategy
+                        for _ in 0..100 {
+                            std::hint::spin_loop();
+                        }
+                    }
+                }
+            }
+
+            done_sync
+                .total_consumed
+                .fetch_add(consumed_count, Ordering::AcqRel);
+            done_sync.consumers_done.fetch_add(1, Ordering::AcqRel);
+
+            unsafe { libc::_exit(0) };
+        }
+        Ok(ForkResult::Parent { child }) => {
+            consumer_pids.push(child);
+        }
+        Err(e) => panic!("Fork failed for consumer: {}", e),
+    }
+}
+\end{lstlisting}
+
+Lines 12 to 18 calculate each consumer's share of items, distributing any remainder among the first consumers. The main consumption loop in lines 23 to 46 implements a termination strategy where lines 25 to 27 reset the empty check counter on successful pop while lines 30 to 38 check if all producers have finished and implement a termination condition. Lines 48 to 51 atomically update the total consumed count for later verification. Line 53 uses \texttt{\_exit} to avoid cleanup that might interfere with shared memory.
+
+\subsection{Result Validation}
+After all producer and consumer processes complete, the benchmark validates that no items were lost or double read during the concurrent operations. This validation is important for ensuring the correctness of each queue implementation under \ac{IPC} scenarios, as shown in \cref{lst:result-validation}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Post-benchmark validation of results}, label={lst:result-validation}]
+// Wait for all processes to complete
+for pid in producer_pids {
+    waitpid(pid, None).expect("waitpid for producer failed");
+}
+
+for pid in consumer_pids {
+    waitpid(pid, None).expect("waitpid for consumer failed");
+}
+
+let duration = start_time.elapsed();
+
+// Validate that all items were consumed
+let total_consumed = done_sync.total_consumed.load(Ordering::Acquire);
+
+if total_consumed != total_items {
+    eprintln!(
+        "Warning (MPMC): Total consumed {}/{} items. Q: {}, Prods: {}, Cons: {}",
+        total_consumed,
+        total_items,
+        std::any::type_name::<Q>(),
+        num_producers,
+        num_consumers
+    );
+}
+
+// Clean up shared memory regions
+unsafe {
+    if !q_shm_ptr.is_null() {
+        unmap_shared(q_shm_ptr, q_shm_size);
+    }
+    unmap_shared(startup_sync_shm_ptr, startup_sync_size);
+    unmap_shared(done_sync_shm_ptr, done_sync_size);
+}
+
+duration
+\end{lstlisting}
+
+Lines 2 to 8 wait for all processes to complete before proceeding with validation. After that line 13 atomically reads the total number of items consumed across all consumer processes. The validation check in lines 15 to 24 compares the consumed count against the expected total. If items are missing, line 17 prints a detailed warning that includes the actual versus expected counts in line 18, the queue type name in line 20, and the producer and consumer configuration in lines 21 and 22. This warning helps identify queue implementations that may lose items under high contention or have synchronization issues and to verify that the queue operates correctly under concurrent access, if the warning does not appear.
+
+\subsection{Benchmark Configuration}
+The benchmarks use Criterion's configuration options to ensure reliable measurements, as shown in \cref{lst:criterion-config}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Criterion benchmark configuration}, label={lst:criterion-config}]
+fn custom_criterion() -> Criterion {
+    Criterion::default()
+        .warm_up_time(Duration::from_secs(1))
+        .measurement_time(Duration::from_secs(4200))
+        .sample_size(500)
+}
+
+criterion_group! {
+    name = benches;
+    config = custom_criterion();
+    targets =
+        bench_wcq_queue,
+        bench_turn_queue,
+        bench_kogan_petrank_queue,
+        bench_yang_crummey
+}
+
+criterion_main!(benches);
+\end{lstlisting}
+
+Line 3 sets a 1-second warm-up period to stabilize system state. Line 4 configures 4200 seconds of measurement time per benchmark. Line 5 sets 500 samples, as each sample involves creating multiple processes and produce and consume a set number of items. Lines 8 to 16 define the benchmark group with all queue implementations to test.
+
+The same benchmark structure is applied to all benchmarks with appropriate modifications to the number of producers and consumers. This consistent approach ensures fair comparison across all implementations while accurately measuring their performance characteristics under \ac{IPC} scenarios.
+
+\section{Benchmark Results}
