@@ -348,7 +348,7 @@ Fences ensure ordering between operations that might not otherwise synchronize. 
 
 \subsection{Versioned \acf{CAS} (Simulating \acf{LL/SC})}
 
-Some algorithms assume \ac{LL/SC} primitives, which x86-64 does not provide. The Jayanti-Petrovic queue from \cref{subsub:jayanti-mpsc-queue} simulates \ac{LL/SC} using versioned \ac{CAS}, as shown in \cref{lst:versioned-cas}.
+Some algorithms assume \ac{LL/SC} primitives, which x86-64 does not provide. The \ac{JPQ} from \cref{subsub:jayanti-mpsc-queue} simulates \ac{LL/SC} using versioned \ac{CAS}, as shown in \cref{lst:versioned-cas}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Versioned CAS for LL/SC simulation}, label={lst:versioned-cas}]
 #[repr(C)]
@@ -385,11 +385,11 @@ unsafe fn cas_min_info(&self, old_compact: CompactMinInfo,
 }
 \end{lstlisting}
 
-The version counter in line 3 prevents the ABA problem where a value changes from A to B and back to A between observations. By incrementing the version on every update seen in line 23, even if the logical value returns to a previous state, the version ensures the \ac{CAS} will fail, simulating \ac{LL/SC} semantics as required by the Jayanti-Petrovic algorithm. This is done in every queue rust implementation that requires \ac{LL/SC} semantics.
+The version counter in line 3 prevents the ABA problem where a value changes from A to B and back to A between observations. By incrementing the version on every update seen in line 23, even if the logical value returns to a previous state, the version ensures the \ac{CAS} will fail, simulating \ac{LL/SC} semantics as required by the \ac{JPQ} algorithm. This is done in every queue rust implementation that requires \ac{LL/SC} semantics.
 
 \subsection{Unsafe Blocks}
 
-Rust's memory safety guarantees to prevent data races by ensuring that either multiple readers or a single writer can access data at any time. However, the wait-free algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure} require to bypass these restrictions. With the use of \texttt{unsafe} blocks the the Rust compiler gets indicated that the blocks memory safety is handled by the implementation itself. The \texttt{try\_enq\_inner} function of \acsp{wCQ} Rust implementation in \cref{lst:wcq-unsafe} demonstrates why \texttt{unsafe} blocks are necessary.
+Rust's memory safety guarantees to prevent data races by ensuring that either multiple readers or a single writer can access data at any time. However, the wait-free algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure} require to bypass these restrictions. With the use of \texttt{unsafe} blocks the the Rust compiler gets indicated that the blocks memory safety is handled by the implementation itself. The \texttt{try\_enq\_inner} function of \ac{wCQ}'s Rust implementation in \cref{lst:wcq-unsafe} demonstrates why \texttt{unsafe} blocks are necessary.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Wait-free synchronization requiring unsafe}, label={lst:wcq-unsafe}]
     // Multiple threads may execute this concurrently
