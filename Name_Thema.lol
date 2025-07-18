@@ -31,13 +31,15 @@
 \contentsline {lstlisting}{\numberline {6.25}{\ignorespaces Buffer mechanism test}}{80}{lstlisting.6.25}%
 \contentsline {lstlisting}{\numberline {6.26}{\ignorespaces Helper thread coordination test}}{81}{lstlisting.6.26}%
 \addvspace {10\p@ }
-\contentsline {lstlisting}{\numberline {7.1}{\ignorespaces Benchmark trait for MPMC queues}}{85}{lstlisting.7.1}%
-\contentsline {lstlisting}{\numberline {7.2}{\ignorespaces Process synchronization structures}}{85}{lstlisting.7.2}%
-\contentsline {lstlisting}{\numberline {7.3}{\ignorespaces Generic benchmark execution function}}{86}{lstlisting.7.3}%
-\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Queue-specific benchmark function}}{88}{lstlisting.7.4}%
-\contentsline {lstlisting}{\numberline {7.5}{\ignorespaces Consumer process implementation}}{89}{lstlisting.7.5}%
-\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Post-benchmark validation of results}}{91}{lstlisting.7.6}%
-\contentsline {lstlisting}{\numberline {7.7}{\ignorespaces Criterion benchmark configuration}}{92}{lstlisting.7.7}%
+\contentsline {lstlisting}{\numberline {7.1}{\ignorespaces Benchmark configuration constants}}{85}{lstlisting.7.1}%
+\contentsline {lstlisting}{\numberline {7.2}{\ignorespaces MPSC-specific configuration}}{85}{lstlisting.7.2}%
+\contentsline {lstlisting}{\numberline {7.3}{\ignorespaces Benchmark trait for MPMC queues}}{85}{lstlisting.7.3}%
+\contentsline {lstlisting}{\numberline {7.4}{\ignorespaces Process synchronization structures}}{86}{lstlisting.7.4}%
+\contentsline {lstlisting}{\numberline {7.5}{\ignorespaces Generic benchmark execution function}}{87}{lstlisting.7.5}%
+\contentsline {lstlisting}{\numberline {7.6}{\ignorespaces Queue-specific benchmark function}}{89}{lstlisting.7.6}%
+\contentsline {lstlisting}{\numberline {7.7}{\ignorespaces Consumer process implementation}}{90}{lstlisting.7.7}%
+\contentsline {lstlisting}{\numberline {7.8}{\ignorespaces Post-benchmark validation of results}}{92}{lstlisting.7.8}%
+\contentsline {lstlisting}{\numberline {7.9}{\ignorespaces Criterion benchmark configuration}}{93}{lstlisting.7.9}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

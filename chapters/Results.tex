@@ -4,6 +4,26 @@ To finish the objective of this thesis at last a setting needs to be build were 
 \section{Benchmark Structure}
 All benchmarks follow a consistent architecture to ensure fair comparison between queue implementations. The benchmarks measure the time taken for producers and consumers to exchange a fixed number of items through each queue implementation using \ac{IPC} over shared memory. This section explains the general benchmark structure using the \ac{MPMC} benchmark as a representative example, as the same patterns apply to all queue categories. Not every line will be explained, but the most important lines will be explained to understand the general structure of the benchmarks. 
 
+\subsection{Benchmark Parameters and Configuration}
+Before examining the benchmark implementation details, it is important to understand the benchmark parameters that control the test scenarios. These constants define the scale and scope of the performance measurements, as shown in \cref{lst:bench-constants}.
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={Benchmark configuration constants}, label={lst:bench-constants}]
+const ITEMS_PER_PROCESS_TARGET: usize = 170_000;
+const PROCESS_COUNTS_TO_TEST: &[(usize, usize)] = &[(1, 1), (2, 2), (4, 4), (6, 6)];
+const MAX_BENCH_SPIN_RETRY_ATTEMPTS: usize = 100_000_000_000;
+\end{lstlisting}
+
+Line 1 sets the number of items each producer process will generate. The value of 170,000 items provides sufficient workload to measure performance while keeping individual benchmark runs reasonable in duration. Line 2 defines the producer and consumer configurations to test as tuples. The array \texttt{[(1, 1), (2, 2), (4, 4), (6, 6)]} tests symmetric configurations from single producer and single consumer up to 6 producers and 6 consumers, allowing analysis of scalability. Line 3 sets the maximum spin attempts before considering an operation failed. This large value ensures that wait-free operations have sufficient opportunity to complete.
+
+For other benchmark categories, these constants are adjusted appropriately. For example, the \ac{MPSC} benchmark uses:
+
+\begin{lstlisting}[language=Rust, style=boxed, caption={MPSC-specific configuration}, label={lst:mpsc-constants}]
+const ITEMS_PER_PRODUCER_TARGET: usize = 500_000;
+const PRODUCER_COUNTS_TO_TEST: &[usize] = &[1, 2, 4, 8, 14];
+\end{lstlisting}
+
+The \ac{MPSC} configuration tests up to 14 producers with a single consumer, using more items per producer to ensure the consumer remains busy throughout the benchmark. Similarly, \ac{SPMC} and \ac{SPSC} benchmarks have their own tailored parameters to effectively measure their specific use-cases.
+
 \subsection{Benchmark Interface Implementation}
 Each queue implementation must provide a uniform interface for benchmarking. This is achieved through a common trait that abstracts the queue-specific operations, as shown in \cref{lst:bench-trait}. The following pop and push traits implement the dequeue and enqueue operations respectively for the queues.
 
