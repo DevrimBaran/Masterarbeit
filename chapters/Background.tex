@@ -196,7 +196,7 @@ While Michael and Scott's algorithm relies on the \ac{CAS} primitive, other atom
 \subsection{Atomic Primitives}\label{subsec:atomic-primitives}
 Atomic primitives are hardware instructions that conduct a set of steps atomically, meaning with no interruption from other processes \cite{Atomics}. This will be important in the algorithms analyzed later in this thesis, since these primitives are used to implement wait-free synchronization. There are different kind of atomic primitives: 
 
-\subsubsection{\ac{LL/SC}}\label{subsubsec:llsc}
+\subsubsection{\acf{LL/SC}}\label{subsubsec:llsc}
 Abbreviation of the instructions \ac{LL} and \ac{SC}, which is an operation available on ARM, MIPS and Alpha architecutures usually implied with a \ac{VL} instruction.
 \begin{itemize}
     \item \ac{LL}(R) returns value of register r
@@ -206,7 +206,7 @@ Abbreviation of the instructions \ac{LL} and \ac{SC}, which is an operation avai
 \cite{Fuchs2014EvaluationOT}
 
 \subsubsection{\acf{CAS}}\label{subsubsec:compare-and-swap}
-It is already explained how \ac{CAS} works in \cref{subsec:michael-scott}. Furthermore to the explanation in \cref{subsec:michael-scott} \ac{CAS} is an atomic primitive that is supported on \enquote{intel x386, x64 and most general purpose architectures with operands that are restricted to pointer size} \cite{Fuchs2014EvaluationOT}.
+Furthermore to the explanation in \cref{subsec:michael-scott} \ac{CAS} is an atomic primitive that is supported on \enquote{intel x386, x64 and most general purpose architectures with operands that are restricted to pointer size} \cite{Fuchs2014EvaluationOT}.
 \begin{itemize}
     \item \enquote{\ac{CAS}(R,e,n) returns true and sets the value of R to n if the value in R is e. Otherwise, it returns false.} \cite{Fuchs2014EvaluationOT}
 \end{itemize}
@@ -227,7 +227,7 @@ Sometimes also called \ac{CAS}2, is a \ac{CAS} on two independent memory locatio
 \subsubsection{Swap}\label{subsubsec:swap}
 Swap is an atomic read-modify-write operation that unconditionally exchanges a value in memory with a new value and returns the old value. Swap(R, v) atomically stores value v into location R and returns the previous value that was in R. This operation always succeeds. \cite{Mateíspmc}.
 
-\subsubsection{\ac{FAA}}\label{subsubsec:fetch-and-add}
+\subsubsection{\acf{FAA}}\label{subsubsec:fetch-and-add}
 This primitive is used to increment \enquote{the value of a variable by a given offset and [return] the result. This instruction always succeeds.} \cite{Fuchs2014EvaluationOT}
 
 \subsubsection{\ac{FAS}}\label{subsubsec:fetch-and-store}
