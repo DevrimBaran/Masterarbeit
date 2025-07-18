@@ -220,7 +220,7 @@ fn bench_yang_crummey(c: &mut Criterion) {
 }
 \end{lstlisting}
 
-Line 2 creates a benchmark group with a descriptive name. Line 4 iterates through different producer/consumer configurations from the constant array \texttt{PROCESS\_COUNTS\_TO\_TEST}. Line 9 formats the benchmark name to indicate the configuration. Lines 11 to 30 use Criterion's \texttt{iter\_custom} method to measure custom timing, as the benchmark itself measures process execution time. The closure in lines 13 to 23 initializes the queue where line 15 calculates the exact shared memory size needed and line 16 allocates the shared memory region. After that lines 19 to 21 initialize the queue at the allocated address. Line 28 indicates that \ac{YMC} doesn't require a helper thread.
+Line 2 creates a benchmark group with a descriptive name. Line 4 iterates through different producer/consumer configurations from the constant array \texttt{PROCESS\_COUNTS\_TO\_TEST}. Line 9 formats the benchmark name to indicate the configuration. Lines 11 to 30 use Criterion's \texttt{iter\_custom} method to measure custom timing, as the benchmark itself measures process execution time. The closure in lines 13 to 23 initializes the queue where line 15 calculates the exact shared memory size needed and line 16 allocates the shared memory region. After that lines 19 to 21 initialize the queue at the allocated address.
 
 \subsection{Consumer Process Implementation}
 The consumer processes follow a similar pattern but with additional logic to handle termination and verify correctness, as shown in \cref{lst:consumer-process}.
@@ -290,7 +290,7 @@ for consumer_id in 0..num_consumers {
 
 Lines 12 to 18 calculate each consumer's share of items, distributing any remainder among the first consumers. The main consumption loop in lines 23 to 46 implements a termination strategy where lines 25 to 27 reset the empty check counter on successful pop while lines 30 to 38 check if all producers have finished and implement a termination condition. Lines 48 to 51 atomically update the total consumed count for later verification. Line 53 uses \texttt{\_exit} to avoid cleanup that might interfere with shared memory.
 
-\subsection{Result Validation}
+\subsection{Validation}
 After all producer and consumer processes complete, the benchmark validates that no items were lost or double read during the concurrent operations. This validation is important for ensuring the correctness of each queue implementation under \ac{IPC} scenarios, as shown in \cref{lst:result-validation}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Post-benchmark validation of results}, label={lst:result-validation}]
