@@ -458,8 +458,10 @@ for i in 0..10 {
 }
 \end{lstlisting}
 
+Lines 2 to 3 in \cref{lst:basic-test} test the initial empty state and check that pop operations fail correctly on empty queues. The single element test in lines 6 to 9 tests the state change from empty to non-empty and back, with line 8 testing that the pushed value is correctly retrieved. Lines 12 to 17 test that FIFO ordering is maintained for multiple elements.
+
 \subsection{Capacity and Boundary Tests}
-All queues were tested to ensure they correctly handle capacity limits. Tests verified that queues reject push operations when full and properly handle edge cases near capacity boundaries. Special attention was given to queues with buffering mechanisms like \ac{BIFFQ} and MultiPush like queues, which required explicit flushing operations.
+Capacity limits also had to be testet, so it can be ensured, that the capacities work correctly. Special attention was given to queues with buffering mechanisms like \ac{BIFFQ} and MultiPush queue, which required explicit flushing operations.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Capacity limit test pattern}, label={lst:capacity-test}]
 // Test pushing up to capacity
@@ -483,36 +485,56 @@ if pushed > 0 {
 }
 \end{lstlisting}
 
-For queues with buffering mechanisms, additional flush operations were required:
+In \cref{lst:capacity-test} lines 3 to 8 test filling the queue to capacity, counting successful pushes. Line 9 tests that at least one item could be pushed. Line 12 tests that a full queue either reports no available space or rejects push attempts. Lines 15 to 19 test that after removing an element, space becomes available for new items.
+
+For queues with buffering mechanisms, additional testing was required:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Buffered queue capacity test}, label={lst:buffered-capacity-test}]
-// BiffQ requires explicit flushing
+// BiffQ attempts to push beyond capacity
 for i in 0..BIFFQ_CAPACITY + 100 {
     match queue.push(i) {
         Ok(_) => pushed_total += 1,
         Err(_) => {
-            // Attempt to flush buffer and retry
+            // Flush local buffer to main queue
             let _ = queue.flush_producer_buffer();
             if queue.push(i).is_err() {
-                break;  // Queue truly full
+                break;  // No space in main queue
             } else {
                 pushed_total += 1;
             }
         }
     }
-    
     // Periodic flushing every 32 items
     if i % 32 == 31 {
         let _ = queue.flush_producer_buffer();
     }
 }
-
 // Final flush to ensure all buffered items are visible
 let _ = queue.flush_producer_buffer();
+
+// Verify capacity behavior based on how full the queue got
+if pushed_total >= BIFFQ_CAPACITY - 32 {
+    // Nearly full: test pop/push with limited space
+    assert!(queue.pop().is_ok());
+    // Try to push after making space
+    for _ in 0..10 {
+        let _ = queue.flush_producer_buffer();
+        if queue.push(99999).is_ok() {
+            break;
+        }
+        let _ = queue.pop(); // Make more space
+    }
+} else {
+    // Partially full: verify basic push/pop works
+    assert!(queue.pop().is_ok());
+    assert!(queue.push(99999).is_ok());
+}
 \end{lstlisting}
 
+The \ac{BIFFQ} test in \cref{lst:buffered-capacity-test} tests the buffering system. When push fails in line 5, line 7 flushes the local buffer to the main queue. If the retry in line 8 still fails, it means the main queue lacks space. Lines 16 to 18 periodically flushes every 32 items (the buffer size). The test in lines 24 to 39 checks different behaviors based on how full the queue is: lines 24 to 33 test the case where the main queue might not have room for a complete buffer flush, while lines 35 to 39 test basic operations when the queue is only partially full.
+
 \subsection{Memory Alignment Verification}
-Since the implementations target shared memory with specific alignment requirements, tests verified proper memory alignment for all queue structures:
+Since the implementations target shared memory with specific alignment requirements, tests as in \cref{lst:alignment-test} verified proper memory alignment for all queue structures:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Memory alignment verification test}, label={lst:alignment-test}]
 // Allocate memory with specific alignment
@@ -541,7 +563,9 @@ assert_eq!(
 );
 \end{lstlisting}
 
-Position-independent addressing was verified through shared memory tests:
+Lines 2 to 4 in \cref{lst:alignment-test} create memory with the required alignment and allocate it so that lines 7 to 10 can test that the allocation has the correct alignment using modulo arithmetic. For \ac{YMC}, lines 18 and 19 calculate the aligned offset, where \texttt{(offset + 127) \& !127} rounds up to the next 128-byte boundary. Lines 21 to 24 test that the final queue pointer has the required 128-byte alignment.
+
+Position-independent addressing was verified in \cref{lst:position-independent-test} through shared memory tests:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Position-independent addressing test}, label={lst:position-independent-test}]
 // Map shared memory at arbitrary address
@@ -566,8 +590,10 @@ queue.push(42).unwrap();
 assert_eq!(queue.pop().unwrap(), 42);
 \end{lstlisting}
 
+Line 4 in \cref{lst:position-independent-test} passes null to let the OS choose the memory address and lines 6 and 7 specify shared anonymous memory for inter-process access. Lines 14 and 15 initializes the at any address. Lines 19 and 20 test that the queue works correctly regardless of its memory location.
+
 \subsubsection{Memory Pool Management}
-The pre-allocated memory pools of the queues were testet too for correct allocation, correct recycling and correct pool exhaustion handling, as seen in the following:
+The pre-allocated memory pools of the queues were tested for correct allocation, recycling, and pool exhaustion handling:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Memory pool management test}, label={lst:pool-management-test}]
 // Test pool allocation and recycling
@@ -616,12 +642,13 @@ if !free_head.is_null() {
 }
 \end{lstlisting}
 
+Lines 4 to 6 in \cref{lst:pool-management-test} test basic allocation from the pool and test that the segment is properly initialized. Line 9 tests returning the segment to the pool. Lines 12 to 20 test pool exhaustion by allocating until \texttt{new\_segment} returns null in line 18. Lines 23 to 25 test that segments can be returned to the pool. Lines 29 to 44 test the free list implementation in Jiffy Queue, where lines 36 to 41 test atomic removal of the free list head using compare-exchange. Since we only test, that the allocations work and can be used, assertions were not used, since only correct behavior is testet.
 
 \subsection{Concurrent Operation Tests}
-Concurrent tests validated the correctness of queue operations under contention. These tests employed multiple patterns:
+Concurrent tests validated the correctness of queue operations under contention. Different kinds of tests were implemented to stress the queues in various ways:
 
 \subsubsection{Producer-Consumer Patterns}
-Tests spawned separate threads for producers and consumers, using barriers for synchronization to ensure correct concurrency:
+Tests spawned separate threads for producers and consumers to test correct concurrent operation as seen in \cref{lst:concurrent-test}:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Concurrent test pattern}, label={lst:concurrent-test}]
 let barrier = Arc::new(Barrier::new(num_threads));
@@ -645,8 +672,10 @@ for handle in handles {
 }
 \end{lstlisting}
 
+Line 1 in \cref{lst:concurrent-test} creates a barrier to synchronize thread startup. Line 8 ensures all threads start at the same time, creating maximum contention. Line 10 generates unique values per producer using \texttt{tid * items\_per\_thread + i} to test data integrity. Lines 17 to 19 wait for all producers to complete before verification. This is just a simple test to ensure that the queues can handle concurrent operations without deadlocks or data corruption.
+
 \subsubsection{Stress Tests}
-High-contention scenarios were tested with multiple producers and consumers operating simultaneously to test that even under high contention the queues maintain correctness. These stress tests look for if queues lose items, cannot remain \ac{FIFO} order and that the queue state remains sonsistent. The following example show how it is done:
+In \cref{lst:stress-test} high-contention scenarios were tested with multiple producers and consumers operating simultaneously:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={High-contention stress test}, label={lst:stress-test}]
 // Stress test with multiple concurrent producers and consumers
@@ -711,7 +740,9 @@ assert!(
 );
 \end{lstlisting}
 
-For queues with FIFO guarantees, ordering verification was performed:
+Lines 4 to 6 in \cref{lst:stress-test} create atomic counters to track production and consumption across threads. Lines 15 to 17 test retry behavior with yield to handle temporary failures. Lines 19 and 20 only count successfully pushed items. Lines 33 to 45 test the consumer loop that continues until signaled to stop and experiences many failures in lines 39 to 41. Lines 51 and 52 signal consumers to terminate. Lines 55 to 60 test that at least 90\% of produced items were consumed.
+
+In the following \cref{lst:fifo-stress-test} correct \ac{FIFO} ordering was tested:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={FIFO ordering verification under stress}, label={lst:fifo-stress-test}]
 // Collect all dequeued items
@@ -743,8 +774,10 @@ for producer_id in 0..num_producers {
 }
 \end{lstlisting}
 
-\subsection{Inter-Process Communication Tests}
-One important test is also if the queues' behavior in true \ac{IPC} scenarios stays correct using process forking. These tests show that under process contention the queues still operate correct, properly handles shared memory regions, that atomic operations are visible between processes. The \ac{IPC} tests followed a consistent pattern using \texttt{fork()} to create separate processes:
+Lines 2 to 5 in \cref{lst:fifo-stress-test} collect all items from the queue. Lines 11 to 14 test for missing or duplicate items by checking sequential values after sorting. Lines 17 to 20 filter items by producer. Lines 23 to 26 test that items from the same producer maintain their order.
+
+\subsection{\acf{IPC} Tests}
+One important test is that the queues' behavior in true \ac{IPC} scenarios remains correct using process forking. These tests verify that under process contention the queues still operate correctly, properly handle shared memory regions, and that atomic operations are visible between processes. The \ac{IPC} tests followed a consistent pattern using \texttt{fork()} to create separate processes as seen in \cref{lst:ipc-test}:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={IPC test structure}, label={lst:ipc-test}]
 match unsafe { fork() } {
@@ -775,11 +808,13 @@ match unsafe { fork() } {
 }
 \end{lstlisting}
 
+Line 2 in \cref{lst:ipc-test} creates a child process that shares the queue's memory with the parent. Lines 5 to 10 test the producer's retry loop, yielding on failure in line 8. Line 12 uses \texttt{\_exit(0)} to avoid cleanup handlers that might affect shared memory. Lines 17 to 21 test the consumer loop collecting all items. Line 24 waits for the child process to complete before final verification.
+
 \subsection{Special Feature Validation}
-Algorithm-specific features required specific validation:
+Algorithm-specific features required targeted validation:
 
 \subsubsection{Buffering Mechanisms}
-Queues with local buffering like \ac{BIFFQ} and MultiPush were tested for correct flush operations and visibility of buffered items as seen in the following example:
+Queues with local buffering like \ac{BIFFQ} and MultiPush were tested like in \cref{lst:buffer-test} for correct flush operations and visibility of buffered items:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Buffer mechanism test}, label={lst:buffer-test}]
 // Test BiffQ flush operations
@@ -807,8 +842,10 @@ for i in 0..32 {  // Local buffer size
 assert_eq!(queue.local_count.load(Ordering::Relaxed), 0);
 \end{lstlisting}
 
+Lines 2 to 4 in \cref{lst:buffer-test} push items into the local buffer. Line 7 tests that items remain invisible to consumers before flushing. Lines 10 and 11 test explicit buffer flushing. Lines 14 to 16 test that items are now consumable in correct order. Lines 19 to 23 test automatic flushing when the 32-item buffer fills.
+
 \subsubsection{Helper Thread Coordination}
-The Verma queue with its helper thread required special tests to verify, that the helper thread correctly functions as expected:
+Verma's queue from \cref{subsubsec:verma-queue} with its helper thread requires special tests seen in \cref{lst:helper-thread-test} to verify that the helper thread functions correctly:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Helper thread coordination test}, label={lst:helper-thread-test}]
 match unsafe { fork() } {
@@ -839,7 +876,17 @@ match unsafe { fork() } {
 assert!(queue.is_empty(), "Queue operational without helper");
 \end{lstlisting}
 
+Line 4 in \cref{lst:helper-thread-test} starts the helper thread in a separate process. Line 8 allows time for helper initialization. Lines 11 to 17 test that operations complete successfully with helper assistance. Line 12 provides time for the helper to process the request. Lines 20 and 21 test proper helper termination and cleanup. Finally, line 25 tests that the queue remains functional without a helper thread.
+
 \subsection{Miri Validation}
 Miri tests provided validation of memory safety in concurrent scenarios. In the test folder of the repository there are miri test files additionally to the unit test files. While structurally similar to the regular unit tests, Miri tests had to use significantly reduced parameters and simplified concurrency patterns to accommodate Miri's execution overhead. The advantage of Miri tests are, that Miri simulates extreme contention leading to detect undefined behavior easier. Miri tests will fail if undefined behavior like data races happens.
 
 \subsection{Test Coverage}
+As we can see in \cref{fig:cov} a total function coverage of 81.12\% and total line coverage of 70.03\% was achieved, showing that most of the code paths were executed during testing. Branch coverage only lies at 44.78\%, which is still fine in concurrent programming.
+\begin{figure}[!ht]
+    \centering
+    \captionsetup{justification=centering}
+    \caption{Total Coverage of the Rust implementation}
+    \includegraphics[width=145mm]{images/coverage.png}
+    \label{fig:cov}
+\end{figure}
