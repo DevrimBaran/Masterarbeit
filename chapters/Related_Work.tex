@@ -18,9 +18,9 @@ Safety requirements define what must never happen (e.g., a queue must never drop
 \end{itemize}
 This systematic methodology to prove the correctness of concurrent data structures laid the necessary groundwork for later developments too. \cite{Lamport1983SPSCCircularBuffer}
 
-Building on methodologies to prove concurrent data structure correctness Herlihy and Wing provided linearizability as a correctness condition for concurrent objects, which is a guarantee that every operation performed appears to take effect instantaneously at some point between the call and return of the operation \cite{HerlihyLinearizability}. This correctness condition was then used to formalize wait-freedom in 1991 \cite{herlihy1991wait}. In the latter work Herlihy proved that any sequential data structure can be transformed into a wait-free concurrent data structure \cite{herlihy1991wait}. A wait-free data structure must satisfy the following three constraints: 
+Building on methodologies to prove concurrent data structure correctness Herlihy and Wing provided linearisability as a correctness condition for concurrent objects, which is a guarantee that every operation performed appears to take effect instantaneously at some point between the call and return of the operation \cite{HerlihyLinearizability}. This correctness condition was then used to formalise wait-freedom in 1991 \cite{herlihy1991wait}. In the latter work Herlihy proved that any sequential data structure can be transformed into a wait-free concurrent data structure \cite{herlihy1991wait}. A wait-free data structure must satisfy the following three constraints: 
 \begin{itemize}
-   \item Linearizability: operations take effect instantaneously at some point between the call and return of the operation.
+   \item Linearisability: operations take effect instantaneously at some point between the call and return of the operation.
    \item Bounded steps: operations end in a finite number of steps.
    \item Independence: operations finish regardless of other processes' execution (for later understanding: a process waiting for another process for a maximum number of time and then returning an error if that time is exceeded would still be considered wait-free, since it will finish regardless of the other process).
 \end{itemize}

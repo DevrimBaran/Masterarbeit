@@ -1,5 +1,5 @@
 \chapter{Benchmarking and Results}\label{ch:results}
-To finish the objective of this thesis at last a setting needs to be built where these algorithms are used for \ac{IPC} over shared memory. This setting was also used to benchmark the performance of these algorithms to identify the best performing wait-free algorithms that can be used. In the \cite{githubMA} the folder benches includes the setting and benchmark of these algorithms. As seen before these algorithms were divided into 4 categories, \ac{MPMC}, \ac{MPSC}, \ac{SPMC} and \ac{SPSC}. Therefore 4 different \ac{IPC} over shared memory settings were built to analyze firstly if all algorithms work as intended and secondly to compare the performance of all algorithms. Even though \ac{SPMC} category only has one algorithm, the built setting was still interesting to check and validate if the algorithm works as intended. After identifying the best algorithm 3 more settings were built. One setting was to see if the \ac{SPMC} queue or the best performing queues of the other categories would be faster for the \ac{SPSC} category. The same was done for the \ac{MPSC} category by checking if the best \ac{MPMC} queue or the best \ac{MPSC} queue would perform better. Finally for the \ac{SPMC} category the same was done to check if the best \ac{MPMC} or \ac{SPMC} queue would be better. The best \ac{SPSC} queue could not be tested for higher producer or consumer numbers, since the missing helping structures and missing atomic primitives would lead to deadlocks or inconsistent data. The benchmarks were done on a system with an Intel i7-12700H x86 processor with 14 cores. The benchmarks were implemented with the help of the \texttt{criterion} crate, which is a benchmarking library for Rust. This chapter will show in general how the benchmark settings were implemented to understand the results later.
+To finish the objective of this thesis at last a setting needs to be built where these algorithms are used for \ac{IPC} over shared memory. This setting was also used to benchmark the performance of these algorithms to identify the best performing wait-free algorithms that can be used. In the \cite{githubMA} the folder benches includes the setting and benchmark of these algorithms. As seen before these algorithms were divided into 4 categories, \ac{MPMC}, \ac{MPSC}, \ac{SPMC} and \ac{SPSC}. Therefore 4 different \ac{IPC} over shared memory settings were built to analyse firstly if all algorithms work as intended and secondly to compare the performance of all algorithms. Even though \ac{SPMC} category only has one algorithm, the built setting was still interesting to check and validate if the algorithm works as intended. After identifying the best algorithm 3 more settings were built. One setting was to see if the \ac{SPMC} queue or the best performing queues of the other categories would be faster for the \ac{SPSC} category. The same was done for the \ac{MPSC} category by checking if the best \ac{MPMC} queue or the best \ac{MPSC} queue would perform better. Finally for the \ac{SPMC} category the same was done to check if the best \ac{MPMC} or \ac{SPMC} queue would be better. The best \ac{SPSC} queue could not be tested for higher producer or consumer numbers, since the missing helping structures and missing atomic primitives would lead to deadlocks or inconsistent data. The benchmarks were done on a system with an Intel i7-12700H x86 processor with 14 cores. The benchmarks were implemented with the help of the \texttt{criterion} crate, which is a benchmarking library for Rust. This chapter will show in general how the benchmark settings were implemented to understand the results later.
 
 \section{Benchmark Structure}
 All benchmarks follow a consistent architecture to ensure fair comparison between queue implementations. The benchmarks measure the time taken for producers and consumers to exchange a fixed number of items through each queue implementation using \ac{IPC} over shared memory. This section explains the general benchmark structure using the \ac{MPMC} benchmark as a representative example, as the same patterns apply to all queue categories. Not every line will be explained, but the most important lines will be explained to understand the general structure of the benchmarks. 
@@ -55,12 +55,12 @@ impl<T: Send + Clone + 'static> BenchMpmcQueue<T> for YangCrummeyQueue<T> {
 }
 \end{lstlisting}
 
-The trait in lines 1 to 6 defines a common interface that all \ac{MPMC} queues must implement. The \texttt{process\_id} parameter in lines 2 and 3 allows queues to distinguish between different processes, which is necessary for some algorithms. Lines 9 to 24 show how the \ac{YMC} queue maps its specific methods to the common interface. The \texttt{bench\_is\_full} method in line 23 returns false for queues with unbounded capacity. This mapping is done for all queues in the respective categories, so that the benchmarks can be run with all queues without changing the benchmark code to to compare fairly.
+The trait in lines 1 to 6 defines a common interface that all \ac{MPMC} queues must implement. The \texttt{process\_id} parameter in lines 2 and 3 allows queues to distinguish between different processes, which is necessary for some algorithms. Lines 9 to 24 show how the \ac{YMC} queue maps its specific methods to the common interface. The \texttt{bench\_is\_full} method in line 23 returns false for queues with unbounded capacity. This mapping is done for all queues in the respective categories, so that the benchmarks can be run with all queues without changing the benchmark code to compare fairly.
 
-\subsection{Process Synchronization Infrastructure}
-Benchmarking concurrent algorithms requires careful synchronization to ensure all processes start simultaneously and coordinate their completion for fair comparisons. Two synchronization structures manage this coordination, as shown in \cref{lst:sync-structures}.
+\subsection{Process Synchronisation Infrastructure}
+Benchmarking concurrent algorithms requires careful synchronisation to ensure all processes start simultaneously and coordinate their completion for fair comparisons. Two synchronisation structures manage this coordination, as shown in \cref{lst:sync-structures}.
 
-\begin{lstlisting}[language=Rust, style=boxed, caption={Process synchronization structures}, label={lst:sync-structures}]
+\begin{lstlisting}[language=Rust, style=boxed, caption={Process synchronisation structures}, label={lst:sync-structures}]
 #[repr(C)]
 struct MpmcStartupSync {
     producers_ready: AtomicU32,
@@ -97,7 +97,7 @@ struct MpmcDoneSync {
 }
 \end{lstlisting}
 
-The \texttt{MpmcStartupSync} structure in lines 1 to 6 coordinates the startup phase. Producers increment \texttt{producers\_ready} in line 3 when ready, consumers increment \texttt{consumers\_ready} in line 4, and all processes wait for \texttt{go\_signal} in line 5 before starting. The \texttt{new\_in\_shm} method in lines 9 to 22 initializes the structure directly in shared memory using placement new. The \texttt{MpmcDoneSync} structure in lines 29 to 34 tracks completion, with \texttt{total\_consumed} in line 33 which is used to verify that no items were lost during the benchmark.
+The \texttt{MpmcStartupSync} structure in lines 1 to 6 coordinates the startup phase. Producers increment \texttt{producers\_ready} in line 3 when ready, consumers increment \texttt{consumers\_ready} in line 4, and all processes wait for \texttt{go\_signal} in line 5 before starting. The \texttt{new\_in\_shm} method in lines 9 to 22 initialises the structure directly in shared memory using placement new. The \texttt{MpmcDoneSync} structure in lines 29 to 34 tracks completion, with \texttt{total\_consumed} in line 33 which is used to verify that no items were lost during the benchmark.
 
 \subsection{Benchmark Execution Framework}
 
@@ -117,10 +117,10 @@ where
 {
     let total_items = num_producers * items_per_process;
     
-    // Initialize queue in shared memory
+    // Initialise queue in shared memory
     let (q, q_shm_ptr, q_shm_size) = queue_init_fn();
     
-    // Allocate synchronization structures
+    // Allocate synchronisation structures
     let startup_sync_size = MpmcStartupSync::shared_size();
     let startup_sync_shm_ptr = unsafe { map_shared(startup_sync_size) };
     let startup_sync = MpmcStartupSync::new_in_shm(startup_sync_shm_ptr);
@@ -175,7 +175,7 @@ where
 }
 \end{lstlisting}
 
-The function signature in lines 1 to 10 accepts a queue initialization function and benchmark parameters. The \texttt{needs\_helper} parameter in line 6 supports queues like Verma's that require a helper thread. Line 15 initializes the queue using the provided function, which returns the queue reference and shared memory details. Lines 26 to 50 show the producer process creation where line 30 signals readiness, lines 31 to 33 implement ensures that every process waits for the go signal, and lines 36 to 41 produce items with retry logic. Lines 53 to 57 ensure all processes are ready before starting. Line 60 captures the start time immediately before signaling processes to begin in line 61. Lines 64 to 66 wait for all producer processes to complete before calculating the elapsed time in line 68.
+The function signature in lines 1 to 10 accepts a queue initialisation function and benchmark parameters. The \texttt{needs\_helper} parameter in line 6 supports queues like Verma's that require a helper thread. Line 15 initialises the queue using the provided function, which returns the queue reference and shared memory details. Lines 26 to 50 show the producer process creation where line 30 signals readiness, lines 31 to 33 implement ensures that every process waits for the go signal, and lines 36 to 41 produce items with retry logic. Lines 53 to 57 ensure all processes are ready before starting. Line 60 captures the start time immediately before signalling processes to begin in line 61. Lines 64 to 66 wait for all producer processes to complete before calculating the elapsed time in line 68.
 
 \subsection{Queue-Specific Benchmark Integration}
 
@@ -199,7 +199,7 @@ fn bench_yang_crummey(c: &mut Criterion) {
                             let bytes = YangCrummeyQueue::<usize>::shared_size(total_processes);
                             let shm_ptr = unsafe { map_shared(bytes) };
                             
-                            // Initialize queue in shared memory
+                            // Initialise queue in shared memory
                             let q = unsafe {
                                 YangCrummeyQueue::init_in_shared(shm_ptr, total_processes)
                             };
@@ -220,7 +220,7 @@ fn bench_yang_crummey(c: &mut Criterion) {
 }
 \end{lstlisting}
 
-Line 2 creates a benchmark group with a descriptive name. Line 4 iterates through different producer/consumer configurations from the constant array \texttt{PROCESS\_COUNTS\_TO\_TEST}. Line 9 formats the benchmark name to indicate the configuration. Lines 11 to 30 use Criterion's \texttt{iter\_custom} method to measure custom timing, as the benchmark itself measures process execution time. The closure in lines 13 to 23 initializes the queue where line 15 calculates the exact shared memory size needed and line 16 allocates the shared memory region. After that lines 19 to 21 initialize the queue at the allocated address.
+Line 2 creates a benchmark group with a descriptive name. Line 4 iterates through different producer/consumer configurations from the constant array \texttt{PROCESS\_COUNTS\_TO\_TEST}. Line 9 formats the benchmark name to indicate the configuration. Lines 11 to 30 use Criterion's \texttt{iter\_custom} method to measure custom timing, as the benchmark itself measures process execution time. The closure in lines 13 to 23 initialises the queue where line 15 calculates the exact shared memory size needed and line 16 allocates the shared memory region. After that lines 19 to 21 initialise the queue at the allocated address.
 
 \subsection{Consumer Process Implementation}
 The consumer processes follow a similar pattern but with additional logic to handle termination and verify correctness, as shown in \cref{lst:consumer-process}.
@@ -331,7 +331,7 @@ unsafe {
 duration
 \end{lstlisting}
 
-Lines 2 to 8 wait for all processes to complete before proceeding with validation. After that line 13 atomically reads the total number of items consumed across all consumer processes. The validation check in lines 15 to 24 compares the consumed count against the expected total. If items are missing, line 17 prints a detailed warning that includes the actual versus expected counts in line 18, the queue type name in line 20, and the producer and consumer configuration in lines 21 and 22. This warning helps identify queue implementations that may lose items under high contention or have synchronization issues and to verify that the queue operates correctly under concurrent access, if the warning does not appear.
+Lines 2 to 8 wait for all processes to complete before proceeding with validation. After that line 13 atomically reads the total number of items consumed across all consumer processes. The validation check in lines 15 to 24 compares the consumed count against the expected total. If items are missing, line 17 prints a detailed warning that includes the actual versus expected counts in line 18, the queue type name in line 20, and the producer and consumer configuration in lines 21 and 22. This warning helps identify queue implementations that may lose items under high contention or have synchronisation issues and to verify that the queue operates correctly under concurrent access, if the warning does not appear.
 
 \subsection{Benchmark Configuration}
 The benchmarks use Criterion's configuration options to ensure reliable measurements, as shown in \cref{lst:criterion-config}.
@@ -357,7 +357,7 @@ criterion_group! {
 criterion_main!(benches);
 \end{lstlisting}
 
-Line 3 sets a 1-second warm-up period to stabilize system state. Line 4 configures 4200 seconds of measurement time per benchmark. Line 5 sets 500 samples, as each sample involves creating multiple processes and produce and consume a set number of items. Lines 8 to 16 define the benchmark group with all queue implementations to test.
+Line 3 sets a 1-second warm-up period to stabilise system state. Line 4 configures 4200 seconds of measurement time per benchmark. Line 5 sets 500 samples, as each sample involves creating multiple processes and produce and consume a set number of items. Lines 8 to 16 define the benchmark group with all queue implementations to test.
 
 The same benchmark structure is applied to all benchmarks with appropriate modifications to the number of producers and consumers. This consistent approach ensures fair comparison across all implementations while accurately measuring their performance characteristics under \ac{IPC} scenarios.
 
@@ -390,21 +390,21 @@ B-Queue & 1552513.1 & 23.81x \\
 \end{tabular}
 \end{table}
 
-The results reveal that the cache-aware algorithms (\ac{BLQ}, \ac{IFFQ}, \ac{LLQ}, \ac{BIFFQ}) are all faster then the other approaches, demonstrating the importance of cache optimization. The \ac{BLQ}'s superior performance can be attributed to its additional batching mechanism, which amortizes synchronization costs across multiple operations while maintaining cache locality.
+The results reveal that the cache-aware algorithms (\ac{BLQ}, \ac{IFFQ}, \ac{LLQ}, \ac{BIFFQ}) are all faster than the other approaches, demonstrating the importance of cache optimisation. The \ac{BLQ}'s superior performance can be attributed to its additional batching mechanism, which amortises synchronisation costs across multiple operations while maintaining cache locality.
 
 Notably, the dynamic allocation-based queues (\ac{dSPSC}, \ac{uSPSC}) showed worse performance, with \ac{dSPSC} being 37 times slower than \ac{BLQ}. This overhead stems from the memory pool management required for shared memory compatibility, as discussed in \cref{ch:implementation}.
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing the distribution of execution times for SPSC queue implementations (35000000 items)}
+\caption{Violin plot showing the distribution of execution times for \ac{SPSC} queue implementations and 35,000,000 total items)}
 \label{fig:spsc-violin}
 \includegraphics[width=\textwidth]{images/results/spsc_queue_performance_violin_test.png}
 \end{figure}
 
-The violin plot in \cref{fig:spsc-violin} illustrates the distribution of execution times across all SPSC implementations. It can be observed that the lamport queue has no consistent performance with great varying results. It often achieves great execution times, but also often bad execution times. This is probably because of bad cache design of the queue that was talked about in \cref{alg:lamport-queue}. The \ac{BLQ} on the other hand shows not only the lowest median execution time but also the most consistent performance with minimal variance, which is an important trait to be able to design hard timing constraints for \ac{HRTS}. 
+The violin plot in \cref{fig:spsc-violin} illustrates the distribution of execution times across all SPSC implementations. It can be observed that the Lamport queue has no consistent performance with greatly varying results. It often achieves great execution times, but also often bad execution times. This is probably because of bad cache design of the queue that was talked about in \cref{alg:lamport-queue}. The \ac{BLQ} on the other hand shows not only the lowest median execution time but also the most consistent performance with minimal variance, which is an important trait to be able to design hard timing constraints for \ac{HRTS}. 
 
 \subsection{\acf{MPSC} Queue Performance}
-For \ac{MPSC} scenarios, four queue implementations were tested with varying producer counts from 1 to 14, each producer generating 500000 items. \cref{tab:mpsc-results} presents the mean performance across different producer configurations, which is visualized in \cref{fig:mpsc-mean-performance}. DQueue with a mean execution time of 13967.2 $\mu$s for 1 producer, 29039.9 $\mu$s for 2 producers, and scaling up to 323126.2 $\mu$s for 14 producers, outperformed all other implementations.
+For \ac{MPSC} scenarios, four queue implementations were tested with varying producer counts from 1 to 14, each producer generating 500000 items. \cref{tab:mpsc-results} presents the mean performance across different producer configurations, which is visualised in \cref{fig:mpsc-mean-performance}. DQueue with a mean execution time of 13967.2 $\mu$s for 1 producer, 29039.9 $\mu$s for 2 producers, and scaling up to 323126.2 $\mu$s for 14 producers, outperformed all other implementations.
 
 \begin{table}[htb]
 \centering
@@ -429,13 +429,13 @@ Jiffy & 32280.3 & 62159.1 & 126199.3 & 276401.5 & 538978.2 \\
 \includegraphics[width=\textwidth]{images/results/mpsc_mean_performance_vs_producers.png}
 \end{figure}
 
-DQueue had the best performance overall as producer count increased. The DQueue's local buffering mechanism effectively reduces contention by minimizing synchronization operations, as each producer accumulates items locally before batch-writing to the shared queue.
+DQueue had the best performance overall as producer count increased. The DQueue's local buffering mechanism effectively reduces contention by minimising synchronisation operations, as each producer accumulates items locally before batch-writing to the shared queue.
 
-The \ac{JPQ}, despite its theoretical $O(\log n)$ complexity, showed poor practical performance  beeing due to the overhead of maintaining the binary tree structure for timestamp propagation. This highlights the gap between theoretical complexity and real-world performance in concurrent data structures.
+The \ac{JPQ}, despite its theoretical $O(\log n)$ complexity, showed poor practical performance being due to the overhead of maintaining the binary tree structure for timestamp propagation. This highlights the gap between theoretical complexity and real-world performance in concurrent data structures.
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing the distribution of execution times for MPSC queue implementations with 14 producers and 1 consumer}
+\caption{Violin plot showing the distribution of execution times for MPSC queue implementations with 14 producers and 1 consumer and 7,000,000 total items}
 \label{fig:mpsc-violin-14p}
 \includegraphics[width=\textwidth]{images/results/mpsc_performance_violin_14_producers.png}
 \end{figure}
@@ -443,10 +443,10 @@ The \ac{JPQ}, despite its theoretical $O(\log n)$ complexity, showed poor practi
 \cref{fig:mpsc-violin-14p} shows the performance distribution under maximum contention (14 producers). DQueue maintains a tight distribution even under high producer contention, which is also the case for lesser producer counts as seen in \cref{fig:mpsc-violin-1p,fig:mpsc-violin-2p,fig:mpsc-violin-4p,fig:mpsc-violin-8p}. This shows that DQueue's design is ensuring consistent enough performance to design hard timing constraints for \ac{HRTS}.
 
 \subsection{\acf{SPMC} Queue Performance}
-Only one native \ac{SPMC} implementation was available. So no performance comparison was made with another \ac{SPMC} queue. What was done is comparing the performance of the David queue with the best performing \ac{MPMC} queue in a \ac{SPMC} benchmark setting, to see if maybe the best performing \ac{MPMC} queue would be even better in a \ac{SPMC} setting then a native \ac{SPMC} queue. This can be seen in \cref{subsubsec:cross-spmc}.
+Only one native \ac{SPMC} implementation was available. So no performance comparison was made with another \ac{SPMC} queue. What was done is comparing the performance of the David queue with the best performing \ac{MPMC} queue in a \ac{SPMC} benchmark setting, to see if maybe the best performing \ac{MPMC} queue would be even better in a \ac{SPMC} setting than a native \ac{SPMC} queue. This can be seen in \cref{subsubsec:cross-spmc}.
 
 \subsection{\acf{MPMC} Queue Performance}
-The \ac{MPMC} category included six implementations tested with symmetric producer-consumer configurations. Each producer generated 170000 items. \cref{tab:mpmc-results} shows the mean performance across different producer-consumer configurations, which is again visualized as seen in \cref{fig:mpmc-mean-performance}.
+The \ac{MPMC} category included six implementations tested with symmetric producer-consumer configurations. Each producer generated 170000 items. \cref{tab:mpmc-results} shows the mean performance across different producer-consumer configurations, which is again visualised as seen in \cref{fig:mpmc-mean-performance}.
 
 \begin{table}[htb]
 \centering
@@ -473,21 +473,22 @@ KoganPetrank & 174502.6 & 285645.9 & 896079.8 & 1574045.2 \\
 \includegraphics[width=\textwidth]{images/results/mpmc_mean_performance_vs_processes.png}
 \end{figure}
 
-The \ac{YMC} queue achieved the best overall performance with 72910.8 $\mu$s for 1 producer and 1 consumer, 72547.6 $\mu$s for 2 producers and 2 consumers, andscaling to 121477.9 $\mu$s for 6 producers and 6 consumers. Its performance remained relatively stable across different configurations, demonstrating its efficiency in handling multiple producers and consumers.
+The \ac{YMC} queue achieved the best overall performance with 72910.8 $\mu$s for 1 producer and 1 consumer, 72547.6 $\mu$s for 2 producers and 2 consumers, and scaling to 121477.9 $\mu$s for 6 producers and 6 consumers. Its performance remained relatively stable across different configurations, demonstrating its efficiency in handling multiple producers and consumers.
 
-What can be observed is that the Verma queue has better performance in the 1P/1C case with a mean performance of 45690.9 $\mu$ then \ac{YMC}. The reason for that is most probably, because even in the 1P/1C case there is still an active dedicated helper thread that is used to help the producer and consumer processes.
+What can be observed is that the Verma queue has better performance in the 1P/1C case with a mean performance of 45690.9 $\mu$s than \ac{YMC}. The reason for that is most probably, because even in the 1P/1C case there is still an active dedicated helper thread that is used to help the producer and consumer processes.
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing the distribution of execution times for MPMC queue implementations with 6 producers and 6 consumers}
+\caption{Violin plot showing the distribution of execution times for MPMC queue implementations with 6 producers and 6 consumers an 1,020,000 total items}
 \label{fig:mpmc-violin-6p6c}
 \includegraphics[width=\textwidth]{images/results/mpmc_performance_violin_6P_6C.png}
 \end{figure}
 
-\cref{fig:mpmc-violin-6p6c} illustrates the performance distribution under symmetric high contention (6P/6C). The \ac{YMC} queue demonstrates that its performance stays consistent with minimal variance, even in lesser producer and consumer counts as seen in \cref{fig:mpmc-violin-2p2c,fig:mpmc-violin-4p4c}, indicating predictable performance beneficial to define tight timing constraints for \ac{HRTS}. The only exception is the 1P/1C case, where the performance distribution is more spread out, as seen in \cref{fig:mpmc-violin-1p1c} indicating that \ac{YMC} is not as optimized for low contention scenarios as it is for high contention scenarios. The Verma queue has consistent performance over all process counts, but with a higher mean execution time than \ac{YMC}. So for \ac{HRTS} which requires predictability Verma queue could be a better choice eventhough it is not the fastest queue in the \ac{MPMC} category.
+\cref{fig:mpmc-violin-6p6c} illustrates the performance distribution under symmetric high contention (6P/6C). The \ac{YMC} queue demonstrates that its performance stays consistent with minimal variance, even in lesser producer and consumer counts as seen in \cref{fig:mpmc-violin-2p2c,fig:mpmc-violin-4p4c}, indicating predictable performance beneficial to define tight timing constraints for \ac{HRTS}. The only exception is the 1P/1C case, where the performance distribution is more spread out, as seen in \cref{fig:mpmc-violin-1p1c} indicating that \ac{YMC} is not as optimised for low contention scenarios as it is for high contention scenarios. The Verma queue has consistent performance over all process counts, but with a higher mean execution time than \ac{YMC}. So for \ac{HRTS} which requires predictability Verma queue could be a better choice even though it is not the fastest queue in the \ac{MPMC} category.
 
 \subsection{Cross-Category Performance Comparison}
-To determine whether specialized queues for each contention category are necessary, cross-category benchmarks were conducted comparing the best performers from each category against queues from other categories. The specialized queues for their respective contention scenarios were called native in each cross-category benchmark. The results are summarized in the following subsections.
+To determine whether specialised queues for each contention category are necessary, cross-category benchmarks were conducted comparing the best performers from each category against queues from other categories. The specialised queues for their respective contention scenarios were called native in each cross-category benchmark. The results are summarised in the following subsections.
+
 
 \subsubsection{Best Queue for \ac{SPSC} Scenarios}
 \cref{tab:best-spsc} compares the native \ac{SPSC} winner (\ac{BLQ}) against the best queues from other categories operating in \ac{SPSC} mode with 300000 items.
@@ -508,17 +509,17 @@ David (SPMC as SPSC) & 21207.3 & 5.85x \\
 \end{tabular}
 \end{table}
 
-The native \ac{SPSC} queue with a mean performance of $3625.7\mu$ outperformed all others, being 2.11x faster than DQueue and nearly 10x faster than \ac{YMC}. This demonstrates that specialized \ac{SPSC} algorithms provide benefits when contention is limited to a single producer and consumer pair. \cref{fig:cross-spsc-violin} visualizes this again.
+The native \ac{SPSC} queue with a mean performance of $3625.7\mu$s outperformed all others, being 2.11x faster than DQueue and nearly 10x faster than \ac{YMC}. This demonstrates that specialised \ac{SPSC} algorithms provide benefits when contention is limited to a single producer and consumer pair. \cref{fig:cross-spsc-violin} visualises this again.
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing performance distribution of different queue categories operating in a \ac{SPSC} setting}
+\caption{Violin plot showing performance distribution of different queue categories operating in an \ac{SPSC} setting with 300,000 total items}
 \label{fig:cross-spsc-violin}
 \includegraphics[width=\textwidth]{images/results/best_algorithms_in_spsc_performance.png}
 \end{figure}
 
 \subsubsection{Best Queue for \ac{MPSC} Scenarios}
-Comparing the native \ac{MPSC} winner DQueue against \ac{YMC} operating in a \ac{MPSC} setting reveals similar patterns, as shown in \cref{tab:best-mpsc} visualized in \cref{fig:cross-mpsc-mean}.
+Comparing the native \ac{MPSC} winner DQueue against \ac{YMC} operating in an \ac{MPSC} setting reveals similar patterns, as shown in \cref{tab:best-mpsc} visualised in \cref{fig:cross-mpsc-mean}.
 
 \begin{table}[htb]
 \centering
@@ -538,7 +539,7 @@ Producers & DQueue (Native \ac{MPSC}) & \ac{YMC} (as \ac{MPSC}) & Relative to DQ
 \end{tabular}
 \end{table}
 
-DQueue outperformed \ac{YMC} across all producer counts, with the performance gap decreasing from 6.22x at 1 producer to 2.32x at 14 producers. The native \ac{MPSC} implementation maintains its advantage due to its optimized local buffering mechanism that reduces synchronization overhead. \ac{YMC} has overhead from its additional consumer synchronization mechanisms, which are not needed in a \ac{MPSC} setting.
+DQueue outperformed \ac{YMC} across all producer counts, with the performance gap decreasing from 6.22x at 1 producer to 2.32x at 14 producers. The native \ac{MPSC} implementation maintains its advantage due to its optimised local buffering mechanism that reduces synchronisation overhead. \ac{YMC} has overhead from its additional consumer synchronisation mechanisms, which are not needed in an \ac{MPSC} setting.
 
 \begin{figure}[htb]
 \centering
@@ -549,12 +550,12 @@ DQueue outperformed \ac{YMC} across all producer counts, with the performance ga
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing the distribution of execution times for cross-category MPSC comparison with 14 producers and 1 consumer}
+\caption{Violin plot showing the distribution of execution times for cross-category MPSC comparison with 14 producers and 1 consumer and 1,400,000 total items}
 \label{fig:cross-mpsc-violin-14p}
 \includegraphics[width=\textwidth]{images/results/best_in_mpsc_performance_violin_14P1C.png}
 \end{figure}
 
-\cref{fig:cross-mpsc-violin-14p} illustrates the performance distribution comparison between DQueue (native MPSC) and \ac{YMC} (operating as MPSC) under maximum producer contention (14 producer). DQueue shows slightly better consistency while performing faster then \ac{YMC} showing that also in \ac{MPSC} settings specialized queues are better then more general \ac{MPMC} queues.
+\cref{fig:cross-mpsc-violin-14p} illustrates the performance distribution comparison between DQueue (native MPSC) and \ac{YMC} (operating as MPSC) under maximum producer contention (14 producers). DQueue shows slightly better consistency whilst performing faster than \ac{YMC}, showing that also in \ac{MPSC} settings specialised queues are better than more general \ac{MPMC} queues.
 
 \subsubsection{Best Queue for \ac{SPMC} Scenarios}\label{subsubsec:cross-spmc}
 The native \ac{SPMC} implementation (David) was compared against \ac{YMC} in \ac{SPMC} mode, as presented in Table~\ref{tab:best-spmc}.
@@ -577,16 +578,16 @@ Consumers & David (Native \ac{SPMC}) & \ac{YMC} (as \ac{SPMC}) & Relative to Dav
 \end{tabular}
 \end{table}
 
-Similar to the \ac{MPSC} results, the specialized David queue significantly outperformed \ac{YMC}, maintaining a 2.5-6x performance advantage across different consumer counts. The native \ac{SPMC} algorithm's two-dimensional array design with row jumping proves to be faster than the general-purpose \ac{MPMC} approach.
+Similar to the \ac{MPSC} results, the specialised David queue significantly outperformed \ac{YMC}, maintaining a 2.5-6x performance advantage across different consumer counts. The native \ac{SPMC} algorithm's two-dimensional array design with row jumping proves to be faster than the general-purpose \ac{MPMC} approach.
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing the distribution of execution times for \ac{SPMC} implementations with 1 producer and 14 consumers}
+\caption{Violin plot showing the distribution of execution times for \ac{SPMC} implementations with 1 producer and 14 consumers and 1,400,000 total items}
 \label{fig:spmc-violin-14c}
 \includegraphics[width=\textwidth]{images/results/best_in_spmc_performance_violin_1P14C.png}
 \end{figure}
 
-The violin plot in Figure~\ref{fig:spmc-violin-14c} demonstrates the performance distribution under maximum consumer contention. The David queue shows more consistent performance with a tighter distribution while beeing faster compared to \ac{YMC} operating in SPMC mode, confirming again specialized queues are the better choice.
+The violin plot in Figure~\ref{fig:spmc-violin-14c} demonstrates the performance distribution under maximum consumer contention. The David queue shows more consistent performance with a tighter distribution whilst being faster compared to \ac{YMC} operating in SPMC mode, confirming again specialised queues are the better choice.
 
 \begin{figure}[htb]
 \centering
@@ -599,11 +600,11 @@ The violin plot in Figure~\ref{fig:spmc-violin-14c} demonstrates the performance
 The benchmark results reveal several key findings:
 
 \begin{enumerate}
-\item Specialization Benefits: Specialized implementations for each contention category consistently outperformed queues from other categories queues by factors of 2-10x, justifying the use of specialized algorithms for different scenarios.
+\item Specialisation Benefits: Specialised implementations for each contention category consistently outperformed queues from other categories by factors of 2-10x, justifying the use of specialised algorithms for different scenarios.
 
-\item Cache Optimization Importance: Cache-aware algorithms like \ac{BLQ} and DQueue demonstrated better performance, highlighting the critical role of cache-line separation and batching.
+\item Cache Optimisation Importance: Cache-aware algorithms like \ac{BLQ} and DQueue demonstrated better performance, highlighting the critical role of cache-line separation and batching.
 
-\item Theory vs. Practice: Algorithms with better theoretical time complexity (e.g., \ac{JPQ}'s $O(\log n)$ queue) underperformed simpler approaches due to implementation overhead and poor cache behavior.
+\item Theory vs. Practice: Algorithms with better theoretical time complexity (e.g., \ac{JPQ}'s $O(\log n)$ queue) underperformed simpler approaches due to implementation overhead and poor cache behaviour.
 \end{enumerate}
 
 Based on these results, the recommended wait-free queues for \ac{IPC} over shared memory in \ac{RTS} are:
@@ -611,5 +612,5 @@ Based on these results, the recommended wait-free queues for \ac{IPC} over share
 \item \ac{SPSC}: \ac{BLQ}
 \item \ac{MPSC}: DQueue
 \item \ac{SPMC}: David
-\item \ac{MPMC}: \ac{YMC} queue for having a good mean performance for higher consumer and producer counts or Verma for having a tighter distribution and therefore more predictable performance in lower consumer and producer counts.
+\item \ac{MPMC}: \ac{YMC} queue for having good mean performance for higher consumer and producer counts or Verma for having a tighter distribution and therefore more predictable performance in lower consumer and producer counts.
 \end{itemize}
