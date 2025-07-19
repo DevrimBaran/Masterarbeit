@@ -15,10 +15,10 @@
 \contentsline {algorithm}{\numberline {10}{\ignorespaces \ac {uSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{28}{algorithm.10}%
 \contentsline {algorithm}{\numberline {11}{\ignorespaces \ac {mSPSC} Operations\blx@tocontentsinit {0}\cite {torquati2010singleproducersingleconsumerqueuessharedcache}}}{29}{algorithm.11}%
 \contentsline {algorithm}{\numberline {12}{\ignorespaces \ac {JPQ} (\ac {SPSC} variant) Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{30}{algorithm.12}%
-\contentsline {algorithm}{\numberline {13}{\ignorespaces \ac {JPQ} (\ac {MPSC} variant) Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{31}{algorithm.13}%
-\contentsline {algorithm}{\numberline {14}{\ignorespaces Drescher's Wait-Free \ac {MPSC} Queue Operations}}{32}{algorithm.14}%
-\contentsline {algorithm}{\numberline {15}{\ignorespaces Jiffy \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{33}{algorithm.15}%
-\contentsline {algorithm}{\numberline {16}{\ignorespaces Jiffy \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{34}{algorithm.16}%
+\contentsline {algorithm}{\numberline {13}{\ignorespaces \ac {JPQ} (\ac {MPSC} variant) Operations \blx@tocontentsinit {0}\cite {JayantiLog}}}{32}{algorithm.13}%
+\contentsline {algorithm}{\numberline {14}{\ignorespaces Drescher's Wait-Free \ac {MPSC} Queue Operations}}{33}{algorithm.14}%
+\contentsline {algorithm}{\numberline {15}{\ignorespaces Jiffy \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{34}{algorithm.15}%
+\contentsline {algorithm}{\numberline {16}{\ignorespaces Jiffy \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {jiffy}}}{35}{algorithm.16}%
 \contentsline {algorithm}{\numberline {17}{\ignorespaces DQueue \ac {MPSC} Queue Enqueue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{36}{algorithm.17}%
 \contentsline {algorithm}{\numberline {18}{\ignorespaces DQueue \ac {MPSC} Queue Dequeue Operation \blx@tocontentsinit {0}\cite {WangCacheCoherent}}}{37}{algorithm.18}%
 \contentsline {algorithm}{\numberline {19}{\ignorespaces David's Queue Operations \blx@tocontentsinit {0}\cite {Mateíspmc}}}{38}{algorithm.19}%
