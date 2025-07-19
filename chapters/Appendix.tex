@@ -1,2 +1,120 @@
 \chapter{Appendix}
 
+\section{Additional Benchmark Visualizations}
+This section contains additional violin plots from the benchmark results that show performance distributions for various producer and consumer configurations. These complement the main results presented in Chapter~\ref{ch:results}.
+
+\subsection{MPSC Queue Performance Distributions}\label{subsec:mpsc-violin}
+The following figures show the performance distribution of MPSC queue implementations across different producer configurations:
+
+\begin{figure}[H]
+\centering
+\caption{MPSC queue performance distribution with 1 producer}
+\label{fig:mpsc-violin-1p}
+\includegraphics[width=\textwidth]{images/results/mpsc_performance_violin_1_producers.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{MPSC queue performance distribution with 2 producers}
+\label{fig:mpsc-violin-2p}
+\includegraphics[width=\textwidth]{images/results/mpsc_performance_violin_2_producers.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{MPSC queue performance distribution with 4 producers}
+\label{fig:mpsc-violin-4p}
+\includegraphics[width=\textwidth]{images/results/mpsc_performance_violin_4_producers.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{MPSC queue performance distribution with 8 producers}
+\label{fig:mpsc-violin-8p}
+\includegraphics[width=\textwidth]{images/results/mpsc_performance_violin_8_producers.png}
+\end{figure}
+
+\subsection{MPMC Queue Performance Distributions}
+The following figures show the performance distribution of MPMC queue implementations across different configurations:
+
+\begin{figure}[H]
+\centering
+\caption{MPMC queue performance distribution with 1 producer and 1 consumer}
+\label{fig:mpmc-violin-1p1c}
+\includegraphics[width=\textwidth]{images/results/mpmc_performance_violin_1P_1C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{MPMC queue performance distribution with 2 producers and 2 consumers}
+\label{fig:mpmc-violin-2p2c}
+\includegraphics[width=\textwidth]{images/results/mpmc_performance_violin_2P_2C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{MPMC queue performance distribution with 4 producers and 4 consumers}
+\label{fig:mpmc-violin-4p4c}
+\includegraphics[width=\textwidth]{images/results/mpmc_performance_violin_4P_4C.png}
+\end{figure}
+
+\subsection{Cross-Category Performance Distributions}
+The following figures show performance distributions when queues from different categories operate in various contention scenarios:
+
+\subsubsection{Cross-Category MPSC Performance}
+\begin{figure}[H]
+\centering
+\caption{Cross-category MPSC performance distribution with 1 producer and 1 consumer}
+\label{fig:cross-mpsc-violin-1p}
+\includegraphics[width=\textwidth]{images/results/best_in_mpsc_performance_violin_1P1C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Cross-category MPSC performance distribution with 2 producers and 1 consumer}
+\label{fig:cross-mpsc-violin-2p}
+\includegraphics[width=\textwidth]{images/results/best_in_mpsc_performance_violin_2P1C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Cross-category MPSC performance distribution with 4 producers and 1 consumer}
+\label{fig:cross-mpsc-violin-4p}
+\includegraphics[width=\textwidth]{images/results/best_in_mpsc_performance_violin_4P1C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Cross-category MPSC performance distribution with 8 producers and 1 consumer}
+\label{fig:cross-mpsc-violin-8p}
+\includegraphics[width=\textwidth]{images/results/best_in_mpsc_performance_violin_8P1C.png}
+\end{figure}
+
+\subsubsection{Cross-Category SPMC Performance}
+\begin{figure}[H]
+\centering
+\caption{Cross-category SPMC performance distribution with 1 producer and 1 consumer}
+\label{fig:cross-spmc-violin-1c}
+\includegraphics[width=\textwidth]{images/results/best_in_spmc_performance_violin_1P1C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Cross-category SPMC performance distribution with 1 producer and 2 consumers}
+\label{fig:cross-spmc-violin-2c}
+\includegraphics[width=\textwidth]{images/results/best_in_spmc_performance_violin_1P2C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Cross-category SPMC performance distribution with 1 producer and 4 consumers}
+\label{fig:cross-spmc-violin-4c}
+\includegraphics[width=\textwidth]{images/results/best_in_spmc_performance_violin_1P4C.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\caption{Cross-category SPMC performance distribution with 1 producer and 8 consumers}
+\label{fig:cross-spmc-violin-8c}
+\includegraphics[width=\textwidth]{images/results/best_in_spmc_performance_violin_1P8C.png}
+\end{figure}
