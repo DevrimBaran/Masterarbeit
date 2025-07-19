@@ -558,7 +558,7 @@ DQueue outperformed \ac{YMC} across all producer counts, with the performance ga
 \cref{fig:cross-mpsc-violin-14p} illustrates the performance distribution comparison between DQueue (native MPSC) and \ac{YMC} (operating as MPSC) under maximum producer contention (14 producers). DQueue shows slightly better consistency whilst performing faster than \ac{YMC}, showing that also in \ac{MPSC} settings specialised queues are better than more general \ac{MPMC} queues. The same goes too for lesser producer counts as seen in \cref{fig:cross-mpsc-violin-1p,fig:cross-mpsc-violin-2p,fig:cross-mpsc-violin-4p,fig:cross-mpsc-violin-8p}.
 
 \subsubsection{Best Queue for \ac{SPMC} Scenarios}\label{subsubsec:cross-spmc}
-The native \ac{SPMC} implementation (David) was compared against \ac{YMC} in \ac{SPMC} mode, as presented in Table~\ref{tab:best-spmc}.
+The native \ac{SPMC} implementation (David) was compared against \ac{YMC} in \ac{SPMC} mode, as presented in \cref{tab:best-spmc}.
 
 \begin{table}[htb]
 \centering
@@ -587,7 +587,7 @@ Similar to the \ac{MPSC} results, the specialised David queue significantly outp
 \includegraphics[width=\textwidth]{images/results/best_in_spmc_performance_violin_1P14C.png}
 \end{figure}
 
-The violin plot in Figure~\ref{fig:spmc-violin-14c} demonstrates the performance distribution under maximum consumer contention. The David queue shows more consistent performance with a tighter distribution whilst being faster compared to \ac{YMC} operating in SPMC mode, confirming again specialised queues are the better choice. Also here the same can be said for lesser consumer counts as seen in \cref{fig:cross-spmc-violin-1c,fig:cross-spmc-violin-2c,fig:cross-spmc-violin-4c,fig:cross-spmc-violin-8c}.
+The violin plot in \cref{fig:spmc-violin-14c} demonstrates the performance distribution under maximum consumer contention. The David queue shows more consistent performance with a tighter distribution whilst being faster compared to \ac{YMC} operating in SPMC mode, confirming again specialised queues are the better choice. Also here the same can be said for lesser consumer counts as seen in \cref{fig:cross-spmc-violin-1c,fig:cross-spmc-violin-2c,fig:cross-spmc-violin-4c,fig:cross-spmc-violin-8c}.
 
 \begin{figure}[htb]
 \centering
