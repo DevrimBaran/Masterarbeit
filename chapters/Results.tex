@@ -1,5 +1,5 @@
 \chapter{Benchmarking and Results}\label{ch:results}
-To finish the objective of this thesis at last a setting needs to be built where these algorithms are used for \ac{IPC} over shared memory. This setting was also used to benchmark the performance of these algorithms to identify the best performing wait-free algorithms that can be used. In the \cite{githubMA} the folder benches includes the setting and benchmark of these algorithms. As seen before these algorithms were divided into 4 categories, \ac{MPMC}, \ac{MPSC}, \ac{SPMC} and \ac{SPSC}. Therefore 4 different \ac{IPC} over shared memory settings were built to analyse firstly if all algorithms work as intended and secondly to compare the performance of all algorithms. Even though \ac{SPMC} category only has one algorithm, the built setting was still interesting to check and validate if the algorithm works as intended. After identifying the best algorithm 3 more settings were built. One setting was to see if the \ac{SPMC} queue or the best performing queues of the other categories would be faster for the \ac{SPSC} category. The same was done for the \ac{MPSC} category by checking if the best \ac{MPMC} queue or the best \ac{MPSC} queue would perform better. Finally for the \ac{SPMC} category the same was done to check if the best \ac{MPMC} or \ac{SPMC} queue would be better. The best \ac{SPSC} queue could not be tested for higher producer or consumer numbers, since the missing helping structures and missing atomic primitives would lead to deadlocks or inconsistent data. The benchmarks were done on a system with an Intel i7-12700H x86 processor with 14 cores. The benchmarks were implemented with the help of the \texttt{criterion} crate, which is a benchmarking library for Rust. This chapter will show in general how the benchmark settings were implemented to understand the results later.
+To finish the objective of this thesis, at last a setting needs to be built where these algorithms are used for \ac{IPC} over shared memory. This setting was also used to benchmark the performance of these algorithms to identify the best performing wait-free algorithms that can be used. In the \cite{githubMA} the folder benches includes the setting and benchmark of these algorithms. As seen before, these algorithms were divided into 4 categories, \ac{MPMC}, \ac{MPSC}, \ac{SPMC} and \ac{SPSC}. Therefore, 4 different \ac{IPC} over shared memory settings were built to analyse firstly if all algorithms work as intended and secondly to compare the performance of all algorithms. Even though \ac{SPMC} category only has one algorithm, the built setting was still interesting to check and validate if the algorithm works as intended. After identifying the best algorithm, 3 more settings were built. One setting was to see if the \ac{SPMC} queue or the best performing queues of the other categories would be faster for the \ac{SPSC} category. The same was done for the \ac{MPSC} category by checking if the best \ac{MPMC} queue or the best \ac{MPSC} queue would perform better. Finally, for the \ac{SPMC} category the same was done to check if the best \ac{MPMC} or \ac{SPMC} queue would be better. The best \ac{SPSC} queue could not be tested for higher producer or consumer numbers, since the missing helping structures and missing atomic primitives would lead to deadlocks or inconsistent data. The benchmarks were done on a system with an Intel i7-12700H x86 processor with 14 cores. The benchmarks were implemented with the help of the \texttt{criterion} crate, which is a benchmarking library for Rust. This chapter will show in general how the benchmark settings were implemented to understand the results later.
 
 \section{Benchmark Structure}
 All benchmarks follow a consistent architecture to ensure fair comparison between queue implementations. The benchmarks measure the time taken for producers and consumers to exchange a fixed number of items through each queue implementation using \ac{IPC} over shared memory. This section explains the general benchmark structure using the \ac{MPMC} benchmark as a representative example, as the same patterns apply to all queue categories. Not every line will be explained, but the most important lines will be explained to understand the general structure of the benchmarks. 
@@ -365,27 +365,27 @@ The same benchmark structure is applied to all benchmarks with appropriate modif
 The benchmark results are presented for each queue category, followed by cross-category comparisons to determine the optimal wait-free data structure for different contention scenarios. All measurements represent the mean execution time in microseconds ($\mu$s) for completing the configured workload across multiple samples. In every bench 500 samples were taken to have enough results to compare the performance. The amount of data produced and consumed was always different for each category. The queues inside each category were always tested with the same amount of data to ensure fair comparison. The amount of items used for each category is shown in the respective subsections.
 
 \subsection{\acf{SPSC} Queue Performance}
-The \ac{SPSC} benchmarks evaluated 11 different queue implementations with 35000000 items to ensure sufficient workload for accurate measurement. As shown in \cref{tab:spsc-results}, the \ac{BLQ} achieved the best performance with a mean execution time of 65199.6 $\mu$s.
+The \ac{SPSC} benchmarks evaluated 11 different queue implementations with 35,000,000 items to ensure sufficient workload for accurate measurement. As shown in \cref{tab:spsc-results}, the \ac{BLQ} achieved the best performance with a mean execution time of 65,199.6 $\mu$s.
 
 \begin{table}[htb]
 \centering
-\caption{\ac{SPSC} Queue Performance Results (35000000 items)}
+\caption{\ac{SPSC} Queue Performance Results (35,000,000 items)}
 \label{tab:spsc-results}
 \begin{tabular}{@{}lrr@{}}
 \toprule
 Queue Implementation & Mean Time ($\mu$s) & Relative Performance \\
 \midrule
-\ac{BLQ} & 65199.6 & 1.00x \\
-\ac{IFFQ} & 124149.9 & 1.90x \\
-\ac{LLQ} & 147800.2 & 2.27x \\
-\ac{BIFFQ} & 159429.6 & 2.45x \\
-\ac{FFQ} & 203053.4 & 3.11x \\
-\ac{mSPSC} & 331283.6 & 5.08x \\
-\ac{uSPSC} & 418840.0 & 6.42x \\
-\ac{JPQ}'s \ac{SPSC} Variant & 626541.9 & 9.61x \\
-Lamport's Queue & 957312.6 & 14.68x \\
-B-Queue & 1552513.1 & 23.81x \\
-\ac{dSPSC} & 2413354.7 & 37.02x \\
+\ac{BLQ} & 65,199.6 & 1.00x \\
+\ac{IFFQ} & 124,149.9 & 1.90x \\
+\ac{LLQ} & 147,800.2 & 2.27x \\
+\ac{BIFFQ} & 159,429.6 & 2.45x \\
+\ac{FFQ} & 203,053.4 & 3.11x \\
+\ac{mSPSC} & 331,283.6 & 5.08x \\
+\ac{uSPSC} & 418,840.0 & 6.42x \\
+\ac{JPQ}'s \ac{SPSC} Variant & 626,541.9 & 9.61x \\
+Lamport's Queue & 957,312.6 & 14.68x \\
+B-Queue & 1,552,513.1 & 23.81x \\
+\ac{dSPSC} & 2,413,354.7 & 37.02x \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -404,20 +404,20 @@ Notably, the dynamic allocation-based queues (\ac{dSPSC}, \ac{uSPSC}) showed wor
 The violin plot in \cref{fig:spsc-violin} illustrates the distribution of execution times across all SPSC implementations. It can be observed that the Lamport queue has no consistent performance with greatly varying results. It often achieves great execution times, but also often bad execution times. This is probably because of bad cache design of the queue that was talked about in \cref{alg:lamport-queue}. The \ac{BLQ} on the other hand shows not only the lowest median execution time but also the most consistent performance with minimal variance, which is an important trait to be able to design hard timing constraints for \ac{HRTS}. 
 
 \subsection{\acf{MPSC} Queue Performance}
-For \ac{MPSC} scenarios, four queue implementations were tested with varying producer counts from 1 to 14, each producer generating 500000 items. \cref{tab:mpsc-results} presents the mean performance across different producer configurations, which is visualised in \cref{fig:mpsc-mean-performance}. DQueue with a mean execution time of 13967.2 $\mu$s for 1 producer, 29039.9 $\mu$s for 2 producers, and scaling up to 323126.2 $\mu$s for 14 producers, outperformed all other implementations.
+For \ac{MPSC} scenarios, four queue implementations were tested with varying producer counts from 1 to 14, each producer generating 500,000 items. \cref{tab:mpsc-results} presents the mean performance across different producer configurations, which is visualised in \cref{fig:mpsc-mean-performance}. DQueue with a mean execution time of 13,967.2 $\mu$s for 1 producer, 29,039.9 $\mu$s for 2 producers, and scaling up to 323,126.2 $\mu$s for 14 producers, outperformed all other implementations.
 
 \begin{table}[htb]
 \centering
-\caption{\ac{MPSC} Queue Performance Results (500000 items per producer)}
+\caption{\ac{MPSC} Queue Performance Results (500,000 items per producer)}
 \label{tab:mpsc-results}
 \begin{tabular}{@{}lrrrrr@{}}
 \toprule
 Queue & 1P & 2P & 4P & 8P & 14P \\
 \midrule
-DQueue & 13967.2 & 29039.9 & 72894.1 & 170676.4 & 323126.2 \\
-Drescher & 22932.0 & 89353.0 & 189703.0 & 434820.2 & 955047.8 \\
-Jiffy & 32280.3 & 62159.1 & 126199.3 & 276401.5 & 538978.2 \\
-\ac{JPQ}'s \ac{MPSC} Variant & 94912.5 & 252959.1 & 648641.6 & 2191529.2 & 4548422.3 \\
+DQueue & 13,967.2 & 29,039.9 & 72,894.1 & 170,676.4 & 323,126.2 \\
+Drescher & 22,932.0 & 89,353.0 & 189,703.0 & 434,820.2 & 955,047.8 \\
+Jiffy & 32,280.3 & 62,159.1 & 126,199.3 & 276,401.5 & 538,978.2 \\
+\ac{JPQ}'s \ac{MPSC} Variant & 94,912.5 & 252,959.1 & 648,641.6 & 2,191,529.2 & 4,548,422.3 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -446,22 +446,22 @@ The \ac{JPQ}, despite its theoretical $O(\log n)$ complexity, showed poor practi
 Only one native \ac{SPMC} implementation was available. So no performance comparison was made with another \ac{SPMC} queue. What was done is comparing the performance of the David queue with the best performing \ac{MPMC} queue in a \ac{SPMC} benchmark setting, to see if maybe the best performing \ac{MPMC} queue would be even better in a \ac{SPMC} setting than a native \ac{SPMC} queue. This can be seen in \cref{subsubsec:cross-spmc}.
 
 \subsection{\acf{MPMC} Queue Performance}
-The \ac{MPMC} category included six implementations tested with symmetric producer-consumer configurations. Each producer generated 170000 items. \cref{tab:mpmc-results} shows the mean performance across different producer-consumer configurations, which is again visualised as seen in \cref{fig:mpmc-mean-performance}.
+The \ac{MPMC} category included six implementations tested with symmetric producer-consumer configurations. Each producer generated 170,000 items. \cref{tab:mpmc-results} shows the mean performance across different producer-consumer configurations, which is again visualised as seen in \cref{fig:mpmc-mean-performance}.
 
 \begin{table}[htb]
 \centering
-\caption{\ac{MPMC} Queue Performance Results (170000 items per producer)}
+\caption{\ac{MPMC} Queue Performance Results (170,000 items per producer)}
 \label{tab:mpmc-results}
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
 Queue & 1P/1C & 2P/2C & 4P/4C & 6P/6C \\
 \midrule
-\ac{YMC} & 72910.8 & 72547.6 & 101541.4 & 121477.9 \\
-Verma & 45690.9 & 73042.7 & 153716.8 & 229763.6 \\
-FeldmanDechev & 90956.0 & 100893.5 & 150636.2 & 278037.7 \\
-TurnQueue & 100150.3 & 173204.2 & 510697.0 & 971945.7 \\
-KoganPetrank & 174502.6 & 285645.9 & 896079.8 & 1574045.2 \\
-\ac{wCQ} & 233996.9 & 248234.3 & 350401.3 & 518476.6 \\
+\ac{YMC} & 72,910.8 & 72,547.6 & 101,541.4 & 121,477.9 \\
+Verma & 45,690.9 & 73,042.7 & 153,716.8 & 229,763.6 \\
+FeldmanDechev & 90,956.0 & 100,893.5 & 150,636.2 & 278,037.7 \\
+TurnQueue & 100,150.3 & 173,204.2 & 510,697.0 & 971,945.7 \\
+KoganPetrank & 174,502.6 & 285,645.9 & 896,079.8 & 1,574,045.2 \\
+\ac{wCQ} & 233,996.9 & 248,234.3 & 350,401.3 & 518,476.6 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -473,43 +473,43 @@ KoganPetrank & 174502.6 & 285645.9 & 896079.8 & 1574045.2 \\
 \includegraphics[width=\textwidth]{images/results/mpmc_mean_performance_vs_processes.png}
 \end{figure}
 
-The \ac{YMC} queue achieved the best overall performance with 72910.8 $\mu$s for 1 producer and 1 consumer, 72547.6 $\mu$s for 2 producers and 2 consumers, and scaling to 121477.9 $\mu$s for 6 producers and 6 consumers. Its performance remained relatively stable across different configurations, demonstrating its efficiency in handling multiple producers and consumers.
+The \ac{YMC} queue achieved the best overall performance with 72,910.8 $\mu$s for 1 producer and 1 consumer, 72,547.6 $\mu$s for 2 producers and 2 consumers, and scaling to 121,477.9 $\mu$s for 6 producers and 6 consumers. Its performance remained relatively stable across different configurations, demonstrating its efficiency in handling multiple producers and consumers.
 
-What can be observed is that the Verma queue has better performance in the 1P/1C case with a mean performance of 45690.9 $\mu$s than \ac{YMC}. The reason for that is most probably, because even in the 1P/1C case there is still an active dedicated helper thread that is used to help the producer and consumer processes.
+What can be observed is that the Verma queue has better performance in the 1P/1C case with a mean performance of 45,690.9 $\mu$s than \ac{YMC}. The reason for that is most probably because even in the 1P/1C case there is still an active dedicated helper thread that is used to help the producer and consumer processes.
 
 \begin{figure}[htb]
 \centering
-\caption{Violin plot showing the distribution of execution times for MPMC queue implementations with 6 producers and 6 consumers an 1,020,000 total items}
+\caption{Violin plot showing the distribution of execution times for MPMC queue implementations with 6 producers and 6 consumers and 1,020,000 total items}
 \label{fig:mpmc-violin-6p6c}
 \includegraphics[width=\textwidth]{images/results/mpmc_performance_violin_6P_6C.png}
 \end{figure}
 
-\cref{fig:mpmc-violin-6p6c} illustrates the performance distribution under symmetric high contention (6P/6C). The \ac{YMC} queue demonstrates that its performance stays consistent with minimal variance, even in lesser producer and consumer counts as seen in \cref{fig:mpmc-violin-2p2c,fig:mpmc-violin-4p4c}, indicating predictable performance beneficial to define tight timing constraints for \ac{HRTS}. The only exception is the 1P/1C case, where the performance distribution is more spread out, as seen in \cref{fig:mpmc-violin-1p1c} indicating that \ac{YMC} is not as optimised for low contention scenarios as it is for high contention scenarios. The Verma queue has consistent performance over all process counts, but with a higher mean execution time than \ac{YMC}. So for \ac{HRTS} which requires predictability Verma queue could be a better choice even though it is not the fastest queue in the \ac{MPMC} category.
+\cref{fig:mpmc-violin-6p6c} illustrates the performance distribution under symmetric high contention (6P/6C). The \ac{YMC} queue demonstrates that its performance stays consistent with minimal variance, even in lesser producer and consumer counts as seen in \cref{fig:mpmc-violin-2p2c,fig:mpmc-violin-4p4c}, indicating predictable performance beneficial to define tight timing constraints for \ac{HRTS}. The only exception is the 1P/1C case, where the performance distribution is more spread out, as seen in \cref{fig:mpmc-violin-1p1c} indicating that \ac{YMC} is not as optimised for low contention scenarios as it is for high contention scenarios. The Verma queue has consistent performance over all process counts, but with a higher mean execution time than \ac{YMC}. So for \ac{HRTS} which requires predictability, Verma queue could be a better choice even though it is not the fastest queue in the \ac{MPMC} category.
 
 \subsection{Cross-Category Performance Comparison}
 To determine whether specialised queues for each contention category are necessary, cross-category benchmarks were conducted comparing the best performers from each category against queues from other categories. The specialised queues for their respective contention scenarios were called native in each cross-category benchmark. The results are summarised in the following subsections.
 
 
 \subsubsection{Best Queue for \ac{SPSC} Scenarios}
-\cref{tab:best-spsc} compares the native \ac{SPSC} winner (\ac{BLQ}) against the best queues from other categories operating in \ac{SPSC} mode with 300000 items.
+\cref{tab:best-spsc} compares the native \ac{SPSC} winner (\ac{BLQ}) against the best queues from other categories operating in \ac{SPSC} mode with 300,000 items.
 
 \begin{table}[htb]
 \centering
-\caption{Cross-Category Performance in \ac{SPSC} Configuration (300000 items)}
+\caption{Cross-Category Performance in \ac{SPSC} Configuration (300,000 items)}
 \label{tab:best-spsc}
 \begin{tabular}{@{}lrr@{}}
 \toprule
 Queue (Category) & Mean Time ($\mu$s) & Relative to \ac{BLQ} \\
 \midrule
-\ac{BLQ} (Native SPSC) & 3625.7 & 1.00x \\
-DQueue (MPSC as SPSC) & 7638.9 & 2.11x \\
-David (SPMC as SPSC) & 21207.3 & 5.85x \\
-\ac{YMC} (MPMC as SPSC) & 36170.9 & 9.98x \\
+\ac{BLQ} (Native SPSC) & 3,625.7 & 1.00x \\
+DQueue (MPSC as SPSC) & 7,638.9 & 2.11x \\
+David (SPMC as SPSC) & 21,207.3 & 5.85x \\
+\ac{YMC} (MPMC as SPSC) & 36,170.9 & 9.98x \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The native \ac{SPSC} queue with a mean performance of $3625.7\mu$s outperformed all others, being 2.11x faster than DQueue and nearly 10x faster than \ac{YMC}. This demonstrates that specialised \ac{SPSC} algorithms provide benefits when contention is limited to a single producer and consumer pair. \cref{fig:cross-spsc-violin} visualises this again.
+The native \ac{SPSC} queue with a mean performance of $3,625.7\mu$s outperformed all others, being 2.11x faster than DQueue and nearly 10x faster than \ac{YMC}. This demonstrates that specialised \ac{SPSC} algorithms provide benefits when contention is limited to a single producer and consumer pair. \cref{fig:cross-spsc-violin} visualises this again.
 
 \begin{figure}[htb]
 \centering
@@ -523,18 +523,18 @@ Comparing the native \ac{MPSC} winner DQueue against \ac{YMC} operating in an \a
 
 \begin{table}[htb]
 \centering
-\caption{Cross-Category Performance in \ac{MPSC} Configuration (100000 items per producer)}
+\caption{Cross-Category Performance in \ac{MPSC} Configuration (100,000 items per producer)}
 \label{tab:best-mpsc}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 Producers & DQueue (Native \ac{MPSC}) & \ac{YMC} (as \ac{MPSC}) & Relative to DQueue \\
 & Time ($\mu$s) & Time ($\mu$s) & \\
 \midrule
-1 & 2102.7 & 13075.6 & 6.22x \\
-2 & 7081.9 & 19650.4 & 2.77x \\
-4 & 16588.1 & 39848.3 & 2.40x \\
-8 & 36197.5 & 84092.5 & 2.32x \\
-14 & 72788.4 & 168854.4 & 2.32x \\
+1 & 2,102.7 & 13,075.6 & 6.22x \\
+2 & 7,081.9 & 19,650.4 & 2.77x \\
+4 & 16,588.1 & 39,848.3 & 2.40x \\
+8 & 36,197.5 & 84,092.5 & 2.32x \\
+14 & 72,788.4 & 168,854.4 & 2.32x \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -562,18 +562,18 @@ The native \ac{SPMC} implementation (David) was compared against \ac{YMC} in \ac
 
 \begin{table}[htb]
 \centering
-\caption{Cross-Category Performance in \ac{SPMC} Configuration (100000 items per consumer)}
+\caption{Cross-Category Performance in \ac{SPMC} Configuration (100,000 items per consumer)}
 \label{tab:best-spmc}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 Consumers & David (Native \ac{SPMC}) & \ac{YMC} (as \ac{SPMC}) & Relative to David \\
 & Time ($\mu$s) & Time ($\mu$s) & \\
 \midrule
-1 & 2754.4 & 16696.0 & 6.06x \\
-2 & 8222.4 & 24220.6 & 2.95x \\
-4 & 17243.9 & 44368.2 & 2.57x \\
-8 & 37756.0 & 96410.1 & 2.55x \\
-14 & 71305.7 & 225931.3 & 3.17x \\
+1 & 2,754.4 & 16,696.0 & 6.06x \\
+2 & 8,222.4 & 24,220.6 & 2.95x \\
+4 & 17,243.9 & 44,368.2 & 2.57x \\
+8 & 37,756.0 & 96,410.1 & 2.55x \\
+14 & 71,305.7 & 225,931.3 & 3.17x \\
 \bottomrule
 \end{tabular}
 \end{table}
