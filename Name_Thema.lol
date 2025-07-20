@@ -28,7 +28,7 @@
 \contentsline {lstlisting}{\numberline {6.22}{\ignorespaces FIFO ordering verification under stress}}{79}{lstlisting.6.22}%
 \contentsline {lstlisting}{\numberline {6.23}{\ignorespaces IPC test structure}}{80}{lstlisting.6.23}%
 \contentsline {lstlisting}{\numberline {6.24}{\ignorespaces Buffer mechanism test}}{81}{lstlisting.6.24}%
-\contentsline {lstlisting}{\numberline {6.25}{\ignorespaces Helper thread coordination test}}{81}{lstlisting.6.25}%
+\contentsline {lstlisting}{\numberline {6.25}{\ignorespaces Helper thread coordination test}}{82}{lstlisting.6.25}%
 \addvspace {10\p@ }
 \contentsline {lstlisting}{\numberline {7.1}{\ignorespaces Benchmark configuration constants}}{85}{lstlisting.7.1}%
 \contentsline {lstlisting}{\numberline {7.2}{\ignorespaces MPSC-specific configuration}}{85}{lstlisting.7.2}%
