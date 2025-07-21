@@ -22,7 +22,7 @@ Diese Arbeit untersucht die Nutzung von wait-free Datenstrukturen für IPC in Ec
 
 Predictable and correct \ac{IPC} is essential for \ac{RTS}, where delays, unpredictability, or inconsistent data can lead to instability and failures. Traditional synchronisation mechanisms introduce blocking, which can result in deadlocks, process starvation, or priority inversion, leading to unpredictable response times. To overcome these challenges, wait-free synchronisation provides an alternative that guarantees operation completion, such as the completion of data exchange between multiple processes, within a bounded number of steps, thereby ensuring system responsiveness and predictability.
 
-This thesis examines the application of wait-free data structures for \ac{IPC} in \ac{RTS}, with a focus on their implementation in Rust. Rust's ownership model and strict concurrency guarantees make it well-suited for developing synchronisation mechanisms. This work examines existing wait-free techniques for real-time \ac{IPC}, and evaluates their performance against conventional synchronisation methods.
+This thesis examines the application of wait-free data structures for \ac{IPC} in \ac{RTS}, with a focus on their implementation in the Rust programming language. Rust's ownership model and strict concurrency guarantees make it well-suited for developing synchronisation mechanisms. This work examines existing wait-free techniques for real-time \ac{IPC}, and evaluates their performance against conventional synchronisation methods.
 
 \vfill
 \noindent\textbf{Keywords:} real-time systems, wait-free synchronisation, lock-free synchronisation, inter-process communication, Rust
