@@ -1,10 +1,10 @@
 \chapter{Implementation}\label{ch:implementation}
 
-After the wait-free algorithms were identified and analysed, the next sub-goal to find the best wait-free algorithms is to implement them like already said in \cref{sec:objective}. The algorithms were implemented and published in the accompanying GitHub repository in \cite{githubMA}, where complete implementation of the algorithms can be found. This chapter will present the implementation details of the concurrent queue algorithms seen in \cref{ch:choosing-the-optimal-wait-free-data-structure} in Rust, focusing on the adaptations necessary for \ac{IPC} over shared memory. While the algorithmic logic of each queue has already been discussed in \cref{ch:choosing-the-optimal-wait-free-data-structure}, the implementation required slight deviations to support \ac{IPC} over shared memory. This includes ensuring correct cache alignment, correctly implementing various atomic primitives, and correctly implementing the logic for shared memory support using short example snippets of the actual rust implementation from the GitHub repository or some general examples. This does not include showing again the same algorithmic logic just in an actual programming language instead of pseudocode, since that would be redundant. This chapter will give the necessary details to understand how to implement the algorithms in Rust and how to adapt them for \ac{IPC} over shared memory.
+After the wait-free algorithms were identified and analysed, the next sub-goal to find the best wait-free algorithms is to implement them like already said in \cref{sec:objective}. The algorithms were implemented and published in the accompanying GitHub repository in \cite{githubMA}, where complete implementation of the algorithms can be found. This chapter will present the implementation details of the concurrent queue algorithms seen in \cref{ch:choosing-the-optimal-wait-free-data-structure} in Rust, focusing on the adaptations necessary for \ac{IPC} over shared memory. While the algorithmic logic of each queue has already been discussed in \cref{ch:choosing-the-optimal-wait-free-data-structure}, the implementation required slight deviations to support \ac{IPC} over shared memory. This includes ensuring correct cache alignment, correctly implementing various atomic primitives, and correctly implementing the logic for shared memory support using short example snippets of the actual Rust implementation from the GitHub repository or some general examples. This does not include showing again the same algorithmic logic, just in an actual programming language instead of pseudocode, since that would be redundant. This chapter will give the necessary details to understand how to implement the algorithms in Rust and how to adapt them for \ac{IPC} over shared memory.
 
 \section{Shared Memory Management for Inter-Process Communication}
 
-\ac{IPC} through shared memory requires slightly different approaches compared to multi-threaded heap-based communication. The primary constraint is that shared memory regions may be mapped at different virtual addresses in different processes, requiring all data structures to be completely position-independent. Additionally, dynamic memory allocation is not possible within shared memory regions, necessitating buffer allocation from a pre-allocated memory pool for all dynamic data structures. Threads, on the other hand, can use the process-private heap for dynamic memory allocation, whose memory layout is shared between threads on the same process, but not processes.  
+\ac{IPC} through shared memory requires slightly different approaches compared to multi-threaded heap-based communication. The primary constraint is that shared memory regions may be mapped at different virtual addresses in different processes, requiring all data structures to be completely position-independent. Additionally, dynamic memory allocation is not possible within shared memory regions, necessitating buffer allocation from a pre-allocated memory pool for all dynamic data structures. Threads, on the other hand, can use the process-private heap for dynamic memory allocation, whose memory layout is shared between threads on the same process, but not between processes.  
 
 \subsection{Shared Memory Size Calculation}
 
@@ -46,11 +46,11 @@ pub fn shared_size(num_threads: usize) -> usize {
 }
 \end{lstlisting}
 
-The size calculation accounts for all components including alignment padding. Some queues like \ac{wCQ} use Rust's \texttt{Layout} API shown in lines 9 to 26 to ensure proper alignment and correctly calculated offsets. For simple queues like BQueue, manual calculation like in lines 2 to 6 suffices.
+The size calculation accounts for all components, including alignment padding. Some queues like \ac{wCQ} use Rust's \texttt{Layout} API shown in lines 9 to 26 to ensure proper alignment and correctly calculated offsets. For simple queues like BQueue, manual calculation like in lines 2 to 6 suffices.
 
 \subsection{Shared Memory Allocation}
 
-Once the required size is calculated, the following functions in \cref{lst:map-shared} used in all benchmarks demonstrates how to allocate and deallocate the required shared memory regions using \texttt{mmap}:
+Once the required size is calculated, the following functions in \cref{lst:map-shared} used in all benchmarks demonstrate how to allocate and deallocate the required shared memory regions using \texttt{mmap}:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Shared memory allocation using mmap}, label={lst:map-shared}]
 unsafe fn map_shared(bytes: usize) -> *mut u8 {
@@ -118,7 +118,7 @@ unsafe fn get_entry(&self, entries_offset: usize, idx: usize) -> &EntryPair {
 
 \subsection{Node Allocation from Pre-allocated Memory Pools}
 
-Some queues as seen in \cref{ch:choosing-the-optimal-wait-free-data-structure} use dynamic memory allocation within the process-private heap. For the \ac{IPC} over shared memory use case of this thesis that is not possible, because in shared memory dynamic memory allocations or deallocations with \texttt{malloc} or \texttt{free} are not possible, since that allocates from process-private heaps that are not available for other processes. Therefore, all queues that would normally allocate memory dynamically have been adapted to allocate from the initialised pre-allocated memory pool. As an example, the Jiffy Queue algorithm from \cref{subsubsec:jiffy-mpsc-queue} shows a dynamic heap allocation method to allocate new buffers to insert them into the linked-list. This was adapted to \ac{IPC} over shared memory in rust by a pool allocation system with free lists that is similarly implemented for all other queues needing dynamic memory allocation, as shown in \cref{lst:pool-allocation}.
+Some queues as seen in \cref{ch:choosing-the-optimal-wait-free-data-structure} use dynamic memory allocation within the process-private heap. For the \ac{IPC} over shared memory use case of this thesis that is not possible, because in shared memory dynamic memory allocations or deallocations with \texttt{malloc} or \texttt{free} are not possible, since that allocates from process-private heaps that are not available for other processes. Therefore, all queues that would normally allocate memory dynamically have been adapted to allocate from the initialised pre-allocated memory pool. As an example, the Jiffy Queue algorithm from \cref{subsubsec:jiffy-mpsc-queue} shows a dynamic heap allocation method to allocate new buffers to insert them into the linked list. This was adapted to \ac{IPC} over shared memory in Rust by a pool allocation system with free lists that is similarly implemented for all other queues needing dynamic memory allocation, as shown in \cref{lst:pool-allocation}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Lock-free memory pool allocation}, label={lst:pool-allocation}]
 unsafe fn alloc_node_array_slice(&self) -> *mut Node<T> {
@@ -160,11 +160,11 @@ unsafe fn alloc_node_array_slice(&self) -> *mut Node<T> {
 This implementation maintains a free list using \ac{CAS} operations in lines 12 to 16. When the free list is empty, it falls back to allocate from the pre-allocated pool seen in lines 23 and 24. The \texttt{fetch\_add} operation atomically increments the allocation index, ensuring process-safe allocation. If the pool is exhausted, the operation fails by returning a null pointer in line 30.
 
 \section{Cache Line Optimisation}
-Processors transfer data between cores in cache line units explained in \cref{subsubsec:lamport-circular-buffer-queue}. When multiple processes access data on the same cache line, even if different variables, the cache coherence protocol causes the cache line to bounce between cores, degrading execution times.
+Processors transfer data between cores in cache line units, explained in \cref{subsubsec:lamport-circular-buffer-queue}. When multiple processes access data on the same cache line, even if different variables, the cache coherence protocol causes the cache line to bounce between cores, degrading execution times.
 
 \subsection{Explicit Cache Line Padding}
 
-In \cref{ch:choosing-the-optimal-wait-free-data-structure} multiple queues were shown that describe separating the cache line. To show how this is done in rust the \ac{BLQ} explained in \cref{subsec:single-producer-and-single-consumer} will be taken to show how to explicitly separate the cache lines, as shown in \cref{lst:cache-separation}.
+In \cref{ch:choosing-the-optimal-wait-free-data-structure}, multiple queues were shown that describe separating the cache line. To show how this is done in rust the \ac{BLQ} explained in \cref{subsec:single-producer-and-single-consumer} will be taken to show how to explicitly separate the cache lines, as shown in \cref{lst:cache-separation}.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Cache line separation in BlqQueue}, label={lst:cache-separation}]
 const CACHE_LINE_SIZE: usize = 64;
@@ -189,9 +189,9 @@ struct ConsumerPrivate {
 }
 \end{lstlisting}
 
-The \texttt{\#[repr(C)]} attribute ensures C-compatible memory layout, while \newline \texttt{\#[repr(align(64))]} forces the structure to start at a cache line boundary shown in lines 4 and 10. Although \texttt{SharedIndices} contains only two \texttt{usize} values with 16 bytes total, the alignment ensures they reside in separate cache lines. The producer updates \texttt{write} while the consumer updates \texttt{read}, preventing false sharing. The shadow copies \texttt{read\_shadow} in line 12 and \texttt{write\_shadow} in line 18 ensure that producer and consumer work on different cache lines, preventing the cache lines to bounce between the producer process and consumer process.
+The \texttt{\#[repr(C)]} attribute ensures C-compatible memory layout, while \newline \texttt{\#[repr(align(64))]} forces the structure to start at a cache line boundary, shown in lines 4 and 10. Although \texttt{SharedIndices} contains only two \texttt{usize} values with 16 bytes total, the alignment ensures they reside in separate cache lines. The producer updates \texttt{write} while the consumer updates \texttt{read}, preventing false sharing. The shadow copies \texttt{read\_shadow} in line 12 and \texttt{write\_shadow} in line 18 ensure that producer and consumer work on different cache lines, preventing the cache lines from bouncing between the producer process and consumer process.
 
-Similarly, all queues that need this kind of cache line separation use this pattern to ensure that the producer and consumer do not share cache lines, preventing false sharing leading to cache lines bouncing between cores.
+Similarly, all queues that need this kind of cache line separation use this pattern to ensure that the producer and consumer do not share cache lines, preventing false sharing, leading to cache lines bouncing between cores.
 
 \subsection{Manual Padding Arrays}
 
@@ -235,7 +235,7 @@ let idx = self.next_item.fetch_add(1, Ordering::Relaxed);
 let seqid = self.tail.fetch_add(1, Ordering::SeqCst);
 \end{lstlisting}
 
-In rust, \ac{FAA} is a method call on atomic types as seen in line 4. In \cref{lst:fetch-and-add} the memory ordering parameter added as the second argument after the value to add determines the synchronisation order of \ac{FAA}. \texttt{Ordering::Relaxed} in line 7 provides no synchronisation, suitable for private counters. \texttt{Ordering::AcqRel} in line 4 ensures acquire semantics for the read and release semantics for the write, establishing happens-before relationships as required by the DQueue algorithm. \texttt{Ordering::SeqCst} in line 10 provides the strongest guarantees, ensuring a total order across all sequentially consistent operations, necessary for the complex \ac{wCQ}. One simple solution would be to always use \texttt{Ordering::SeqCst} for all operations, but that would reduce the execution times of the algorithms in a significant way. Consequently, it is important to analyse the algorithms from \cref{ch:choosing-the-optimal-wait-free-data-structure} to understand which memory ordering is needed for which operation.
+In Rust, \ac{FAA} is a method call on atomic types as seen in line 4. In \cref{lst:fetch-and-add}, the memory ordering parameter added as the second argument after the value to add determines the synchronisation order of \ac{FAA}. \texttt{Ordering::Relaxed} in line 7 provides no synchronisation, suitable for private counters. \texttt{Ordering::AcqRel} in line 4 ensures acquire semantics for the read and release semantics for the write, establishing happens-before relationships as required by the DQueue algorithm. \texttt{Ordering::SeqCst} in line 10 provides the strongest guarantees, ensuring a total order across all sequentially consistent operations, necessary for the complex \ac{wCQ}. One simple solution would be to always use \texttt{Ordering::SeqCst} for all operations, but that would reduce the execution times of the algorithms in a significant way. Consequently, it is important to analyse the algorithms from \cref{ch:choosing-the-optimal-wait-free-data-structure} to understand which memory ordering is needed for which operation.
 
 \subsection{\acf{CAS}}
 
@@ -294,7 +294,7 @@ let prev_tail_ptr = self.tail.swap(new_node_ptr, Ordering::AcqRel);
 (*prev_tail_ptr).next.store(new_node_ptr, Ordering::Release);
 \end{lstlisting}
 
-Swap operations are useful when the previous value is needed but the update is unconditional. The DrescherQueue uses swap to implement its simple enqueue operation (line 10), atomically updating the tail pointer and then linking the previous tail to the new node, exactly as specified in the Drescher algorithm in \cref{subsubsec:drescher-mpsc-queue}.
+Swap operations are useful when the previous value is needed, but the update is unconditional. The DrescherQueue uses swap to implement its simple enqueue operation (line 10), atomically updating the tail pointer and then linking the previous tail to the new node, exactly as specified in the Drescher algorithm in \cref{subsubsec:drescher-mpsc-queue}.
 
 \subsection{Load and Store with Memory Ordering}
 
@@ -316,7 +316,7 @@ let val = entry.value.load(Ordering::SeqCst);
 entry.value.store(new_val, Ordering::SeqCst);
 \end{lstlisting}
 
-The acquire-release pattern is particularly important. A release store in line 9 synchronises with an acquire load in line 2 of the same location, ensuring that all writes before the release store are visible to any thread that sees the acquire load. This pattern is used in all queues to ensure correct ordering to the producer-consumer relationship, implementing the memory barriers described in algorithms like Lamport Queue (\cref{subsubsec:lamport-circular-buffer-queue}) and others.
+The acquire-release pattern is particularly important. A release store in line 9 synchronises with an acquire load in line 2 of the same location, ensuring that all writes before the release store are visible to any thread that sees the acquire load. This pattern is used in all queues to ensure correct ordering of the producer-consumer relationship, implementing the memory barriers described in algorithms like Lamport Queue (\cref{subsubsec:lamport-circular-buffer-queue}) and others.
 
 \subsection{Memory Fences}
 
@@ -389,7 +389,7 @@ The version counter in line 3 prevents the ABA problem where a value changes fro
 
 \subsection{Unsafe Blocks}
 
-Rust's memory safety guarantees to prevent data races by ensuring that either multiple readers or a single writer can access data at any time. However, the wait-free algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure} require to bypass these restrictions. Through the use of \texttt{unsafe} blocks, the programmer indicates to the Rust compiler that the block's memory safety is handled by the implementation itself. The \texttt{try\_enq\_inner} function of \ac{wCQ}'s Rust implementation in \cref{lst:wcq-unsafe} demonstrates why \texttt{unsafe} blocks are necessary.
+Rust's memory safety guarantees prevent data races by ensuring that either multiple readers or a single writer can access data at any time. However, the wait-free algorithms in \cref{ch:choosing-the-optimal-wait-free-data-structure} require bypassing these restrictions. Through the use of \texttt{unsafe} blocks, the programmer indicates to the Rust compiler that the block's memory safety is handled by the implementation itself. The \texttt{try\_enq\_inner} function of \ac{wCQ}'s Rust implementation in \cref{lst:wcq-unsafe} demonstrates why \texttt{unsafe} blocks are necessary.
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={Wait-free synchronisation requiring unsafe}, label={lst:wcq-unsafe}]
     // Multiple threads may execute this concurrently
@@ -430,10 +430,10 @@ Rust's memory safety guarantees to prevent data races by ensuring that either mu
     }
 \end{lstlisting}
 
-One reason for an \texttt{unsafe} block is raw pointer dereferencing seen in lines 32 to 34. The \texttt{get\_entry} function performs pointer arithmetic on \texttt{base\_ptr} and dereferences the result which is needed for shared memory. The compiler cannot verify that the calculated address is valid or that no data races occur. The Rust compiler also does not allow concurrent access of multiple writer threads or processes. \texttt{try\_enq\_inner} beginning at line 2 is implemented so that multiple processes can simultaneously call it. Each process atomically increments the tail to get a unique position in line 4, then accesses potentially the same entry due to cache remapping in lines 5 and 7, and finally attempts to modify the entry in line 18. The Rust compiler cannot verify too that this access is safe, so the developer of this implementation has to indicate to the compiler that this is safe by using an \texttt{unsafe} block.
+One reason for an \texttt{unsafe} block is raw pointer dereferencing seen in lines 32 to 34. The \texttt{get\_entry} function performs pointer arithmetic on \texttt{base\_ptr} and dereferences the result, which is needed for shared memory. The compiler cannot verify that the calculated address is valid or that no data races occur. The Rust compiler also does not allow concurrent access of multiple writer threads or processes. \texttt{try\_enq\_inner} beginning at line 2 is implemented so that multiple processes can simultaneously call it. Each process atomically increments the tail to get a unique position in line 4, then accesses potentially the same entry due to cache remapping in lines 5 and 7, and finally attempts to modify the entry in line 18. The Rust compiler cannot verify that this access is safe, so the developer of this implementation has to indicate to the compiler that this is safe by using an \texttt{unsafe} block.
 
 \section{Validation}
-Additionally, ensuring the correctness of the implemented algorithms is is also part of the objective to ensure the correctness of the implemented algorithms; unit and miri tests were performed. The unit tests validate the basic functionality of each queue, ensuring that operations like enqueue and dequeue work as expected. Miri tests were used to check for undefined behaviour in concurrent scenarios, ensuring that the algorithms behave correctly under extreme contention. This section will generally describe how the tests were implemented and what they validate, without going into the details of each test case.
+Additionally, ensuring the correctness of the implemented algorithms is also part of the objective to ensure the correctness of the implemented algorithms; unit and miri tests were performed. The unit tests validate the basic functionality of each queue, ensuring that operations like enqueue and dequeue work as expected. Miri tests were used to check for undefined behaviour in concurrent scenarios, ensuring that the algorithms behave correctly under extreme contention. This section will generally describe how the tests were implemented and what they validate, without going into the details of each test case.
 
 \subsection{Basic Operations}
 Every queue implementation was validated for fundamental operations including initialisation, push, pop, and state queries (\texttt{is\_empty}, \texttt{is\_full}). For example, the basic operation test pattern was implemented as shown in \cref{lst:basic-test}:
@@ -458,7 +458,7 @@ for i in 0..10 {
 }
 \end{lstlisting}
 
-Lines 2 to 3 in \cref{lst:basic-test} test the initial empty state and check that pop operations fail correctly on empty queues. The single element test in lines 6 to 9 tests the state change from empty to non-empty and back, with line 8 testing that the pushed value is correctly retrieved. Lines 12 to 17 test that FIFO ordering is maintained for multiple elements.
+Lines 2 to 3 in \cref{lst:basic-test} test the initial empty state and check that pop operations fail correctly on empty queues. The single-element test in lines 6 to 9 tests the state change from empty to non-empty and back, with line 8 testing that the pushed value is correctly retrieved. Lines 12 to 17 test that FIFO ordering is maintained for multiple elements.
 
 \subsection{Capacity and Boundary Tests}
 Capacity limits also had to be tested, so it can be ensured that the capacities work correctly. Special attention was given to queues with buffering mechanisms like \ac{BIFFQ} and MultiPush queue, which required explicit flushing operations.
@@ -642,7 +642,7 @@ if !free_head.is_null() {
 }
 \end{lstlisting}
 
-Lines 4 to 6 in \cref{lst:pool-management-test} test basic allocation from the pool and test that the segment is properly initialised. Line 9 tests returning the segment to the pool. Lines 12 to 20 test pool exhaustion by allocating until \texttt{new\_segment} returns null in line 18. Lines 23 to 25 test that segments can be returned to the pool. Lines 29 to 44 test the free list implementation in Jiffy Queue, where lines 36 to 41 test atomic removal of the free list head using compare-exchange. Since we only test that the allocations work and can be used, assertions were not used, since only correct behaviour is tested.
+Lines 4 to 6 in \cref{lst:pool-management-test} test basic allocation from the pool and test that the segment is properly initialised. Line 9 tests returning the segment to the pool. Lines 12 to 20 test pool exhaustion by allocating until \texttt{new\_segment} returns null in line 18. Lines 23 to 25 test that segments can be returned to the pool. Lines 29 to 44 test the free list implementation in Jiffy Queue, where lines 36 to 41 test atomic removal of the free list head using \texttt{compare\_exchange}. Since we only test that the allocations work and can be used, assertions were not used, since only correct behaviour is tested.
 
 \subsection{Concurrent Operation Tests}
 Concurrent tests validated the correctness of queue operations under contention. Different kinds of tests were implemented to stress the queues in various ways:
@@ -713,7 +713,7 @@ assert!(
 );
 \end{lstlisting}
 
-Lines 4 to 6 in \cref{lst:stress-test} create atomic counters to track production and consumption across threads. Lines 15 to 17 test retry behaviour with yield to handle temporary failures. Lines 19 and 20 only count successfully pushed items. Lines 33 to 45 test the consumer loop that continues until signalled to stop and experiences many failures in lines 39 to 41. Lines 51 and 52 signal consumers to terminate. Lines 55 to 60 test that at least 90\% of produced items were consumed.
+Lines 4 to 6 in \cref{lst:stress-test} create atomic counters to track production and consumption across threads. Lines 15 to 17 test retry behaviour with yield to handle temporary failures. Lines 19 and 20 only count successfully pushed items. Lines 33 to 45 test the consumer loop that continues until signalled to stop and experiences many failures in lines 39 to 41. Lines 51 and 52 signal consumers to terminate. Lines 55 to 60 test that at least 90\% of the produced items were consumed.
 
 In the following \cref{lst:fifo-stress-test}, correct \ac{FIFO} ordering was tested:
 
@@ -750,7 +750,7 @@ for producer_id in 0..num_producers {
 Lines 2 to 5 in \cref{lst:fifo-stress-test} collect all items from the queue. Lines 11 to 14 test for missing or duplicate items by checking sequential values after sorting. Lines 17 to 20 filter items by producer. Lines 23 to 26 test that items from the same producer maintain their order.
 
 \subsection{\acf{IPC} Tests}
-One important test is that the queues' behaviour in true \ac{IPC} scenarios remains correct using process forking. These tests verify that under process contention the queues still operate correctly, properly handle shared memory regions, and that atomic operations are visible between processes. The \ac{IPC} tests followed a consistent pattern using \texttt{fork()} to create separate processes as seen in \cref{lst:ipc-test}:
+One important test is that the queues' behaviour in true \ac{IPC} scenarios remains correct using process forking. These tests verify that under process contention, the queues still operate correctly, properly handle shared memory regions, and that atomic operations are visible between processes. The \ac{IPC} tests followed a consistent pattern using \texttt{fork()} to create separate processes as seen in \cref{lst:ipc-test}:
 
 \begin{lstlisting}[language=Rust, style=boxed, caption={IPC test structure}, label={lst:ipc-test}]
 match unsafe { fork() } {
@@ -781,7 +781,7 @@ match unsafe { fork() } {
 }
 \end{lstlisting}
 
-Line 2 in \cref{lst:ipc-test} creates a child process that shares the queue's memory with the parent. Lines 5 to 10 test the producer's retry loop, yielding on failure in line 8. Line 12 uses \texttt{\_exit(0)} to avoid cleanup handlers that might affect shared memory. Lines 17 to 21 test the consumer loop collecting all items. Line 24 waits for the child process to complete before final verification.
+Line 2 in \cref{lst:ipc-test} creates a child process that shares the queue's memory with the parent. Lines 5 to 10 test the producer's retry loop, yielding on failure in line 8. Line 12 uses \texttt{\_exit(0)} to avoid cleanup handlers that might affect shared memory. Lines 17 to 21 test the consumer loop, collecting all items. Line 24 waits for the child process to complete before final verification.
 
 \subsection{Special Feature Validation}
 Algorithm-specific features required targeted validation:
@@ -815,7 +815,7 @@ for i in 0..32 {  // Local buffer size
 assert_eq!(queue.local_count.load(Ordering::Relaxed), 0);
 \end{lstlisting}
 
-Lines 2 to 4 in \cref{lst:buffer-test} push items into the local buffer. Line 7 tests that items remain invisible to consumers before flushing. Lines 10 and 11 test explicit buffer flushing. Lines 14 to 16 test that items are now consumable in correct order. Lines 19 to 23 test automatic flushing when the 32-item buffer fills.
+Lines 2 to 4 in \cref{lst:buffer-test} push items into the local buffer. Line 7 tests that items remain invisible to consumers before flushing. Lines 10 and 11 test explicit buffer flushing. Lines 14 to 16 test that items are now consumable in the correct order. Lines 19 to 23 test automatic flushing when the 32-item buffer fills.
 
 \subsubsection{Helper Thread Coordination}
 Verma's queue from \cref{subsubsec:verma-queue} with its helper thread requires special tests seen in \cref{lst:helper-thread-test} to verify that the helper thread functions correctly:
