@@ -12,9 +12,7 @@ The implementation challenges of adapting thread-based algorithms to \ac{IPC} re
 
 The Rust programming language was well-suited for implementing these algorithms. Its ownership model and explicit memory ordering semantics allowed precise control over synchronisation while maintaining memory safety. The unsafe blocks required for shared memory operations were well-contained, and the type system helped prevent common concurrency bugs during development. The achieved test coverage of 81.12\% function coverage and 70.03\% line coverage demonstrates that most code paths could be reliably tested despite the complexity of concurrent operations. These tests with the additional correctness check in the benchmark also formed the validation that these queues work as expected.
 
-During the thesis it was found out that the recommended wait-free queues for real-time \ac{IPC} are \acf{BLQ} for \ac{SPSC}, DQueue for \ac{MPSC}, David Queue for \ac{SPMC}, and \ac{YMC} or Verma Queue for \ac{MPMC} depending on how high the contention is.
-
-These findings contribute to \ac{RTS} by providing concrete performance data for wait-free algorithms under realistic \ac{IPC} workloads, and offering production-ready Rust implementations suitable for safety-critical applications.
+The implemented queues were then benchmarked to answer the objective of this thesis. The benchmarks showed that the recommended wait-free queues for real-time \ac{IPC} are \acf{BLQ} for \ac{SPSC}, DQueue for \ac{MPSC}, David Queue for \ac{SPMC}, and \ac{YMC} or Verma Queue for \ac{MPMC} depending on how high the contention is.
 
 \section{Future Work}
 While this thesis provides a comprehensive evaluation of existing wait-free algorithms for \ac{IPC}, several areas need further research.
